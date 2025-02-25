@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroRePlayer", "MacroRePlayer\MacroRePlayer.csproj", "{55E6A4B1-0DA8-4949-B460-57FC046A3E18}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55E6A4B1-0DA8-4949-B460-57FC046A3E18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55E6A4B1-0DA8-4949-B460-57FC046A3E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55E6A4B1-0DA8-4949-B460-57FC046A3E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55E6A4B1-0DA8-4949-B460-57FC046A3E18}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9EFE1AA7-CB07-410E-A4EF-3AEE3A300B35}
+	EndGlobalSection
+EndGlobal
