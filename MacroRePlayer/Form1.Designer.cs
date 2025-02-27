@@ -40,10 +40,10 @@
             this.EditorLabel = new System.Windows.Forms.Label();
             this.RecorderGroupBox = new System.Windows.Forms.GroupBox();
             this.PlayerGroupBox = new System.Windows.Forms.GroupBox();
-            this.EditorGroupBox = new System.Windows.Forms.GroupBox();
-            this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
+            this.EditorGroupBox = new System.Windows.Forms.GroupBox();
             this.EditorEventPanel = new System.Windows.Forms.Panel();
+            this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.RecorderGroupBox.SuspendLayout();
             this.PlayerGroupBox.SuspendLayout();
             this.EditorGroupBox.SuspendLayout();
@@ -180,6 +180,13 @@
             this.PlayerGroupBox.TabIndex = 12;
             this.PlayerGroupBox.TabStop = false;
             // 
+            // vScrollBar1
+            // 
+            this.vScrollBar1.Location = new System.Drawing.Point(46, 66);
+            this.vScrollBar1.Name = "vScrollBar1";
+            this.vScrollBar1.Size = new System.Drawing.Size(25, 230);
+            this.vScrollBar1.TabIndex = 12;
+            // 
             // EditorGroupBox
             // 
             this.EditorGroupBox.Controls.Add(this.EditorEventPanel);
@@ -191,6 +198,13 @@
             this.EditorGroupBox.TabIndex = 13;
             this.EditorGroupBox.TabStop = false;
             // 
+            // EditorEventPanel
+            // 
+            this.EditorEventPanel.Location = new System.Drawing.Point(6, 83);
+            this.EditorEventPanel.Name = "EditorEventPanel";
+            this.EditorEventPanel.Size = new System.Drawing.Size(188, 210);
+            this.EditorEventPanel.TabIndex = 14;
+            // 
             // JsonFileSelectorComboBox
             // 
             this.JsonFileSelectorComboBox.FormattingEnabled = true;
@@ -200,20 +214,6 @@
             this.JsonFileSelectorComboBox.TabIndex = 11;
             this.JsonFileSelectorComboBox.DropDown += new System.EventHandler(this.comboBox1_DropDown);
             this.JsonFileSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.JsonFileSelectorComboBox_SelectedIndexChanged);
-            // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(46, 66);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(25, 230);
-            this.vScrollBar1.TabIndex = 12;
-            // 
-            // EditorEventPanel
-            // 
-            this.EditorEventPanel.Location = new System.Drawing.Point(6, 83);
-            this.EditorEventPanel.Name = "EditorEventPanel";
-            this.EditorEventPanel.Size = new System.Drawing.Size(188, 210);
-            this.EditorEventPanel.TabIndex = 14;
             // 
             // Form1
             // 

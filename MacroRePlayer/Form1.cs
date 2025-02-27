@@ -1,177 +1,153 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Gma.System.MouseKeyHook;
+using System.Drawing.Text;
+using System.Xml;
+using Formatting = Newtonsoft.Json.Formatting;
+using System.Drawing;
 
 namespace MacroRePlayer
 {
-
     public partial class Form1 : Form
     {
-        private List<InputEvent> events;
-        private DateTime lastEventTime;
-        private bool isRecording;
-        private IKeyboardMouseEvents globalHook;
+        // Seznam událostí, které budou zaznamenány
+        private List<InputEvent> events = new List<InputEvent>();
+        private DateTime lastEventTime; // Poslední zaznamenaný čas události
+        private bool isRecording; // Indikátor nahrávání
+        private IKeyboardMouseEvents globalHook; // Globální hook pro sledování vstupů
         private HashSet<string> pressedKeys = new HashSet<string>(); // Sledování stisknutých kláves
-
+        private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
         public Form1()
         {
             InitializeComponent();
-            events = new List<InputEvent>();
-            isRecording = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string currentDateTime = DateTime.Now.ToString("HH-mm_dd.MM.yyyy");
-            JsonFileSelectorForm.Text = $"MacroRecord{currentDateTime}";
-
-            
+            // Nastavení výchozího názvu souboru s aktuálním časem
+            JsonFileSelectorForm.Text = $"MacroRecord{DateTime.Now:HH-mm_dd.MM.yyyy}";
         }
 
         private void StartRecording_Click(object sender, EventArgs e)
         {
-            string directoryPath = @"C:\Users\green013\AppData\Local\MacroRePlayer"; // cesta k ukládání .json souborů
+            // Vytvoří složku, pokud neexistuje
+            Directory.CreateDirectory(directoryPath);
 
-            // Vytvoření složky, pokud neexistuje
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
-
-            events.Clear();
+            events.Clear(); // Vyčistí seznam událostí
             isRecording = true;
             lastEventTime = DateTime.Now;
-            StopRecording.Visible = true;
-            StartRecording.Visible = false;
+            ToggleRecordingButtons(true);
 
+            // Inicializace globálního hooku pro sledování vstupů
             globalHook = Hook.GlobalEvents();
             globalHook.MouseDownExt += GlobalHook_MouseDownExt;
             globalHook.MouseUpExt += GlobalHook_MouseUpExt;
             globalHook.KeyDown += GlobalHook_KeyDown;
             globalHook.KeyUp += GlobalHook_KeyUp;
-
-            //MessageBox.Show("Nahrávání zahájeno.");
         }
 
         private void StopRecording_Click(object sender, EventArgs e)
         {
             isRecording = false;
-            StopRecording.Visible = false;
-            StartRecording.Visible = true;
+            ToggleRecordingButtons(false);
+            UnsubscribeGlobalHook(); // Odhlášení event handlerů
+            SaveEventsToJson(); // Uložení událostí do JSON souboru
+        }
 
-            globalHook.MouseDownExt -= GlobalHook_MouseDownExt;
-            globalHook.MouseUpExt -= GlobalHook_MouseUpExt;
-            globalHook.KeyDown -= GlobalHook_KeyDown;
-            globalHook.KeyUp -= GlobalHook_KeyUp;
-            globalHook.Dispose();
+        private void ToggleRecordingButtons(bool recording)
+        {
+            // Přepnutí viditelnosti tlačítek start/stop
+            StopRecording.Visible = recording;
+            StartRecording.Visible = !recording;
+        }
 
-            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer");
-            string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json");
-
-            using (StreamWriter writer = new StreamWriter(fileName))
+        private void UnsubscribeGlobalHook()
+        {
+            // Odpojení všech event handlerů
+            if (globalHook != null)
             {
-                string json = JsonConvert.SerializeObject(events, Formatting.Indented);
-                writer.Write(json);
+                globalHook.MouseDownExt -= GlobalHook_MouseDownExt;
+                globalHook.MouseUpExt -= GlobalHook_MouseUpExt;
+                globalHook.KeyDown -= GlobalHook_KeyDown;
+                globalHook.KeyUp -= GlobalHook_KeyUp;
+                globalHook.Dispose();
             }
+        }
 
+        private void SaveEventsToJson()
+        {
+            // Uložení seznamu událostí do JSON souboru
+            string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json");
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented));
             MessageBox.Show($"Soubor {fileName} byl úspěšně vytvořen.");
         }
 
         private void GlobalHook_MouseDownExt(object sender, MouseEventExtArgs e)
         {
-            if (isRecording)
-            {
-                AddDelayEvent();
-                events.Add(new InputEvent
-                {
-                    EventType = "MouseDown",
-                    X = e.X,
-                    Y = e.Y,
-                    Key = e.Button.ToString()
-                });
-                lastEventTime = DateTime.Now;
-            }
+            // Záznam stisknutí myši
+            RecordMouseEvent("MouseDown", e);
         }
 
         private void GlobalHook_MouseUpExt(object sender, MouseEventExtArgs e)
         {
+            // Záznam uvolnění myši
+            RecordMouseEvent("MouseUp", e);
+        }
+
+        private void RecordMouseEvent(string eventType, MouseEventExtArgs e)
+        {
             if (isRecording)
             {
-                AddDelayEvent();
-                events.Add(new InputEvent
-                {
-                    EventType = "MouseUp",
-                    X = e.X,
-                    Y = e.Y,
-                    Key = e.Button.ToString()
-                });
+                AddDelayEvent(); // Přidání zpoždění mezi událostmi
+                events.Add(new InputEvent { EventType = eventType, X = e.X, Y = e.Y, Key = e.Button.ToString() });
                 lastEventTime = DateTime.Now;
             }
         }
 
         private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
         {
-            if (isRecording)
+            // Záznam stisknutí klávesy, pouze pokud nebyla zaznamenána dříve
+            if (isRecording && pressedKeys.Add(e.KeyCode.ToString()))
             {
-                // Zabránění opakovaným KeyDown událostem
-                if (!pressedKeys.Contains(e.KeyCode.ToString()))
-                {
-                    AddDelayEvent();
-                    events.Add(new InputEvent
-                    {
-                        EventType = "KeyDown",
-                        Key = e.KeyCode.ToString()
-                    });
-                    lastEventTime = DateTime.Now;
-                    pressedKeys.Add(e.KeyCode.ToString()); // Přidat klávesu do seznamu stisknutých
-                }
+                AddDelayEvent();
+                events.Add(new InputEvent { EventType = "KeyDown", Key = e.KeyCode.ToString() });
+                lastEventTime = DateTime.Now;
             }
         }
 
         private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
         {
+            // Záznam uvolnění klávesy
             if (isRecording)
             {
                 AddDelayEvent();
-                events.Add(new InputEvent
-                {
-                    EventType = "KeyUp",
-                    Key = e.KeyCode.ToString()
-                });
+                events.Add(new InputEvent { EventType = "KeyUp", Key = e.KeyCode.ToString() });
                 lastEventTime = DateTime.Now;
-                pressedKeys.Remove(e.KeyCode.ToString()); // Odebrat klávesu ze seznamu stisknutých
+                pressedKeys.Remove(e.KeyCode.ToString());
             }
         }
 
         private void AddDelayEvent()
         {
-            var delay = (DateTime.Now - lastEventTime).Milliseconds;
+            // Přidání časového zpoždění mezi událostmi
+            int delay = (int)(DateTime.Now - lastEventTime).TotalMilliseconds;
             if (delay > 0)
             {
-                events.Add(new InputEvent
-                {
-                    EventType = "Delay",
-                    Duration = delay
-                });
+                events.Add(new InputEvent { EventType = "Delay", Duration = delay });
             }
         }
 
         private void FolderOpenerButton_Click(object sender, EventArgs e)
         {
-            string userDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer");
-            if (Directory.Exists(userDirectoryPath))
+            // Otevření složky s uloženými makry
+            if (Directory.Exists(directoryPath))
             {
-                System.Diagnostics.Process.Start("explorer.exe", userDirectoryPath);
+                System.Diagnostics.Process.Start("explorer.exe", directoryPath);
             }
             else
             {
@@ -181,128 +157,54 @@ namespace MacroRePlayer
 
         private void comboBox1_DropDown(object sender, EventArgs e)
         {
-            // Zobrazení všech .json souborů v adresáři
-            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer");
+            // Naplnění seznamu dostupných JSON souborů
+            JsonFileSelectorComboBox.Items.Clear();
+
+            // Přidání prázdné položky na začátek
+            JsonFileSelectorComboBox.Items.Add("");
+
             if (Directory.Exists(directoryPath))
             {
-                var jsonFiles = Directory.GetFiles(directoryPath, "*.json");
-                foreach (var file in jsonFiles)
-                {
-                    JsonFileSelectorComboBox.Items.Add(Path.GetFileName(file));
-                }
+                JsonFileSelectorComboBox.Items.AddRange(Directory.GetFiles(directoryPath, "*.json").Select(Path.GetFileName).ToArray());
             }
         }
 
         private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer");
+            // Načtení vybraného souboru a jeho zobrazení
             string selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
-
             if (File.Exists(selectedFile))
             {
-                string jsonContent = File.ReadAllText(selectedFile);
-                List<InputEvent> loadedEvents = JsonConvert.DeserializeObject<List<InputEvent>>(jsonContent);
-
+                List<InputEvent> loadedEvents = JsonConvert.DeserializeObject<List<InputEvent>>(File.ReadAllText(selectedFile));
                 DisplayEvents(loadedEvents);
+            }
+            else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
+            {
+                EditorEventPanel.Controls.Clear();
             }
         }
 
         private void DisplayEvents(List<InputEvent> events)
         {
-            EditorEventPanel.Controls.Clear();
-            EditorEventPanel.AutoScroll = true;
-
-            foreach (var inputEvent in events)
+            for (int i = 0; i < events.Count; i++)
             {
-                Panel eventPanel = new Panel
+                for (int j = 0; j < 4; j++)
                 {
-                    AutoSize = true,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Margin = new Padding(5)
-                };
-
-                Label eventTypeLabel = new Label
-                {
-                    Text = inputEvent.EventType,
-                    AutoSize = true
-                };
-                eventPanel.Controls.Add(eventTypeLabel);
-
-                if (inputEvent.EventType == "Delay")
-                {
-                    Label durationLabel = new Label
+                    for (int k = 0; k <=5; k++) //5x label prvků
                     {
-                        Text = "Duration:",
-                        AutoSize = true
-                    };
-                    TextBox durationTextBox = new TextBox
-                    {
-                        Text = inputEvent.Duration.ToString(),
-                        Width = 100
-                    };
-                    eventPanel.Controls.Add(durationLabel);
-                    eventPanel.Controls.Add(durationTextBox);
+                        foreach (var prop in events[k].GetType().GetProperties())
+                        {
+                            Label label = new Label();
+                            label.Name = $"{prop.Name}Label";
+                            label.Text = $"{prop.Name}: {prop.GetValue(events[k])}";
+                            label.Location = new Point(10 + j * 100, 10 + k * 30); //nevim jak tahle zahadana rovnice funguje
+                            EditorEventPanel.Controls.Add(label);
+                        }
+                    }
                 }
-                else if (inputEvent.EventType == "MouseDown" || inputEvent.EventType == "MouseUp")
-                {
-                    Label xLabel = new Label
-                    {
-                        Text = "X:",
-                        AutoSize = true
-                    };
-                    TextBox xTextBox = new TextBox
-                    {
-                        Text = inputEvent.X.ToString(),
-                        Width = 100
-                    };
-                    Label yLabel = new Label
-                    {
-                        Text = "Y:",
-                        AutoSize = true
-                    };
-                    TextBox yTextBox = new TextBox
-                    {
-                        Text = inputEvent.Y.ToString(),
-                        Width = 100
-                    };
-                    Label buttonLabel = new Label
-                    {
-                        Text = "Button:",
-                        AutoSize = true
-                    };
-                    ComboBox buttonComboBox = new ComboBox
-                    {
-                        Width = 100,
-                        DropDownStyle = ComboBoxStyle.DropDownList
-                    };
-                    buttonComboBox.Items.AddRange(new string[] { "Left", "Right", "Middle" });
-                    buttonComboBox.SelectedItem = inputEvent.Key;
-
-                    eventPanel.Controls.Add(xLabel);
-                    eventPanel.Controls.Add(xTextBox);
-                    eventPanel.Controls.Add(yLabel);
-                    eventPanel.Controls.Add(yTextBox);
-                    eventPanel.Controls.Add(buttonLabel);
-                    eventPanel.Controls.Add(buttonComboBox);
-                }
-                else if (inputEvent.EventType == "KeyDown" || inputEvent.EventType == "KeyUp")
-                {
-                    Label keyLabel = new Label
-                    {
-                        Text = "Key:",
-                        AutoSize = true
-                    };
-                    TextBox keyTextBox = new TextBox
-                    {
-                        Text = inputEvent.Key,
-                        Width = 100
-                    };
-                    eventPanel.Controls.Add(keyLabel);
-                    eventPanel.Controls.Add(keyTextBox);
-                }
-
-                EditorEventPanel.Controls.Add(eventPanel);
+                
             }
         }
+
     }
 }
