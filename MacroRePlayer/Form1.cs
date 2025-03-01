@@ -188,21 +188,16 @@ namespace MacroRePlayer
         {
             for (int i = 0; i < events.Count; i++)
             {
-                for (int j = 0; j < 4; j++)
+                var eventn = events[i].getAll();
+                for (int k=0; k<eventn.Count; k++)
                 {
-                    for (int k = 0; k <=5; k++) //5x label prvků
-                    {
-                        foreach (var prop in events[k].GetType().GetProperties())
-                        {
-                            Label label = new Label();
-                            label.Name = $"{prop.Name}Label";
-                            label.Text = $"{prop.Name}: {prop.GetValue(events[k])}";
-                            label.Location = new Point(10 + j * 100, 10 + k * 30); //nevim jak tahle zahadana rovnice funguje
-                            EditorEventPanel.Controls.Add(label);
-                        }
-                    }
+                    string prop = eventn[k];
+                    Label label = new Label();
+                    label.Name = $"{prop}Label";
+                    label.Text = $"{prop}";
+                    label.Location = new Point(10 + k * 100, 10 + i * 30); //nevim jak tahle zahadana rovnice funguje
+                    EditorEventPanel.Controls.Add(label);
                 }
-                
             }
         }
 

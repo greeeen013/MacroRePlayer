@@ -13,5 +13,16 @@ namespace MacroRePlayer
         public int? Y { get; set; }
         public string Key { get; set; }
         public int? Duration { get; set; }
+
+        public List<String> getAll()
+        {
+            var a = new List<String>();
+            a.Add(EventType);
+            a.Add(X.ToString());
+            a.Add(Y.ToString());
+            a.Add(Key);
+            a.Add(Duration.ToString());
+            return a;
+        }
     }
 }

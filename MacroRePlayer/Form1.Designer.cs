@@ -200,6 +200,7 @@
             // 
             // EditorEventPanel
             // 
+            this.EditorEventPanel.AutoScroll = true;
             this.EditorEventPanel.Location = new System.Drawing.Point(6, 83);
             this.EditorEventPanel.Name = "EditorEventPanel";
             this.EditorEventPanel.Size = new System.Drawing.Size(188, 210);
