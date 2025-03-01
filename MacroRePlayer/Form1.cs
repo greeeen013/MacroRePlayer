@@ -189,14 +189,23 @@ namespace MacroRePlayer
             for (int i = 0; i < events.Count; i++)
             {
                 var eventn = events[i].getAll();
-                for (int k=0; k<eventn.Count; k++)
+                int xOffset = 10; // Počáteční pozice X
+
+                for (int k = 0; k < eventn.Count; k++)
                 {
                     string prop = eventn[k];
-                    Label label = new Label();
-                    label.Name = $"{prop}Label";
-                    label.Text = $"{prop}";
-                    label.Location = new Point(10 + k * 100, 10 + i * 30); //nevim jak tahle zahadana rovnice funguje
-                    EditorEventPanel.Controls.Add(label);
+
+                    // Pokud je prop prázdný řetězec, přeskočíme vytvoření Labelu
+                    if (!string.IsNullOrEmpty(prop))
+                    {
+                        Label label = new Label();
+                        label.Text = prop;
+                        label.Location = new Point(xOffset, 10 + i * 30);
+                        EditorEventPanel.Controls.Add(label);
+
+                        // Posuneme pozici X pro další Label
+                        xOffset += 100;
+                    }
                 }
             }
         }

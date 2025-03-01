@@ -40,7 +40,6 @@
             this.EditorLabel = new System.Windows.Forms.Label();
             this.RecorderGroupBox = new System.Windows.Forms.GroupBox();
             this.PlayerGroupBox = new System.Windows.Forms.GroupBox();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.EditorGroupBox = new System.Windows.Forms.GroupBox();
             this.EditorEventPanel = new System.Windows.Forms.Panel();
             this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
@@ -173,19 +172,11 @@
             // PlayerGroupBox
             // 
             this.PlayerGroupBox.Controls.Add(this.PlayerLabel);
-            this.PlayerGroupBox.Controls.Add(this.vScrollBar1);
             this.PlayerGroupBox.Location = new System.Drawing.Point(447, 56);
             this.PlayerGroupBox.Name = "PlayerGroupBox";
             this.PlayerGroupBox.Size = new System.Drawing.Size(200, 301);
             this.PlayerGroupBox.TabIndex = 12;
             this.PlayerGroupBox.TabStop = false;
-            // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(46, 66);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(25, 230);
-            this.vScrollBar1.TabIndex = 12;
             // 
             // EditorGroupBox
             // 
@@ -259,7 +250,6 @@
         private System.Windows.Forms.GroupBox PlayerGroupBox;
         private System.Windows.Forms.GroupBox EditorGroupBox;
         private System.Windows.Forms.ComboBox JsonFileSelectorComboBox;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
         private System.Windows.Forms.Panel EditorEventPanel;
     }
 }
