@@ -6,23 +6,54 @@ using System.Threading.Tasks;
 
 namespace MacroRePlayer
 {
-    class InputEvent
-    {
-        public string EventType { get; set; }
-        public int? X { get; set; }
-        public int? Y { get; set; }
-        public string Key { get; set; }
-        public int? Duration { get; set; }
 
-        public List<String> getAll()
-        {
-            var a = new List<String>();
-            a.Add(EventType);
-            a.Add(X.ToString());
-            a.Add(Y.ToString());
-            a.Add(Key);
-            a.Add(Duration.ToString());
-            return a;
-        }
+    interface IInputEvent
+    {
+        void draw();
     }
+
+    class DelayEvent : IInputEvent
+    {
+        public string Type => "DelayEvent";
+        public int Duration;
+
+        public void draw() { }
+    }
+
+    class MouseDownEvent : IInputEvent
+    {
+        public string Type => "MouseDown";
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Button { get; set; }
+
+        public void draw() { }
+    }
+
+    class MouseUpEvent : IInputEvent
+    {
+        public string Type => "MouseUp";
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Button { get; set; }
+
+        public void draw() { }
+    }
+
+    class KeyDownEvent : IInputEvent
+    {
+        public string Type => "KeyDown";
+        public string Key { get; set; }
+
+        public void draw() { }
+    }
+
+    class KeyUpEvent : IInputEvent
+    {
+        public string Type => "KeyUp";
+        public string Key { get; set; }
+
+        public void draw() { }
+    }
+
 }
