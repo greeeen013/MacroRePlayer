@@ -9,6 +9,7 @@ namespace MacroRePlayer
 
     interface IInputEvent
     {
+        string Type { get; }
         void draw();
     }
 

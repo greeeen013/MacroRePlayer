@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MacroRePlayer
@@ -178,14 +179,14 @@ namespace MacroRePlayer
                 settings.Converters.Add(new InputEventConverter());
 
                 List<IInputEvent> loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
-                Console.WriteLine(loadedEvents);
+                //MessageBox.Show($"{loadedEvents}");
 
                 // Display the loaded events
                 DisplayEvents(loadedEvents);
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
             {
-                // Clear the editor panel if no file is selected
+                // vycisti to Table pokud je vybrano prazdne políčko
                 EditorEventPanel.Controls.Clear();
             }
         }
@@ -194,8 +195,20 @@ namespace MacroRePlayer
         {
             for (int i = 0; i < events.Count; i++)
             {
+                IInputEvent neco = events[i]; // neco jen pro zatim pro test
                 // TODO: pridat ke všem eventum draw funkci
-                events[i].draw();
+                //events [i].draw();
+                //MessageBox.Show($"{events[i]}");
+                //MessageBox.Show($"{neco}");
+                if (neco.Type == "DelayEvent") 
+                {
+                    //MessageBox.Show($"{((DelayEvent)neco).Duration}"); 
+                }
+                if (neco.Type == "KeyDown")
+                {
+
+                    //MessageBox.Show($"{((KeyDownEvent)neco).Key}");
+                }
             }
         }
 
