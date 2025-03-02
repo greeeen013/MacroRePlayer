@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Gma.System.MouseKeyHook;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Gma.System.MouseKeyHook;
-using System.Drawing.Text;
-using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
-using System.Drawing;
 
 namespace MacroRePlayer
 {
     public partial class Form1 : Form
     {
         // Seznam událostí, které budou zaznamenány
-        private List<InputEvent> events = new List<InputEvent>();
+        private List<IInputEvent> events = new List<IInputEvent>();
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
         private bool isRecording; // Indikátor nahrávání
         private IKeyboardMouseEvents globalHook; // Globální hook pro sledování vstupů
@@ -90,21 +87,21 @@ namespace MacroRePlayer
         private void GlobalHook_MouseDownExt(object sender, MouseEventExtArgs e)
         {
             // Záznam stisknutí myši
-            RecordMouseEvent("MouseDown", e);
+            if (isRecording)
+            {
+                AddDelayEvent(); // Přidání zpoždění mezi událostmi
+                events.Add(new MouseDownEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() });
+                lastEventTime = DateTime.Now;
+            }
         }
 
         private void GlobalHook_MouseUpExt(object sender, MouseEventExtArgs e)
         {
             // Záznam uvolnění myši
-            RecordMouseEvent("MouseUp", e);
-        }
-
-        private void RecordMouseEvent(string eventType, MouseEventExtArgs e)
-        {
             if (isRecording)
             {
                 AddDelayEvent(); // Přidání zpoždění mezi událostmi
-                events.Add(new InputEvent { EventType = eventType, X = e.X, Y = e.Y, Key = e.Button.ToString() });
+                events.Add(new MouseUpEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() });
                 lastEventTime = DateTime.Now;
             }
         }
@@ -115,7 +112,7 @@ namespace MacroRePlayer
             if (isRecording && pressedKeys.Add(e.KeyCode.ToString()))
             {
                 AddDelayEvent();
-                events.Add(new InputEvent { EventType = "KeyDown", Key = e.KeyCode.ToString() });
+                events.Add(new KeyDownEvent { Key = e.KeyCode.ToString() });
                 lastEventTime = DateTime.Now;
             }
         }
@@ -126,7 +123,7 @@ namespace MacroRePlayer
             if (isRecording)
             {
                 AddDelayEvent();
-                events.Add(new InputEvent { EventType = "KeyUp", Key = e.KeyCode.ToString() });
+                events.Add(new KeyUpEvent { Key = e.KeyCode.ToString() });
                 lastEventTime = DateTime.Now;
                 pressedKeys.Remove(e.KeyCode.ToString());
             }
@@ -138,7 +135,7 @@ namespace MacroRePlayer
             int delay = (int)(DateTime.Now - lastEventTime).TotalMilliseconds;
             if (delay > 0)
             {
-                events.Add(new InputEvent { EventType = "Delay", Duration = delay });
+                events.Add(new DelayEvent { Duration = delay });
             }
         }
 
@@ -173,40 +170,32 @@ namespace MacroRePlayer
         {
             // Načtení vybraného souboru a jeho zobrazení
             string selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
+
             if (File.Exists(selectedFile))
             {
-                List<InputEvent> loadedEvents = JsonConvert.DeserializeObject<List<InputEvent>>(File.ReadAllText(selectedFile));
+                // Pridaní InputEventConverter aby se správně parsovala InputEvent interface
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new InputEventConverter());
+
+                List<IInputEvent> loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
+                Console.WriteLine(loadedEvents);
+
+                // Display the loaded events
                 DisplayEvents(loadedEvents);
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
             {
+                // Clear the editor panel if no file is selected
                 EditorEventPanel.Controls.Clear();
             }
         }
 
-        private void DisplayEvents(List<InputEvent> events)
+        private void DisplayEvents(List<IInputEvent> events)
         {
             for (int i = 0; i < events.Count; i++)
             {
-                var eventn = events[i].getAll();
-                int xOffset = 10; // Počáteční pozice X
-
-                for (int k = 0; k < eventn.Count; k++)
-                {
-                    string prop = eventn[k];
-
-                    // Pokud je prop prázdný řetězec, přeskočíme vytvoření Labelu
-                    if (!string.IsNullOrEmpty(prop))
-                    {
-                        Label label = new Label();
-                        label.Text = prop;
-                        label.Location = new Point(xOffset, 10 + i * 30);
-                        EditorEventPanel.Controls.Add(label);
-
-                        // Posuneme pozici X pro další Label
-                        xOffset += 100;
-                    }
-                }
+                // TODO: pridat ke všem eventum draw funkci
+                events[i].draw();
             }
         }
 
