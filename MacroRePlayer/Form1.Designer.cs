@@ -43,6 +43,7 @@
             this.EditorGroupBox = new System.Windows.Forms.GroupBox();
             this.EditorEventPanel = new System.Windows.Forms.Panel();
             this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
+            this.EditorSaveButton = new System.Windows.Forms.Button();
             this.RecorderGroupBox.SuspendLayout();
             this.PlayerGroupBox.SuspendLayout();
             this.EditorGroupBox.SuspendLayout();
@@ -188,6 +189,7 @@
             // 
             // EditorGroupBox
             // 
+            this.EditorGroupBox.Controls.Add(this.EditorSaveButton);
             this.EditorGroupBox.Controls.Add(this.EditorEventPanel);
             this.EditorGroupBox.Controls.Add(this.JsonFileSelectorComboBox);
             this.EditorGroupBox.Controls.Add(this.EditorLabel);
@@ -195,7 +197,7 @@
             this.EditorGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.EditorGroupBox.Name = "EditorGroupBox";
             this.EditorGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.EditorGroupBox.Size = new System.Drawing.Size(569, 368);
+            this.EditorGroupBox.Size = new System.Drawing.Size(569, 411);
             this.EditorGroupBox.TabIndex = 13;
             this.EditorGroupBox.TabStop = false;
             // 
@@ -218,6 +220,16 @@
             this.JsonFileSelectorComboBox.TabIndex = 11;
             this.JsonFileSelectorComboBox.DropDown += new System.EventHandler(this.comboBox1_DropDown);
             this.JsonFileSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.JsonFileSelectorComboBox_SelectedIndexChanged);
+            // 
+            // EditorSaveButton
+            // 
+            this.EditorSaveButton.Location = new System.Drawing.Point(23, 368);
+            this.EditorSaveButton.Name = "EditorSaveButton";
+            this.EditorSaveButton.Size = new System.Drawing.Size(75, 23);
+            this.EditorSaveButton.TabIndex = 15;
+            this.EditorSaveButton.Text = "SAVE";
+            this.EditorSaveButton.UseVisualStyleBackColor = true;
+            this.EditorSaveButton.Visible = false;
             // 
             // Form1
             // 
@@ -264,6 +276,7 @@
         private System.Windows.Forms.GroupBox EditorGroupBox;
         private System.Windows.Forms.ComboBox JsonFileSelectorComboBox;
         private System.Windows.Forms.Panel EditorEventPanel;
+        private System.Windows.Forms.Button EditorSaveButton;
     }
 }
 

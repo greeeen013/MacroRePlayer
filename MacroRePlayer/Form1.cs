@@ -187,11 +187,13 @@ namespace MacroRePlayer
 
                 // Display the loaded events
                 DisplayEvents(loadedEvents);
+                EditorSaveButton.Visible = true;
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
             {
                 // vycisti to Table pokud je vybrano prazdne políčko
                 EditorEventPanel.Controls.Clear();
+                EditorSaveButton.Visible = false;
             }
         }
 
@@ -205,7 +207,7 @@ namespace MacroRePlayer
             {
                 var panel = new Panel
                 {
-                    Size = new Size(320, 30),
+                    Size = new Size(400, 30), // Zvětšení šířky panelu kvůli labelům
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.White,
                     Location = new Point(0, yOffset) // Zarovnání doleva
@@ -219,25 +221,46 @@ namespace MacroRePlayer
                     Location = new Point(5, 5)
                 };
 
-                var textBox = new System.Windows.Forms.TextBox
+                panel.Controls.Add(label);
+
+                // Přidání ovládacích prvků podle typu události
+                switch (inputEvent)
                 {
-                    Text = GetEventValue(inputEvent), // Získání hodnoty události
-                    Size = new Size(200, 20),
-                    Location = new Point(90, 5)
-                };
+                    case DelayEvent delayEvent:
+                        AddTextBox(panel, "Delay:", delayEvent.Duration.ToString(), 90);
+                        break;
+
+                    case MouseDownEvent mouseDownEvent:
+                        AddTextBox(panel, "X:", mouseDownEvent.X.ToString(), 90); // TextBox pro X
+                        AddTextBox(panel, "Y:", mouseDownEvent.Y.ToString(), 170); // TextBox pro Y
+                        AddComboBox(panel, "Button:", mouseDownEvent.Button, 250); // Dropdown pro tlačítko myši
+                        break;
+
+                    case MouseUpEvent mouseUpEvent:
+                        AddTextBox(panel, "X:", mouseUpEvent.X.ToString(), 90); // TextBox pro X
+                        AddTextBox(panel, "Y:", mouseUpEvent.Y.ToString(), 170); // TextBox pro Y
+                        AddComboBox(panel, "Button:", mouseUpEvent.Button, 250); // Dropdown pro tlačítko myši
+                        break;
+
+                    case KeyDownEvent keyDownEvent:
+                        AddTextBox(panel, "Key:", keyDownEvent.Key, 90); // TextBox pro klávesu
+                        break;
+
+                    case KeyUpEvent keyUpEvent:
+                        AddTextBox(panel, "Key:", keyUpEvent.Key, 90); // TextBox pro klávesu
+                        break;
+                }
 
                 var dragLabel = new Label
                 {
                     Text = "≡",
                     AutoSize = false,
                     Size = new Size(20, 20),
-                    Location = new Point(300, 5),
+                    Location = new Point(380, 5), // Posunutí dragLabel kvůli větší šířce panelu
                     Cursor = Cursors.Hand // Změna kurzoru na ruku
                 };
 
-                // Přidání Label, TextBox a dragLabel do Panelu
-                panel.Controls.Add(label);
-                panel.Controls.Add(textBox);
+                // Přidání dragLabel do Panelu
                 panel.Controls.Add(dragLabel);
 
                 // Povolení drag-and-drop pro dragLabel
@@ -250,6 +273,60 @@ namespace MacroRePlayer
 
                 yOffset += 35; // Posunutí pozice Y pro další panel (30 výška panelu + 5 mezera)
             }
+        }
+
+        private void AddTextBox(Panel panel, string labelText, string text, int x)
+        {
+            // Přidání labelu
+            var label = new Label
+            {
+                Text = labelText,
+                AutoSize = false,
+                Size = new Size(37, 20), //37 kvůli slovu "Delay:"
+                Location = new Point(x-5, 8)
+            };
+
+            panel.Controls.Add(label);
+
+            // Přidání textboxu
+            var textBox = new System.Windows.Forms.TextBox
+            {
+                Text = text,
+                Size = new Size(40, 20),
+                Location = new Point(x + 35, 5) // Posunutí textboxu vedle labelu
+            };
+
+            panel.Controls.Add(textBox);
+        }
+
+        private void AddComboBox(Panel panel, string labelText, string selectedButton, int x)
+        {
+            // Přidání labelu
+            var label = new Label
+            {
+                Text = labelText,
+                AutoSize = false,
+                Size = new Size(50, 20),
+                Location = new Point(x, 5)
+            };
+
+            panel.Controls.Add(label);
+
+            // Přidání dropdown menu
+            var comboBox = new System.Windows.Forms.ComboBox
+            {
+                Size = new Size(80, 20),
+                Location = new Point(x + 55, 5), // Posunutí dropdown menu vedle labelu
+                DropDownStyle = ComboBoxStyle.DropDownList // Zakázání editace
+            };
+
+            // Přidání možností do dropdown menu
+            comboBox.Items.AddRange(new string[] { "Left", "Right", "Middle" });
+
+            // Nastavení vybrané hodnoty
+            comboBox.SelectedItem = selectedButton;
+
+            panel.Controls.Add(comboBox);
         }
 
         // DRAG AND DROP FUNKCIONALITA !!!
@@ -405,7 +482,7 @@ namespace MacroRePlayer
             }
 
             return EditorEventPanel.Controls.Count; // Vrátí index za posledním prvkem
-        } 
+        }
 
         private string GetEventValue(IInputEvent inputEvent)
         {
@@ -413,14 +490,19 @@ namespace MacroRePlayer
             {
                 case DelayEvent delayEvent:
                     return delayEvent.Duration.ToString();
+
                 case MouseDownEvent mouseDownEvent:
                     return $"X: {mouseDownEvent.X}, Y: {mouseDownEvent.Y}, Button: {mouseDownEvent.Button}";
+
                 case MouseUpEvent mouseUpEvent:
                     return $"X: {mouseUpEvent.X}, Y: {mouseUpEvent.Y}, Button: {mouseUpEvent.Button}";
+
                 case KeyDownEvent keyDownEvent:
                     return keyDownEvent.Key;
+
                 case KeyUpEvent keyUpEvent:
                     return keyUpEvent.Key;
+
                 default:
                     return string.Empty;
             }
