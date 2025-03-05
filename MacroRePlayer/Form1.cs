@@ -207,7 +207,7 @@ namespace MacroRePlayer
             {
                 var panel = new Panel
                 {
-                    Size = new Size(400, 30), // Zvětšení šířky panelu kvůli labelům
+                    Size = new Size(420, 30), // Zvětšení šířky panelu kvůli labelům
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.White,
                     Location = new Point(0, yOffset) // Zarovnání doleva
@@ -256,7 +256,7 @@ namespace MacroRePlayer
                     Text = "≡",
                     AutoSize = false,
                     Size = new Size(20, 20),
-                    Location = new Point(380, 5), // Posunutí dragLabel kvůli větší šířce panelu
+                    Location = new Point(400, 5), // Posunutí dragLabel kvůli větší šířce panelu
                     Cursor = Cursors.Hand // Změna kurzoru na ruku
                 };
 
@@ -282,8 +282,9 @@ namespace MacroRePlayer
             {
                 Text = labelText,
                 AutoSize = false,
-                Size = new Size(37, 20), //37 kvůli slovu "Delay:"
-                Location = new Point(x-5, 8)
+                Size = new Size(37, 15), //37 kvůli slovu "Delay:"
+                Location = new Point(x - 3, 6), // Posunutí labelu doleva
+                TextAlign = ContentAlignment.MiddleRight
             };
 
             panel.Controls.Add(label);
@@ -293,7 +294,7 @@ namespace MacroRePlayer
             {
                 Text = text,
                 Size = new Size(40, 20),
-                Location = new Point(x + 35, 5) // Posunutí textboxu vedle labelu
+                Location = new Point(x + 35, 4) // Posunutí textboxu vedle labelu
             };
 
             panel.Controls.Add(textBox);
@@ -306,8 +307,8 @@ namespace MacroRePlayer
             {
                 Text = labelText,
                 AutoSize = false,
-                Size = new Size(50, 20),
-                Location = new Point(x, 5)
+                Size = new Size(42, 15), //42 kvůli slovu "Button:"
+                Location = new Point(x +13, 7), // Posunutí labelu doleva
             };
 
             panel.Controls.Add(label);
@@ -316,7 +317,7 @@ namespace MacroRePlayer
             var comboBox = new System.Windows.Forms.ComboBox
             {
                 Size = new Size(80, 20),
-                Location = new Point(x + 55, 5), // Posunutí dropdown menu vedle labelu
+                Location = new Point(x + 55, 4), // Posunutí dropdown menu vedle labelu
                 DropDownStyle = ComboBoxStyle.DropDownList // Zakázání editace
             };
 
