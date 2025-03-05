@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,9 +21,12 @@ namespace MacroRePlayer
         private HashSet<string> pressedKeys = new HashSet<string>(); // Sledování stisknutých kláves
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
+
         public Form1()
         {
             InitializeComponent();
+
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -193,22 +197,232 @@ namespace MacroRePlayer
 
         private void DisplayEvents(List<IInputEvent> events)
         {
-            for (int i = 0; i < events.Count; i++)
-            {
-                IInputEvent neco = events[i]; // neco jen pro zatim pro test
-                // TODO: pridat ke všem eventum draw funkci
-                //events [i].draw();
-                //MessageBox.Show($"{events[i]}");
-                //MessageBox.Show($"{neco}");
-                if (neco.Type == "DelayEvent") 
-                {
-                    //MessageBox.Show($"{((DelayEvent)neco).Duration}"); 
-                }
-                if (neco.Type == "KeyDown")
-                {
+            EditorEventPanel.Controls.Clear(); // Vyčistí panel před přidáním nových událostí
 
-                    //MessageBox.Show($"{((KeyDownEvent)neco).Key}");
+            int yOffset = 0; // Počáteční pozice Y
+
+            foreach (var inputEvent in events)
+            {
+                var panel = new Panel
+                {
+                    Size = new Size(320, 30),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.White,
+                    Location = new Point(0, yOffset) // Zarovnání doleva
+                };
+
+                var label = new Label
+                {
+                    Text = $"{inputEvent.Type}:",
+                    AutoSize = false,
+                    Size = new Size(80, 20),
+                    Location = new Point(5, 5)
+                };
+
+                var textBox = new System.Windows.Forms.TextBox
+                {
+                    Text = GetEventValue(inputEvent), // Získání hodnoty události
+                    Size = new Size(200, 20),
+                    Location = new Point(90, 5)
+                };
+
+                var dragLabel = new Label
+                {
+                    Text = "≡",
+                    AutoSize = false,
+                    Size = new Size(20, 20),
+                    Location = new Point(300, 5),
+                    Cursor = Cursors.Hand // Změna kurzoru na ruku
+                };
+
+                // Přidání Label, TextBox a dragLabel do Panelu
+                panel.Controls.Add(label);
+                panel.Controls.Add(textBox);
+                panel.Controls.Add(dragLabel);
+
+                // Povolení drag-and-drop pro dragLabel
+                dragLabel.MouseDown += DragLabel_MouseDown;
+                dragLabel.MouseMove += DragLabel_MouseMove;
+                dragLabel.MouseUp += DragLabel_MouseUp;
+
+                // Přidání Panelu do EditorEventPanel
+                EditorEventPanel.Controls.Add(panel);
+
+                yOffset += 35; // Posunutí pozice Y pro další panel (30 výška panelu + 5 mezera)
+            }
+        }
+
+        // DRAG AND DROP FUNKCIONALITA !!!
+        private bool isDragging = false;
+        private Point dragStartPoint;
+        private Control draggedControl;
+        private int draggedIndex;
+        private Label _insertIndicator; // Indikátor pro vložení
+
+        private void DragLabel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                draggedControl = ((Label)sender).Parent as Panel; // Chytáme celý Panel
+                dragStartPoint = e.Location;
+                draggedIndex = EditorEventPanel.Controls.IndexOf(draggedControl);
+                draggedControl.BringToFront(); // Přesun panelu na vrchol
+                draggedControl.BackColor = Color.LightBlue; // Zvýraznění při tažení
+
+
+                // Inicializace indikátoru
+                _insertIndicator = new Label
+                {
+                    Text = "-----",
+                    AutoSize = false,
+                    Size = new Size(320, 5),
+                    BackColor = Color.Red,
+                    Visible = false
+                };
+
+                // Přidání indikátoru do EditorEventPanel
+                EditorEventPanel.Controls.Add(_insertIndicator);
+
+                // Dočasné zakázání automatického přeuspořádávání
+                EditorEventPanel.SuspendLayout();
+            }
+        }
+
+        private void DragLabel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging && draggedControl != null)
+            {
+                Point newLocation = draggedControl.PointToScreen(e.Location);
+                newLocation = EditorEventPanel.PointToClient(newLocation);
+
+                // Odečtení počátečního bodu pro plynulý pohyb
+                newLocation.X -= dragStartPoint.X;
+                newLocation.Y -= dragStartPoint.Y;
+
+                // Omezení pohybu, aby nešel mimo EditorEventPanel
+                newLocation.X = Math.Max(0, Math.Min(newLocation.X, EditorEventPanel.Width - draggedControl.Width));
+                newLocation.Y = Math.Max(0, Math.Min(newLocation.Y, EditorEventPanel.Height - draggedControl.Height));
+
+                draggedControl.Location = newLocation;
+
+                // Zobrazení indikátoru pro vložení
+                ShowInsertIndicator(draggedControl);
+            }
+        }
+
+        private void DragLabel_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (isDragging && draggedControl != null)
+            {
+                isDragging = false;
+                draggedControl.BackColor = Color.White; // Vrácení barvy
+
+                // Skrytí indikátoru
+                _insertIndicator.Visible = false;
+
+                // Vložení Panelu na pozici indikátoru
+                InsertPanelAtIndicator(draggedControl);
+
+                // Obnovení automatického přeuspořádávání
+                EditorEventPanel.ResumeLayout();
+
+                // Odstranění indikátoru
+                EditorEventPanel.Controls.Remove(_insertIndicator);
+
+                draggedControl = null;
+            }
+        }
+
+        private void ShowInsertIndicator(Control draggedControl)
+        {
+            int newIndex = CalculateNewIndex(draggedControl);
+
+            // Kontrola, zda je newIndex platný a EditorEventPanel obsahuje prvky
+            if (newIndex >= 0 && newIndex < EditorEventPanel.Controls.Count && EditorEventPanel.Controls[newIndex] != null)
+            {
+                // Nastavení pozice indikátoru
+                _insertIndicator.Location = new Point(0, EditorEventPanel.Controls[newIndex].Location.Y - 5);
+                _insertIndicator.Visible = true;
+            }
+            else if (newIndex == EditorEventPanel.Controls.Count)
+            {
+                // Pokud je newIndex za posledním panelem, zobrazte indikátor na konci
+                _insertIndicator.Location = new Point(0, EditorEventPanel.Controls[EditorEventPanel.Controls.Count - 1].Location.Y + 35);
+                _insertIndicator.Visible = true;
+            }
+            else
+            {
+                _insertIndicator.Visible = false; // Skrytí indikátoru, pokud je newIndex neplatný
+            }
+        }
+
+        private void InsertPanelAtIndicator(Control draggedControl)
+        {
+            int newIndex = CalculateNewIndex(draggedControl);
+            newIndex--; // Odečtení 1, protože se Panel vkládá před indikátorem
+
+            if (newIndex != draggedIndex && newIndex >= 0 && newIndex <= EditorEventPanel.Controls.Count)
+            {
+                // Odstranění Panelu z původní pozice
+                EditorEventPanel.Controls.Remove(draggedControl);
+
+                // Vložení Panelu na novou pozici
+                EditorEventPanel.Controls.Add(draggedControl);
+                EditorEventPanel.Controls.SetChildIndex(draggedControl, newIndex);
+
+                // Aktualizace pozic všech panelů
+                UpdatePanelLocations();
+            }
+        }
+
+        private void UpdatePanelLocations()
+        {
+            int yOffset = 0; // Počáteční pozice Y
+
+            foreach (Control control in EditorEventPanel.Controls)
+            {
+                if (control is Panel panel && !ReferenceEquals(panel, _insertIndicator)) // Přeskočení indikátoru
+                {
+                    panel.Location = new Point(0, yOffset); // Zarovnání doleva
+                    yOffset += panel.Height + 5; // Posunutí pozice Y pro další panel (výška panelu + mezera)
                 }
+            }
+        }
+
+        private int CalculateNewIndex(Control draggedControl)
+        {
+            int midPoint = draggedControl.Location.Y + (draggedControl.Height / 2);
+
+            for (int i = 0; i < EditorEventPanel.Controls.Count; i++)
+            {
+                if (EditorEventPanel.Controls[i] == draggedControl) continue; // Přeskočení aktuálně taženého Panelu
+
+                if (midPoint < EditorEventPanel.Controls[i].Location.Y + (EditorEventPanel.Controls[i].Height / 2))
+                {
+                    return i; // Vrátí index, kam má být panel vložen
+                }
+            }
+
+            return EditorEventPanel.Controls.Count; // Vrátí index za posledním prvkem
+        } 
+
+        private string GetEventValue(IInputEvent inputEvent)
+        {
+            switch (inputEvent)
+            {
+                case DelayEvent delayEvent:
+                    return delayEvent.Duration.ToString();
+                case MouseDownEvent mouseDownEvent:
+                    return $"X: {mouseDownEvent.X}, Y: {mouseDownEvent.Y}, Button: {mouseDownEvent.Button}";
+                case MouseUpEvent mouseUpEvent:
+                    return $"X: {mouseUpEvent.X}, Y: {mouseUpEvent.Y}, Button: {mouseUpEvent.Button}";
+                case KeyDownEvent keyDownEvent:
+                    return keyDownEvent.Key;
+                case KeyUpEvent keyUpEvent:
+                    return keyUpEvent.Key;
+                default:
+                    return string.Empty;
             }
         }
 
