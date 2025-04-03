@@ -53,6 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditorForm.Designer.cs">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EventDisplayFunctionCreater.cs" />
     <Compile Include="EventDisplayHelper.cs" />
     <Compile Include="EventEditorPanelBoxes.cs" />
@@ -66,6 +72,9 @@
     <Compile Include="InputEventJsonConvertor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="EditorForm.resx">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

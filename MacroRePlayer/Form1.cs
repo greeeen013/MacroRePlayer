@@ -85,7 +85,7 @@ namespace MacroRePlayer
         {
             // Uložení seznamu událostí do JSON souboru
             string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json");
-            File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented));
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented)); //TODO NAUCIT SE JAK FUNGUJE FILE. a co všechno s tím jde !!!!!!!!!!!!!
             MessageBox.Show($"Soubor {fileName} byl úspěšně vytvořen.");
         }
 
@@ -203,6 +203,12 @@ namespace MacroRePlayer
         public Panel GetEditorEventPanel()
         {
             return EditorEventPanel;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            EditorForm form = new EditorForm();
+            form.Show();
         }
     }
 }

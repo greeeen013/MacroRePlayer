@@ -45,6 +45,7 @@
             this.EditorEventPanel = new System.Windows.Forms.Panel();
             this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.OpenEditorButton = new System.Windows.Forms.Button();
             this.RecorderGroupBox.SuspendLayout();
             this.PlayerGroupBox.SuspendLayout();
             this.EditorGroupBox.SuspendLayout();
@@ -159,6 +160,7 @@
             // 
             // RecorderGroupBox
             // 
+            this.RecorderGroupBox.Controls.Add(this.OpenEditorButton);
             this.RecorderGroupBox.Controls.Add(this.RecorderLabel);
             this.RecorderGroupBox.Controls.Add(this.StartRecording);
             this.RecorderGroupBox.Controls.Add(this.StopRecording);
@@ -238,6 +240,16 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(967, 417);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
+            // OpenEditorButton
+            // 
+            this.OpenEditorButton.Location = new System.Drawing.Point(52, 350);
+            this.OpenEditorButton.Name = "OpenEditorButton";
+            this.OpenEditorButton.Size = new System.Drawing.Size(75, 23);
+            this.OpenEditorButton.TabIndex = 15;
+            this.OpenEditorButton.Text = "Open Editor";
+            this.OpenEditorButton.UseVisualStyleBackColor = true;
+            this.OpenEditorButton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,6 +295,7 @@
         private System.Windows.Forms.Panel EditorEventPanel;
         private System.Windows.Forms.Button EditorSaveButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button OpenEditorButton;
     }
 }
 
