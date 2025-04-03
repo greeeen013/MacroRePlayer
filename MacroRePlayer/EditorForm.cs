@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MacroRePlayer
@@ -17,6 +14,7 @@ namespace MacroRePlayer
         public EditorForm()
         {
             InitializeComponent();
+
 
 
             // Inicializace ovládacích prvků k delay
@@ -73,6 +71,10 @@ namespace MacroRePlayer
         private TextBox newKeyTextBox = null;
         private Label newKeyLabel = null;
 
+        private List<IInputEvent> loadedEvents = new List<IInputEvent>();
+        private string selectedFile = "";
+
+
         private void EditorForm_Load(object sender, EventArgs e)
         {
 
@@ -92,10 +94,10 @@ namespace MacroRePlayer
             }
         }
 
-        private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e) //FIXNOUT KDYZ ZMENIM TU VEC TAK SE NEZMENI
         {
             // Načtení vybraného souboru a jeho zobrazení
-            string selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
+            selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
 
             if (File.Exists(selectedFile))
             {
@@ -103,7 +105,7 @@ namespace MacroRePlayer
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new InputEventConverter());
 
-                List<IInputEvent> loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
+                loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
                 //MessageBox.Show($"{loadedEvents}");
 
                 // Display the loaded events
@@ -121,12 +123,8 @@ namespace MacroRePlayer
         }
 
         private void EventNamesOnlyList_SelectionChanged(object sender, EventArgs e)
-        { // tohle se stane pokazdy co se vybere jina vec z toho policka
+        {
             int selectedIndex = EventNamesOnlyList.SelectedIndex;
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new InputEventConverter());
-            string selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
-            List<IInputEvent> loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
 
             if (selectedIndex != -1)
             {
@@ -140,7 +138,9 @@ namespace MacroRePlayer
                         if (delayEvent != null)
                         {
                             // Nastavení textu TextBoxu podle hodnoty z DelayEvent
+                            newDelayTextBox.TextChanged -= DelayTextBox_TextChanged;
                             newDelayTextBox.Text = $"{delayEvent.Duration}";
+                            newDelayTextBox.TextChanged += DelayTextBox_TextChanged;
                         }
                         break;
 
@@ -149,9 +149,17 @@ namespace MacroRePlayer
                         var mouseEvent = loadedEvents[selectedIndex] as MouseDownEvent;
                         if (mouseEvent != null)
                         {
+                            newTextBoxX.TextChanged -= MouseDownTextBox_TextChanged;
+                            newTextBoxY.TextChanged -= MouseDownTextBox_TextChanged;
+                            newComboButtonBox.SelectedIndexChanged -= MouseDownTextBox_TextChanged;
+
                             newTextBoxX.Text = $"{mouseEvent.X}";
                             newTextBoxY.Text = $"{mouseEvent.Y}";
                             newComboButtonBox.SelectedItem = mouseEvent.Button;
+
+                            newTextBoxX.TextChanged += MouseDownTextBox_TextChanged;
+                            newTextBoxY.TextChanged += MouseDownTextBox_TextChanged;
+                            newComboButtonBox.SelectedIndexChanged += MouseDownTextBox_TextChanged;
                         }
                         break;
                     case "MouseUp":
@@ -162,9 +170,17 @@ namespace MacroRePlayer
                         var mouseEventt = loadedEvents[selectedIndex] as MouseUpEvent;
                         if (mouseEventt != null)
                         {
+                            newTextBoxX.TextChanged -= MouseUpTextBox_TextChanged;
+                            newTextBoxY.TextChanged -= MouseUpTextBox_TextChanged;
+                            newComboButtonBox.SelectedIndexChanged -= MouseUpTextBox_TextChanged;
+
                             newTextBoxX.Text = $"{mouseEventt.X}";
                             newTextBoxY.Text = $"{mouseEventt.Y}";
                             newComboButtonBox.SelectedItem = mouseEventt.Button;
+
+                            newTextBoxX.TextChanged += MouseUpTextBox_TextChanged;
+                            newTextBoxY.TextChanged += MouseUpTextBox_TextChanged;
+                            newComboButtonBox.SelectedIndexChanged += MouseUpTextBox_TextChanged;
                         }
                         break;
                     case "KeyDown":
@@ -173,16 +189,20 @@ namespace MacroRePlayer
                         if (keyDownEvent != null)
                         {
                             // Nastavení textu TextBoxu podle hodnoty z DelayEvent
+                            newKeyTextBox.TextChanged -= KeyDownTextBox_TextChanged;
                             newKeyTextBox.Text = $"{keyDownEvent.Key}";
+                            newKeyTextBox.TextChanged += KeyDownTextBox_TextChanged;
                         }
                         break;
                     case "KeyUp":
                         ShowKeyEventControls();
-                        var keyDownEventt = loadedEvents[selectedIndex] as KeyUpEvent;
-                        if (keyDownEventt != null)
+                        var keyUpEvent = loadedEvents[selectedIndex] as KeyUpEvent;
+                        if (keyUpEvent != null)
                         {
                             // Nastavení textu TextBoxu podle hodnoty z DelayEvent
-                            newKeyTextBox.Text = $"{keyDownEventt.Key}";
+                            newKeyTextBox.TextChanged -= KeyUpTextBox_TextChanged;
+                            newKeyTextBox.Text = $"{keyUpEvent.Key}";
+                            newKeyTextBox.TextChanged += KeyUpTextBox_TextChanged;
                         }
                         break;
 
@@ -190,6 +210,75 @@ namespace MacroRePlayer
                         // Skryjeme prvky související s MouseDown/MouseUp
                         HideEveryEventControls();
                         break;
+                }
+            }
+        }
+
+        private void DelayTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var delayEvent = loadedEvents[selectedIndex] as DelayEvent;
+                if (delayEvent != null)
+                {
+                    delayEvent.Duration = int.Parse(newDelayTextBox.Text);
+                }
+            }
+        }
+
+        private void MouseDownTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var mouseEvent = loadedEvents[selectedIndex] as MouseDownEvent;
+                if (mouseEvent != null)
+                {
+                    mouseEvent.X = int.Parse(newTextBoxX.Text);
+                    mouseEvent.Y = int.Parse(newTextBoxY.Text);
+                    mouseEvent.Button = newComboButtonBox.SelectedItem.ToString();
+                }
+            }
+        }
+
+        private void MouseUpTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var mouseEvent = loadedEvents[selectedIndex] as MouseUpEvent;
+                if (mouseEvent != null)
+                {
+                    mouseEvent.X = int.Parse(newTextBoxX.Text);
+                    mouseEvent.Y = int.Parse(newTextBoxY.Text);
+                    mouseEvent.Button = newComboButtonBox.SelectedItem.ToString();
+                }
+            }
+        }
+
+        private void KeyDownTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var keyEvent = loadedEvents[selectedIndex] as KeyDownEvent;
+                if (keyEvent != null)
+                {
+                    keyEvent.Key = newKeyTextBox.Text;
+                }
+            }
+        }
+
+        private void KeyUpTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var keyEvent = loadedEvents[selectedIndex] as KeyUpEvent;
+                if (keyEvent != null)
+                {
+                    keyEvent.Key = newKeyTextBox.Text;
                 }
             }
         }
@@ -212,8 +301,8 @@ namespace MacroRePlayer
 
         private void ShowKeyEventControls()
         {
-            newKeyTextBox.Visible= true;
-            newKeyLabel.Visible= true;
+            newKeyTextBox.Visible = true;
+            newKeyLabel.Visible = true;
         }
 
         private void HideEveryEventControls()
@@ -233,6 +322,60 @@ namespace MacroRePlayer
             //ke key
             newKeyTextBox.Visible = false;
             newKeyLabel.Visible = false;
+        }
+
+        private void Save_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(selectedFile))
+            {
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new InputEventConverter());
+
+                // Update the loadedEvents with the current values from the UI
+                
+
+                // Sort the events by their order in the list
+                var sortedEvents = EventNamesOnlyList.Items.Cast<string>()
+                    .Select((item, index) => new { item, index })
+                    .Select(x => loadedEvents[x.index])
+                    .ToList();
+
+                string json = JsonConvert.SerializeObject(sortedEvents, Formatting.Indented);
+                File.WriteAllText(selectedFile, json);
+                MessageBox.Show("Data byla úspěšně uložena!");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex > 0)
+            {
+                var selectedItem = EventNamesOnlyList.SelectedItem;
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                EventNamesOnlyList.Items.Insert(selectedIndex - 1, selectedItem);
+                EventNamesOnlyList.SelectedIndex = selectedIndex - 1;
+
+                var selectedEvent = loadedEvents[selectedIndex];
+                loadedEvents.RemoveAt(selectedIndex);
+                loadedEvents.Insert(selectedIndex - 1, selectedEvent);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex < EventNamesOnlyList.Items.Count - 1)
+            {
+                var selectedItem = EventNamesOnlyList.SelectedItem;
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, selectedItem);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+
+                var selectedEvent = loadedEvents[selectedIndex];
+                loadedEvents.RemoveAt(selectedIndex);
+                loadedEvents.Insert(selectedIndex + 1, selectedEvent);
+            }
         }
     }
 }

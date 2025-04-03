@@ -157,52 +157,9 @@ namespace MacroRePlayer
             }
         }
 
-        private void comboBox1_DropDown(object sender, EventArgs e)
-        {
-            // Naplnění seznamu dostupných JSON souborů
-            JsonFileSelectorComboBox.Items.Clear();
-
-            // Přidání prázdné položky na začátek
-            JsonFileSelectorComboBox.Items.Add("");
-
-            if (Directory.Exists(directoryPath))
-            {
-                JsonFileSelectorComboBox.Items.AddRange(Directory.GetFiles(directoryPath, "*.json").Select(Path.GetFileName).ToArray());
-            }
-        }
-
         private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Načtení vybraného souboru a jeho zobrazení
-            string selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
-
-            if (File.Exists(selectedFile))
-            {
-                // Pridaní InputEventConverter aby se správně parsovala InputEvent interface
-                var settings = new JsonSerializerSettings();
-                settings.Converters.Add(new InputEventConverter());
-
-                List<IInputEvent> loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
-                //MessageBox.Show($"{loadedEvents}");
-
-                // Display the loaded events
-                EditorEventPanel.Controls.Clear(); // Vyčistí panel před přidáním nových událostí
-                EditorGroupBox.Width = 450;
-                EditorEventPanel.Width = 440;
-                EventDisplayHelper.DisplayEvents(loadedEvents); // Získáš panel
-
-                EditorSaveButton.Visible = true;
-            }
-            else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
-            {
-                // vycisti to Table pokud je vybrano prazdne políčko
-                EditorEventPanel.Controls.Clear();
-                EditorSaveButton.Visible = false;
-            }
-        }
-        public Panel GetEditorEventPanel()
-        {
-            return EditorEventPanel;
+            
         }
 
         private void button1_Click(object sender, EventArgs e)

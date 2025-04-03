@@ -39,13 +39,10 @@
             this.PlayerLabel = new System.Windows.Forms.Label();
             this.EditorLabel = new System.Windows.Forms.Label();
             this.RecorderGroupBox = new System.Windows.Forms.GroupBox();
+            this.OpenEditorButton = new System.Windows.Forms.Button();
             this.PlayerGroupBox = new System.Windows.Forms.GroupBox();
             this.EditorGroupBox = new System.Windows.Forms.GroupBox();
-            this.EditorSaveButton = new System.Windows.Forms.Button();
-            this.EditorEventPanel = new System.Windows.Forms.Panel();
-            this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.OpenEditorButton = new System.Windows.Forms.Button();
             this.RecorderGroupBox.SuspendLayout();
             this.PlayerGroupBox.SuspendLayout();
             this.EditorGroupBox.SuspendLayout();
@@ -174,6 +171,16 @@
             this.RecorderGroupBox.TabIndex = 11;
             this.RecorderGroupBox.TabStop = false;
             // 
+            // OpenEditorButton
+            // 
+            this.OpenEditorButton.Location = new System.Drawing.Point(52, 350);
+            this.OpenEditorButton.Name = "OpenEditorButton";
+            this.OpenEditorButton.Size = new System.Drawing.Size(75, 23);
+            this.OpenEditorButton.TabIndex = 15;
+            this.OpenEditorButton.Text = "Open Editor";
+            this.OpenEditorButton.UseVisualStyleBackColor = true;
+            this.OpenEditorButton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // PlayerGroupBox
             // 
             this.PlayerGroupBox.Controls.Add(this.PlayerLabel);
@@ -185,44 +192,12 @@
             // 
             // EditorGroupBox
             // 
-            this.EditorGroupBox.Controls.Add(this.EditorSaveButton);
-            this.EditorGroupBox.Controls.Add(this.EditorEventPanel);
-            this.EditorGroupBox.Controls.Add(this.JsonFileSelectorComboBox);
             this.EditorGroupBox.Controls.Add(this.EditorLabel);
             this.EditorGroupBox.Location = new System.Drawing.Point(229, 3);
             this.EditorGroupBox.Name = "EditorGroupBox";
             this.EditorGroupBox.Size = new System.Drawing.Size(188, 402);
             this.EditorGroupBox.TabIndex = 13;
             this.EditorGroupBox.TabStop = false;
-            // 
-            // EditorSaveButton
-            // 
-            this.EditorSaveButton.Location = new System.Drawing.Point(5, 378);
-            this.EditorSaveButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.EditorSaveButton.Name = "EditorSaveButton";
-            this.EditorSaveButton.Size = new System.Drawing.Size(56, 19);
-            this.EditorSaveButton.TabIndex = 15;
-            this.EditorSaveButton.Text = "SAVE";
-            this.EditorSaveButton.UseVisualStyleBackColor = true;
-            this.EditorSaveButton.Visible = false;
-            // 
-            // EditorEventPanel
-            // 
-            this.EditorEventPanel.AutoScroll = true;
-            this.EditorEventPanel.Location = new System.Drawing.Point(6, 83);
-            this.EditorEventPanel.Name = "EditorEventPanel";
-            this.EditorEventPanel.Size = new System.Drawing.Size(76, 290);
-            this.EditorEventPanel.TabIndex = 14;
-            // 
-            // JsonFileSelectorComboBox
-            // 
-            this.JsonFileSelectorComboBox.FormattingEnabled = true;
-            this.JsonFileSelectorComboBox.Location = new System.Drawing.Point(48, 39);
-            this.JsonFileSelectorComboBox.Name = "JsonFileSelectorComboBox";
-            this.JsonFileSelectorComboBox.Size = new System.Drawing.Size(121, 21);
-            this.JsonFileSelectorComboBox.TabIndex = 11;
-            this.JsonFileSelectorComboBox.DropDown += new System.EventHandler(this.comboBox1_DropDown);
-            this.JsonFileSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.JsonFileSelectorComboBox_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 
@@ -239,16 +214,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(967, 417);
             this.tableLayoutPanel1.TabIndex = 14;
-            // 
-            // OpenEditorButton
-            // 
-            this.OpenEditorButton.Location = new System.Drawing.Point(52, 350);
-            this.OpenEditorButton.Name = "OpenEditorButton";
-            this.OpenEditorButton.Size = new System.Drawing.Size(75, 23);
-            this.OpenEditorButton.TabIndex = 15;
-            this.OpenEditorButton.Text = "Open Editor";
-            this.OpenEditorButton.UseVisualStyleBackColor = true;
-            this.OpenEditorButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -291,9 +256,6 @@
         private System.Windows.Forms.GroupBox RecorderGroupBox;
         private System.Windows.Forms.GroupBox PlayerGroupBox;
         private System.Windows.Forms.GroupBox EditorGroupBox;
-        private System.Windows.Forms.ComboBox JsonFileSelectorComboBox;
-        private System.Windows.Forms.Panel EditorEventPanel;
-        private System.Windows.Forms.Button EditorSaveButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button OpenEditorButton;
     }

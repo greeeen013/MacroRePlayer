@@ -60,7 +60,6 @@
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EventDisplayFunctionCreater.cs" />
-    <Compile Include="EventDisplayHelper.cs" />
     <Compile Include="EventEditorPanelBoxes.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
