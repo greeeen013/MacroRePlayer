@@ -157,7 +157,6 @@
             // 
             // RecorderGroupBox
             // 
-            this.RecorderGroupBox.Controls.Add(this.OpenEditorButton);
             this.RecorderGroupBox.Controls.Add(this.RecorderLabel);
             this.RecorderGroupBox.Controls.Add(this.StartRecording);
             this.RecorderGroupBox.Controls.Add(this.StopRecording);
@@ -173,7 +172,7 @@
             // 
             // OpenEditorButton
             // 
-            this.OpenEditorButton.Location = new System.Drawing.Point(52, 350);
+            this.OpenEditorButton.Location = new System.Drawing.Point(57, 82);
             this.OpenEditorButton.Name = "OpenEditorButton";
             this.OpenEditorButton.Size = new System.Drawing.Size(75, 23);
             this.OpenEditorButton.TabIndex = 15;
@@ -192,6 +191,7 @@
             // 
             // EditorGroupBox
             // 
+            this.EditorGroupBox.Controls.Add(this.OpenEditorButton);
             this.EditorGroupBox.Controls.Add(this.EditorLabel);
             this.EditorGroupBox.Location = new System.Drawing.Point(229, 3);
             this.EditorGroupBox.Name = "EditorGroupBox";

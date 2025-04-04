@@ -346,7 +346,7 @@ namespace MacroRePlayer
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void EditorFormButtonMoveUp_Click(object sender, EventArgs e)
         {
             int selectedIndex = EventNamesOnlyList.SelectedIndex;
             if (selectedIndex > 0)
@@ -362,7 +362,7 @@ namespace MacroRePlayer
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void EditorFormButtonMoveDown_Click(object sender, EventArgs e)
         {
             int selectedIndex = EventNamesOnlyList.SelectedIndex;
             if (selectedIndex < EventNamesOnlyList.Items.Count - 1)
@@ -377,5 +377,32 @@ namespace MacroRePlayer
                 loadedEvents.Insert(selectedIndex + 1, selectedEvent);
             }
         }
+
+        private void EditorFormButtonAdd_Click(object sender, EventArgs e)
+        {
+            contextMenuStrip1.Show(EditorFormButtonAdd, 70, 0);
+        }
+
+        private void EditorFormButtonDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        
+        //TODO: pridat delete tlačítko
+        //TODO: pridat start cyklus (s počtem) tlacitko
+        //TODO: pridat konec cyklu tlacitko
+        //TODO: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
+        //TODO: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
+        //TODO: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error
+
+        //TODO: dodelat player
+        //TODO: udelat to cely nejako hezky
+
     }
 }
