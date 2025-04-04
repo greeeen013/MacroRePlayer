@@ -74,6 +74,8 @@ namespace MacroRePlayer
         private List<IInputEvent> loadedEvents = new List<IInputEvent>();
         private string selectedFile = "";
 
+        bool isHolding = false; // kvuli drzeni tlacitka nahoru a dolu
+        DateTime pressStartTime; // taky kvuli drzeni tlacitka nahoru a dolu
 
         private void EditorForm_Load(object sender, EventArgs e)
         {
@@ -384,7 +386,7 @@ namespace MacroRePlayer
             }
         }
 
-        private void EditorFormButtonMoveUp_Click(object sender, EventArgs e)
+        private void MoveSelectedIndexUp()
         {
             int selectedIndex = EventNamesOnlyList.SelectedIndex;
             if (selectedIndex > 0)
@@ -397,11 +399,66 @@ namespace MacroRePlayer
                 var selectedEvent = loadedEvents[selectedIndex];
                 loadedEvents.RemoveAt(selectedIndex);
                 loadedEvents.Insert(selectedIndex - 1, selectedEvent);
-                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty); // idk jestli to tu je needed, ale kdyz to tam neni a swapnu mezi stejnymi eventy se spatne prohodi cisla (pouze pri zobrazeni funcknost fungovala spravne)
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
             }
-        }
+        } // posune selectnutej prvek o 1 místo nahoru
 
-        private void EditorFormButtonMoveDown_Click(object sender, EventArgs e)
+        private void MoveSelectedIndexToTop()
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex > 0)
+            {
+                var selectedItem = EventNamesOnlyList.SelectedItem;
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                EventNamesOnlyList.Items.Insert(0, selectedItem);
+                EventNamesOnlyList.SelectedIndex = 0;
+
+                var selectedEvent = loadedEvents[selectedIndex];
+                loadedEvents.RemoveAt(selectedIndex);
+                loadedEvents.Insert(0, selectedEvent);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
+            }
+        } //posune selectnutej prvek uplne nahoru
+
+        private void EditorFormButtonUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            pressStartTime = DateTime.Now;
+            isHolding = true;
+            HoldTimer.Start();
+        } //tenhle event se spusti kdyz se zmackne tlačítko nahoru myšítkem a jestli je držený
+
+        private void EditorFormButtonUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            isHolding = false;
+            HoldTimer.Stop();
+
+            if ((DateTime.Now - pressStartTime) < TimeSpan.FromMilliseconds(HoldTimer.Interval)) //pokud je to rychleji nez interval tak to posune nahoru
+            {
+                MoveSelectedIndexUp();
+            }
+            else
+            {
+                MoveSelectedIndexToTop();
+            }
+        } //tenhle event se spusti kdyz se odzmackne tlačítko nahoru myšítkem
+
+        private void MoveSelectedIndexToBottom()
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex < EventNamesOnlyList.Items.Count - 1)
+            {
+                var selectedItem = EventNamesOnlyList.SelectedItem;
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                EventNamesOnlyList.Items.Insert(EventNamesOnlyList.Items.Count, selectedItem);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+                var selectedEvent = loadedEvents[selectedIndex];
+                loadedEvents.RemoveAt(selectedIndex);
+                loadedEvents.Insert(loadedEvents.Count, selectedEvent);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
+            }
+        } //posune selectnutej prvek o 1 místo dolu
+
+        private void MoveSelectedIndexDown()
         {
             int selectedIndex = EventNamesOnlyList.SelectedIndex;
             if (selectedIndex < EventNamesOnlyList.Items.Count - 1)
@@ -415,6 +472,28 @@ namespace MacroRePlayer
                 loadedEvents.RemoveAt(selectedIndex);
                 loadedEvents.Insert(selectedIndex + 1, selectedEvent);
                 EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty); // idk jestli to tu je needed, ale kdyz to tam neni a swapnu mezi stejnymi eventy se spatne prohodi cisla (pouze pri zobrazeni funcknost fungovala spravne)
+            }
+        } //posune selectnutej prvek uplně na konec listu
+
+        private void EditorFormButtonDown_MouseDown(object sender, MouseEventArgs e)
+        {
+            pressStartTime = DateTime.Now;
+            isHolding = true;
+            HoldTimer.Start();
+        } //tenhle event se spusti kdyz se zmackne tlačítko dolu myšítkem a jestli je držený
+
+        private void EditorFormButtonDown_MouseUp(object sender, MouseEventArgs e) //tenhle event se spusti kdyz se odzmackne tlačítko dolu myšítkem
+        {
+            isHolding = false;
+            HoldTimer.Stop();
+
+            if ((DateTime.Now - pressStartTime) < TimeSpan.FromMilliseconds(HoldTimer.Interval)) //pokud je to rychleji nez interval tak to posune nahoru
+            {
+                MoveSelectedIndexDown();
+            }
+            else
+            {
+                MoveSelectedIndexToBottom();
             }
         }
 
@@ -449,12 +528,15 @@ namespace MacroRePlayer
         }
 
 
+
+
         //TODO: pridat delete tlačítko
         //TODO: pridat start cyklus (s počtem) tlacitko (a asi i s ID)
         //TODO: pridat konec cyklu tlacitko (s ID)
-        //TODO: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
+
+        //done: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
         //done: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
-        //TODO: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error !!! WORKING ON IT
+        //done: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error !!! WORKING ON IT
 
         //TODO: fixnout json file selector kdyz zmenim ten file tak se nezmeni ta tabulka
 

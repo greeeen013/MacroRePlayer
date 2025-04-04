@@ -53,6 +53,7 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.HoldTimer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -94,7 +95,8 @@
             this.EditorFormButtonUp.TabIndex = 14;
             this.EditorFormButtonUp.Text = "▲ UP";
             this.EditorFormButtonUp.UseVisualStyleBackColor = true;
-            this.EditorFormButtonUp.Click += new System.EventHandler(this.EditorFormButtonMoveUp_Click);
+            this.EditorFormButtonUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonUp_MouseDown);
+            this.EditorFormButtonUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonUp_MouseUp);
             // 
             // EditorFormButtonDown
             // 
@@ -104,7 +106,8 @@
             this.EditorFormButtonDown.TabIndex = 15;
             this.EditorFormButtonDown.Text = "▼ DOWN";
             this.EditorFormButtonDown.UseVisualStyleBackColor = true;
-            this.EditorFormButtonDown.Click += new System.EventHandler(this.EditorFormButtonMoveDown_Click);
+            this.EditorFormButtonDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonDown_MouseDown);
+            this.EditorFormButtonDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonDown_MouseUp);
             // 
             // EditorFormButtonDelete
             // 
@@ -247,6 +250,10 @@
             this.toolTip1.SetToolTip(this.pictureBox1, "LoopEvents must always be \r\nan opening loop and a closing loop! \r\nwithout this it" +
         " will not allow you to save \r\nthe program. :)");
             // 
+            // HoldTimer
+            // 
+            this.HoldTimer.Interval = 200;
+            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -297,5 +304,6 @@
         private System.Windows.Forms.ToolStripMenuItem stopLoopEventToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Timer HoldTimer;
     }
 }
