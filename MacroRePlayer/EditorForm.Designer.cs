@@ -42,15 +42,15 @@
             this.EditorFormButtonAdd = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.delayEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mouseDownEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mouseUpEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyDownEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyUpEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.startLoopEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopLoopEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
@@ -124,6 +124,7 @@
             this.EditorFormButtonCopy.TabIndex = 17;
             this.EditorFormButtonCopy.Text = "📋 Copy";
             this.EditorFormButtonCopy.UseVisualStyleBackColor = true;
+            this.EditorFormButtonCopy.Click += new System.EventHandler(this.EditorFormButtonCopy_Click);
             // 
             // EditorFormButtonPaste
             // 
@@ -133,6 +134,7 @@
             this.EditorFormButtonPaste.TabIndex = 18;
             this.EditorFormButtonPaste.Text = "📋 Paste";
             this.EditorFormButtonPaste.UseVisualStyleBackColor = true;
+            this.EditorFormButtonPaste.Click += new System.EventHandler(this.EditorFormButtonPaste_Click);
             // 
             // EditorFormButtonExtract
             // 
@@ -142,6 +144,7 @@
             this.EditorFormButtonExtract.TabIndex = 19;
             this.EditorFormButtonExtract.Text = "📋 Extract";
             this.EditorFormButtonExtract.UseVisualStyleBackColor = true;
+            this.EditorFormButtonExtract.Click += new System.EventHandler(this.EditorFormButtonExtract_Click);
             // 
             // EditorFormButtonAdd
             // 
@@ -175,6 +178,36 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "BasicEvents";
             // 
+            // delayEventToolStripMenuItem
+            // 
+            this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
+            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.delayEventToolStripMenuItem.Text = "DelayEvent";
+            // 
+            // mouseDownEventToolStripMenuItem
+            // 
+            this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
+            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
+            // 
+            // mouseUpEventToolStripMenuItem
+            // 
+            this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
+            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
+            // 
+            // keyDownEventToolStripMenuItem
+            // 
+            this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
+            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
+            // 
+            // keyUpEventToolStripMenuItem
+            // 
+            this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
+            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
+            // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -184,53 +217,23 @@
             this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "LoopEvents";
             // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "toolStripMenuItem3";
-            // 
-            // delayEventToolStripMenuItem
-            // 
-            this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
-            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.delayEventToolStripMenuItem.Text = "DelayEvent";
-            // 
-            // mouseDownEventToolStripMenuItem
-            // 
-            this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
-            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
-            // 
-            // mouseUpEventToolStripMenuItem
-            // 
-            this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
-            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
-            // 
-            // keyDownEventToolStripMenuItem
-            // 
-            this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
-            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
-            // 
-            // keyUpEventToolStripMenuItem
-            // 
-            this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
-            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
-            // 
             // startLoopEventToolStripMenuItem
             // 
             this.startLoopEventToolStripMenuItem.Name = "startLoopEventToolStripMenuItem";
-            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.startLoopEventToolStripMenuItem.Text = "StartLoopEvent";
             // 
             // stopLoopEventToolStripMenuItem
             // 
             this.stopLoopEventToolStripMenuItem.Name = "stopLoopEventToolStripMenuItem";
-            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.stopLoopEventToolStripMenuItem.Text = "StopLoopEvent";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Text = "toolStripMenuItem3";
             // 
             // pictureBox1
             // 

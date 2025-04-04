@@ -24,7 +24,7 @@ namespace MacroRePlayer
             // Inicializace ovládacích prvků k myši
             newTextBoxX = new TextBox { Location = new Point(50, 10), Width = 200, Visible = false };
             newTextBoxY = new TextBox { Location = new Point(50, 40), Width = 200, Visible = false };
-            newComboButtonBox = new ComboBox { Location = new Point(50, 70), Width = 200, Visible = false };
+            newComboButtonBox = new ComboBox { Location = new Point(50, 70), Width = 200, Visible = false, DropDownStyle = ComboBoxStyle.DropDownList };
             newComboButtonBox.Items.AddRange(new string[] { "Left", "Right", "Middle" });
 
             newLabelX = new Label { Text = "X:", Location = new Point(10, 10), Visible = false };
@@ -143,7 +143,6 @@ namespace MacroRePlayer
                             newDelayTextBox.TextChanged += DelayTextBox_TextChanged;
                         }
                         break;
-
                     case "MouseDown":
                         ShowMouseEventControls();
                         var mouseEvent = loadedEvents[selectedIndex] as MouseDownEvent;
@@ -222,7 +221,14 @@ namespace MacroRePlayer
                 var delayEvent = loadedEvents[selectedIndex] as DelayEvent;
                 if (delayEvent != null)
                 {
-                    delayEvent.Duration = int.Parse(newDelayTextBox.Text);
+                    if (string.IsNullOrEmpty(newDelayTextBox.Text))
+                    {
+                        delayEvent.Duration = 0;
+                    }
+                    else
+                    {
+                        delayEvent.Duration = int.Parse(newDelayTextBox.Text);
+                    }
                 }
             }
         }
@@ -235,9 +241,25 @@ namespace MacroRePlayer
                 var mouseEvent = loadedEvents[selectedIndex] as MouseDownEvent;
                 if (mouseEvent != null)
                 {
-                    mouseEvent.X = int.Parse(newTextBoxX.Text);
-                    mouseEvent.Y = int.Parse(newTextBoxY.Text);
-                    mouseEvent.Button = newComboButtonBox.SelectedItem.ToString();
+                    if (string.IsNullOrEmpty(newTextBoxX.Text))
+                    {
+                        mouseEvent.X = 0;
+                    }
+                    else
+                    {
+                        mouseEvent.X = int.Parse(newTextBoxX.Text);
+                    }
+
+                    if (string.IsNullOrEmpty(newTextBoxY.Text))
+                    {
+                        mouseEvent.Y = 0;
+                    }
+                    else
+                    {
+                        mouseEvent.Y = int.Parse(newTextBoxY.Text);
+                    }
+
+                    mouseEvent.Button = newComboButtonBox.SelectedItem?.ToString();
                 }
             }
         }
@@ -250,9 +272,25 @@ namespace MacroRePlayer
                 var mouseEvent = loadedEvents[selectedIndex] as MouseUpEvent;
                 if (mouseEvent != null)
                 {
-                    mouseEvent.X = int.Parse(newTextBoxX.Text);
-                    mouseEvent.Y = int.Parse(newTextBoxY.Text);
-                    mouseEvent.Button = newComboButtonBox.SelectedItem.ToString();
+                    if (string.IsNullOrEmpty(newTextBoxX.Text))
+                    {
+                        mouseEvent.X = 0;
+                    }
+                    else
+                    {
+                        mouseEvent.X = int.Parse(newTextBoxX.Text);
+                    }
+
+                    if (string.IsNullOrEmpty(newTextBoxY.Text))
+                    {
+                        mouseEvent.Y = 0;
+                    }
+                    else
+                    {
+                        mouseEvent.Y = int.Parse(newTextBoxY.Text);
+                    }
+
+                    mouseEvent.Button = newComboButtonBox.SelectedItem?.ToString();
                 }
             }
         }
@@ -265,7 +303,7 @@ namespace MacroRePlayer
                 var keyEvent = loadedEvents[selectedIndex] as KeyDownEvent;
                 if (keyEvent != null)
                 {
-                    keyEvent.Key = newKeyTextBox.Text;
+                    keyEvent.Key = string.IsNullOrEmpty(newKeyTextBox.Text) ? null : newKeyTextBox.Text;
                 }
             }
         }
@@ -278,7 +316,7 @@ namespace MacroRePlayer
                 var keyEvent = loadedEvents[selectedIndex] as KeyUpEvent;
                 if (keyEvent != null)
                 {
-                    keyEvent.Key = newKeyTextBox.Text;
+                    keyEvent.Key = string.IsNullOrEmpty(newKeyTextBox.Text) ? null : newKeyTextBox.Text;
                 }
             }
         }
@@ -359,6 +397,7 @@ namespace MacroRePlayer
                 var selectedEvent = loadedEvents[selectedIndex];
                 loadedEvents.RemoveAt(selectedIndex);
                 loadedEvents.Insert(selectedIndex - 1, selectedEvent);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty); // idk jestli to tu je needed, ale kdyz to tam neni a swapnu mezi stejnymi eventy se spatne prohodi cisla (pouze pri zobrazeni funcknost fungovala spravne)
             }
         }
 
@@ -375,6 +414,7 @@ namespace MacroRePlayer
                 var selectedEvent = loadedEvents[selectedIndex];
                 loadedEvents.RemoveAt(selectedIndex);
                 loadedEvents.Insert(selectedIndex + 1, selectedEvent);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty); // idk jestli to tu je needed, ale kdyz to tam neni a swapnu mezi stejnymi eventy se spatne prohodi cisla (pouze pri zobrazeni funcknost fungovala spravne)
             }
         }
 
@@ -393,13 +433,30 @@ namespace MacroRePlayer
 
         }
 
-        
+        private void EditorFormButtonCopy_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EditorFormButtonExtract_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EditorFormButtonPaste_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
         //TODO: pridat delete tlačítko
-        //TODO: pridat start cyklus (s počtem) tlacitko
-        //TODO: pridat konec cyklu tlacitko
+        //TODO: pridat start cyklus (s počtem) tlacitko (a asi i s ID)
+        //TODO: pridat konec cyklu tlacitko (s ID)
         //TODO: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
-        //TODO: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
-        //TODO: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error
+        //done: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
+        //TODO: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error !!! WORKING ON IT
+
+        //TODO: fixnout json file selector kdyz zmenim ten file tak se nezmeni ta tabulka
 
         //TODO: dodelat player
         //TODO: udelat to cely nejako hezky
