@@ -13,7 +13,6 @@ namespace MacroRePlayer
 {
     public partial class Form1 : Form
     {
-        // Seznam událostí, které budou zaznamenány
         private List<IInputEvent> events = new List<IInputEvent>();
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
         private bool isRecording; // Indikátor nahrávání
@@ -31,8 +30,18 @@ namespace MacroRePlayer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Nastavení výchozího názvu souboru s aktuálním časem
-            JsonFileSelectorForm.Text = $"MacroRecord{DateTime.Now:HH-mm_dd.MM.yyyy}";
+            JsonFileSelectorForm.Text = $"MacroRecord{DateTime.Now:HH-mm_dd.MM.yyyy}"; // nastavení výchozího názvu souboru do textového pole s datem a časem pro ukládání makra 
+
+            this.EditorStartStopPlayingKeybindTextBox.AutoSize = false;
+            this.EditorStartStopPlayingKeybindTextBox.Size = new System.Drawing.Size(85, 43); // nastavení velikosti textového pole pro klávesovou zkratku na keybind pro spouštění/zastavení přehrávání
+
+            this.EditorPlaybackMethodComboBox.DropDownStyle = ComboBoxStyle.DropDownList; // nastavení stylu ComboBoxu na DropDownList
+            this.EditorPlaybackMethodComboBox.SelectedIndex = 0; // nastavení výchozího indexu na 0 (první položka v ComboBoxu což je one time play)
+
+            this.EditorPlaybackSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList; // nastavení stylu ComboBoxu na DropDownList
+            this.EditorPlaybackSpeedComboBox.SelectedIndex = 3; // nastavení výchozího indexu na 3 (čtvrtá položka v ComboBoxu což je 1x speed)
+
+
         } // tento event se spouští při načtení formuláře a předepíše výchozí název souboru (což je dnešní datum a čas) pro ukládání makra
 
         private void StartRecording_Click(object sender, EventArgs e)
@@ -146,13 +155,51 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při kliknutí na tlačítko pro otevření složky a otevírá složku s makry v Průzkumníku nebo zobrazuje chybovou hlášku, pokud složka neexistuje
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OpenEditor_Click(object sender, EventArgs e)
         {
             EditorForm form = new EditorForm();
             form.Show();
         } //working on it
 
+        private void FolderDeleteButton_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Opravdu chcete smazat složku s makry?", "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                if (Directory.Exists(directoryPath))
+                {
+                    Directory.Delete(directoryPath, true);
+                    MessageBox.Show("Složka byla úspěšně smazána.");
+                }
+                else
+                {
+                    MessageBox.Show("Složka neexistuje.");
+                }
+            }
+        }
+
+        private void PlayerComboBox_DropDown(object sender, EventArgs e)
+        {
+
+        }
+
+        private void StartPlayingMacroButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void StopPlayingMacroButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EditorStartStopKeybindSetButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
         //TODO: smazání složky s makrama button s "are you sure message"
-        //TODO: řádek 124 globalhook_keyup řádek pressedKeys.Remove(e.KeyCode.ToString()); si upe nejsem jistej
+        //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej
+        //TODO: nejako zjistit a fixnou verticalní zarovnání v StartStopPlayingKeybindTextBox (idk jestli to je vubec possible)
     }
 }

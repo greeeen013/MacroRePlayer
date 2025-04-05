@@ -117,6 +117,8 @@ namespace MacroRePlayer
                     EventNamesOnlyList.Items.Add(inputEvent.Type);
                 }
                 EditorFormActivateControlButtons(); // Aktivace tlačítek pro editaci listu
+                EventNamesOnlyList.SelectedIndex = 0; // Nastavení výchozího indexu na 0
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty); // Nastavení výchozího indexu na 0
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
             {
@@ -133,7 +135,7 @@ namespace MacroRePlayer
             EditorFormButtonDelete.Enabled = true;
             EditorFormButtonCopy.Enabled = true;
             EditorFormButtonExtract.Enabled = true;
-            EditorFormButtonPaste.Enabled = true;
+            EditorFormButtonInsert.Enabled = true;
             EditorFormButtonUp.Enabled = true;
             EditorFormButtonDown.Enabled = true;
             EditorFormButtonSave.Enabled = true;
@@ -146,7 +148,7 @@ namespace MacroRePlayer
             EditorFormButtonDelete.Enabled = false;
             EditorFormButtonCopy.Enabled = false;
             EditorFormButtonExtract.Enabled = false;
-            EditorFormButtonPaste.Enabled = false;
+            EditorFormButtonInsert.Enabled = false;
             EditorFormButtonUp.Enabled = false;
             EditorFormButtonDown.Enabled = false;
             EditorFormButtonSave.Enabled = false;
@@ -570,7 +572,7 @@ namespace MacroRePlayer
             }
         } //tenhle event se spusti kdyz se zmackne extract a zkopíruje selectnutej index do clipboardu a smaže ho z listu (prakticky výjmout)
 
-        private void EditorFormButtonPaste_Click(object sender, EventArgs e)
+        private void EditorFormButtonInsert_Click(object sender, EventArgs e)
         {
             if (Clipboard.ContainsText())
             {

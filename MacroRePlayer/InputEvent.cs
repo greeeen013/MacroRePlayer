@@ -25,7 +25,7 @@ namespace MacroRePlayer
     {
         public string Type => "MouseDown";
         public int X { get; set; }
-        public int Y { get; set; }
+        public int Y { get; set; } 
         public string Button { get; set; } // "Left", "Right", "Middle"
 
         public void draw() { }

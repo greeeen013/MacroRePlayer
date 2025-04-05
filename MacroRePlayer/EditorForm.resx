@@ -124,14 +124,29 @@
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DwAACw8BkvkDpQAAAGRJREFUOE9joBaQBuKFQLybSLwAiEF64AAk8J9EPB+I4WA7EGNT9BqKscmB9MAB
+        DQAACw0B7QfALAAAAGRJREFUOE9joBaQBuKFQLybSLwAiEF64AAk8J9EPB+I4WA7EGNT9BqKscmB9MAB
         LgNioBibHFEGvIFibHJEGQDyJwhjkyPKAIq9MGoACQmJ4qQMyhggQ7BlHGwYpBklM5EJGBgAH5Oo6WkM
         DY4AAAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="EditorFormToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>228, 20</value>
   </metadata>
+  <data name="pictureBox1.ToolTip" xml:space="preserve">
+    <value>▲ UP - when pressed move selected event by one slot up
+          -  when hold move selected event to the top
+ ▼ DOWN - when pressed move selected event by one slot down
+                  - when hold move selected event to the bottom
+🗑 Delete - when pressed delete selected event
+📋 Copy - when pressed copy selected event
+📋 Extract - when pressed it will copy and delete selected event
+📋 Insert - when pressed inserts copied event
+
+LoopEvents must always be 
+an opening loop and a closing loop! 
+without this it will not allow you to save 
+the program. :)</value>
+  </data>
   <metadata name="HoldTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>316, 20</value>
   </metadata>

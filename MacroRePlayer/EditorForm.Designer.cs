@@ -37,7 +37,7 @@
             this.EditorFormButtonDown = new System.Windows.Forms.Button();
             this.EditorFormButtonDelete = new System.Windows.Forms.Button();
             this.EditorFormButtonCopy = new System.Windows.Forms.Button();
-            this.EditorFormButtonPaste = new System.Windows.Forms.Button();
+            this.EditorFormButtonInsert = new System.Windows.Forms.Button();
             this.EditorFormButtonExtract = new System.Windows.Forms.Button();
             this.EditorFormButtonAdd = new System.Windows.Forms.Button();
             this.EditorFormContextMenuEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -52,7 +52,7 @@
             this.stopLoopEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.EditorFormToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.HoldTimer = new System.Windows.Forms.Timer(this.components);
             this.EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -134,16 +134,16 @@
             this.EditorFormButtonCopy.UseVisualStyleBackColor = true;
             this.EditorFormButtonCopy.Click += new System.EventHandler(this.EditorFormButtonCopy_Click);
             // 
-            // EditorFormButtonPaste
+            // EditorFormButtonInsert
             // 
-            this.EditorFormButtonPaste.Enabled = false;
-            this.EditorFormButtonPaste.Location = new System.Drawing.Point(358, 392);
-            this.EditorFormButtonPaste.Name = "EditorFormButtonPaste";
-            this.EditorFormButtonPaste.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonPaste.TabIndex = 18;
-            this.EditorFormButtonPaste.Text = "📋 Paste";
-            this.EditorFormButtonPaste.UseVisualStyleBackColor = true;
-            this.EditorFormButtonPaste.Click += new System.EventHandler(this.EditorFormButtonPaste_Click);
+            this.EditorFormButtonInsert.Enabled = false;
+            this.EditorFormButtonInsert.Location = new System.Drawing.Point(358, 392);
+            this.EditorFormButtonInsert.Name = "EditorFormButtonInsert";
+            this.EditorFormButtonInsert.Size = new System.Drawing.Size(75, 23);
+            this.EditorFormButtonInsert.TabIndex = 19;
+            this.EditorFormButtonInsert.Text = "📋 Insert";
+            this.EditorFormButtonInsert.UseVisualStyleBackColor = true;
+            this.EditorFormButtonInsert.Click += new System.EventHandler(this.EditorFormButtonInsert_Click);
             // 
             // EditorFormButtonExtract
             // 
@@ -151,7 +151,7 @@
             this.EditorFormButtonExtract.Location = new System.Drawing.Point(359, 363);
             this.EditorFormButtonExtract.Name = "EditorFormButtonExtract";
             this.EditorFormButtonExtract.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonExtract.TabIndex = 19;
+            this.EditorFormButtonExtract.TabIndex = 18;
             this.EditorFormButtonExtract.Text = "📋 Extract";
             this.EditorFormButtonExtract.UseVisualStyleBackColor = true;
             this.EditorFormButtonExtract.Click += new System.EventHandler(this.EditorFormButtonExtract_Click);
@@ -174,7 +174,7 @@
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.EditorFormContextMenuEvents.Name = "contextMenuStrip1";
-            this.EditorFormContextMenuEvents.Size = new System.Drawing.Size(181, 92);
+            this.EditorFormContextMenuEvents.Size = new System.Drawing.Size(181, 70);
             // 
             // toolStripMenuItem1
             // 
@@ -191,35 +191,35 @@
             // delayEventToolStripMenuItem
             // 
             this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
-            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.delayEventToolStripMenuItem.Text = "DelayEvent";
             this.delayEventToolStripMenuItem.Click += new System.EventHandler(this.delayEventToolStripMenuItem_Click);
             // 
             // mouseDownEventToolStripMenuItem
             // 
             this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
-            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
             this.mouseDownEventToolStripMenuItem.Click += new System.EventHandler(this.mouseDownEventToolStripMenuItem_Click);
             // 
             // mouseUpEventToolStripMenuItem
             // 
             this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
-            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
             this.mouseUpEventToolStripMenuItem.Click += new System.EventHandler(this.mouseUpEventToolStripMenuItem_Click);
             // 
             // keyDownEventToolStripMenuItem
             // 
             this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
-            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
             this.keyDownEventToolStripMenuItem.Click += new System.EventHandler(this.keyDownEventToolStripMenuItem_Click);
             // 
             // keyUpEventToolStripMenuItem
             // 
             this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
-            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
             this.keyUpEventToolStripMenuItem.Click += new System.EventHandler(this.keyUpEventToolStripMenuItem_Click);
             // 
@@ -235,13 +235,13 @@
             // startLoopEventToolStripMenuItem
             // 
             this.startLoopEventToolStripMenuItem.Name = "startLoopEventToolStripMenuItem";
-            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.startLoopEventToolStripMenuItem.Text = "StartLoopEvent";
             // 
             // stopLoopEventToolStripMenuItem
             // 
             this.stopLoopEventToolStripMenuItem.Name = "stopLoopEventToolStripMenuItem";
-            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.stopLoopEventToolStripMenuItem.Text = "StopLoopEvent";
             // 
             // toolStripMenuItem3
@@ -259,8 +259,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 22;
             this.pictureBox1.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox1, "LoopEvents must always be \r\nan opening loop and a closing loop! \r\nwithout this it" +
-        " will not allow you to save \r\nthe program. :)");
+            this.EditorFormToolTip.SetToolTip(this.pictureBox1, resources.GetString("pictureBox1.ToolTip"));
             // 
             // HoldTimer
             // 
@@ -274,7 +273,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.EditorFormButtonAdd);
             this.Controls.Add(this.EditorFormButtonExtract);
-            this.Controls.Add(this.EditorFormButtonPaste);
+            this.Controls.Add(this.EditorFormButtonInsert);
             this.Controls.Add(this.EditorFormButtonCopy);
             this.Controls.Add(this.EditorFormButtonDelete);
             this.Controls.Add(this.EditorFormButtonDown);
@@ -300,7 +299,7 @@
         private System.Windows.Forms.Button EditorFormButtonDown;
         private System.Windows.Forms.Button EditorFormButtonDelete;
         private System.Windows.Forms.Button EditorFormButtonCopy;
-        private System.Windows.Forms.Button EditorFormButtonPaste;
+        private System.Windows.Forms.Button EditorFormButtonInsert;
         private System.Windows.Forms.Button EditorFormButtonExtract;
         private System.Windows.Forms.Button EditorFormButtonAdd;
         private System.Windows.Forms.ContextMenuStrip EditorFormContextMenuEvents;
@@ -315,7 +314,7 @@
         private System.Windows.Forms.ToolStripMenuItem startLoopEventToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopLoopEventToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip EditorFormToolTip;
         private System.Windows.Forms.Timer HoldTimer;
     }
 }
