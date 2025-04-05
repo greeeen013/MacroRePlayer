@@ -24,8 +24,8 @@ namespace MacroRePlayer
             // Inicializace ovládacích prvků k myši
             newTextBoxX = new TextBox { Location = new Point(50, 10), Width = 200, Visible = false };
             newTextBoxY = new TextBox { Location = new Point(50, 40), Width = 200, Visible = false };
-            newComboButtonBox = new ComboBox { Location = new Point(50, 70), Width = 200, Visible = false, DropDownStyle = ComboBoxStyle.DropDownList };
-            newComboButtonBox.Items.AddRange(new string[] { "Left", "Right", "Middle" });
+            newComboBoxForButton = new ComboBox { Location = new Point(50, 70), Width = 200, Visible = false, DropDownStyle = ComboBoxStyle.DropDownList };
+            newComboBoxForButton.Items.AddRange(new string[] { "Left", "Right", "Middle" });
 
             newLabelX = new Label { Text = "X:", Location = new Point(10, 10), Visible = false };
             newLabelY = new Label { Text = "Y:", Location = new Point(10, 40), Visible = false };
@@ -44,7 +44,7 @@ namespace MacroRePlayer
             // Přidání prvků do formuláře myš
             this.Controls.Add(newTextBoxX);
             this.Controls.Add(newTextBoxY);
-            this.Controls.Add(newComboButtonBox);
+            this.Controls.Add(newComboBoxForButton);
             this.Controls.Add(newLabelX);
             this.Controls.Add(newLabelY);
             this.Controls.Add(newLabelCombo);
@@ -60,7 +60,7 @@ namespace MacroRePlayer
 
         private TextBox newTextBoxX = null; // TextBox pro X
         private TextBox newTextBoxY = null; // TextBox pro Y
-        private ComboBox newComboButtonBox = null; // ComboBox pro výběr tlačítka
+        private ComboBox newComboBoxForButton = null; // ComboBox pro výběr tlačítka
         private Label newLabelX = null; // Label pro X
         private Label newLabelY = null; // Label pro Y
         private Label newLabelCombo = null; // Label pro combobox/Button
@@ -94,13 +94,13 @@ namespace MacroRePlayer
             {
                 JsonFileSelectorComboBox.Items.AddRange(Directory.GetFiles(directoryPath, "*.json").Select(Path.GetFileName).ToArray());
             }
-        }
+        } //event kterej se spustí když se otevře combobox a naplní ho dostupnejma jsonama
 
-        private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e) //FIXNOUT KDYZ ZMENIM TU VEC TAK SE NEZMENI
+        private void JsonFileSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Načtení vybraného souboru a jeho zobrazení
             selectedFile = Path.Combine(directoryPath, JsonFileSelectorComboBox.SelectedItem.ToString());
-
+            EventNamesOnlyList.Items.Clear(); // Vyčistí panel před přidáním nových událostí (bez toho to nefunguje)
             if (File.Exists(selectedFile))
             {
                 // Pridaní InputEventConverter aby se správně parsovala InputEvent interface
@@ -116,13 +116,41 @@ namespace MacroRePlayer
                 {
                     EventNamesOnlyList.Items.Add(inputEvent.Type);
                 }
+                EditorFormActivateControlButtons(); // Aktivace tlačítek pro editaci listu
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
             {
-                // vycisti to Table pokud je vybrano prazdne políčko
-                EventNamesOnlyList.Controls.Clear();
+                EventNamesOnlyList.Items.Clear(); // Vyčistí panel pokud bylo vybrano prazdno
+                EditorFormDeactivateControlButtons(); // Deaktivace tlačítek pro editaci listu
+
             }
-        }
+        } //event kterej se spustí pokud se změní vybranej soubor v comboboxu a vypíše eventy do listu
+
+        private void EditorFormActivateControlButtons()
+        {
+            // Aktivace tlačítek pro přidání události
+            EditorFormButtonAdd.Enabled = true;
+            EditorFormButtonDelete.Enabled = true;
+            EditorFormButtonCopy.Enabled = true;
+            EditorFormButtonExtract.Enabled = true;
+            EditorFormButtonPaste.Enabled = true;
+            EditorFormButtonUp.Enabled = true;
+            EditorFormButtonDown.Enabled = true;
+            EditorFormButtonSave.Enabled = true;
+        } //aktivace tlačítek pro editaci listu
+
+        private void EditorFormDeactivateControlButtons()
+        {
+            // Deaktivace tlačítek pro editaci listu
+            EditorFormButtonAdd.Enabled = false;
+            EditorFormButtonDelete.Enabled = false;
+            EditorFormButtonCopy.Enabled = false;
+            EditorFormButtonExtract.Enabled = false;
+            EditorFormButtonPaste.Enabled = false;
+            EditorFormButtonUp.Enabled = false;
+            EditorFormButtonDown.Enabled = false;
+            EditorFormButtonSave.Enabled = false;
+        } //deaktivace tlačítek pro editaci listu
 
         private void EventNamesOnlyList_SelectionChanged(object sender, EventArgs e)
         {
@@ -135,7 +163,7 @@ namespace MacroRePlayer
                 switch (selectedItem)
                 {
                     case "DelayEvent":
-                        ShowDelayEventControls();
+                        ShowDelayEventControls(); // Zobrazíme ovládací prvky pouze pro DelayEvent
                         var delayEvent = loadedEvents[selectedIndex] as DelayEvent;
                         if (delayEvent != null)
                         {
@@ -152,15 +180,15 @@ namespace MacroRePlayer
                         {
                             newTextBoxX.TextChanged -= MouseDownTextBox_TextChanged;
                             newTextBoxY.TextChanged -= MouseDownTextBox_TextChanged;
-                            newComboButtonBox.SelectedIndexChanged -= MouseDownTextBox_TextChanged;
+                            newComboBoxForButton.SelectedIndexChanged -= MouseDownTextBox_TextChanged;
 
                             newTextBoxX.Text = $"{mouseEvent.X}";
                             newTextBoxY.Text = $"{mouseEvent.Y}";
-                            newComboButtonBox.SelectedItem = mouseEvent.Button;
+                            newComboBoxForButton.SelectedItem = mouseEvent.Button;
 
                             newTextBoxX.TextChanged += MouseDownTextBox_TextChanged;
                             newTextBoxY.TextChanged += MouseDownTextBox_TextChanged;
-                            newComboButtonBox.SelectedIndexChanged += MouseDownTextBox_TextChanged;
+                            newComboBoxForButton.SelectedIndexChanged += MouseDownTextBox_TextChanged;
                         }
                         break;
                     case "MouseUp":
@@ -173,15 +201,15 @@ namespace MacroRePlayer
                         {
                             newTextBoxX.TextChanged -= MouseUpTextBox_TextChanged;
                             newTextBoxY.TextChanged -= MouseUpTextBox_TextChanged;
-                            newComboButtonBox.SelectedIndexChanged -= MouseUpTextBox_TextChanged;
+                            newComboBoxForButton.SelectedIndexChanged -= MouseUpTextBox_TextChanged;
 
                             newTextBoxX.Text = $"{mouseEventt.X}";
                             newTextBoxY.Text = $"{mouseEventt.Y}";
-                            newComboButtonBox.SelectedItem = mouseEventt.Button;
+                            newComboBoxForButton.SelectedItem = mouseEventt.Button;
 
                             newTextBoxX.TextChanged += MouseUpTextBox_TextChanged;
                             newTextBoxY.TextChanged += MouseUpTextBox_TextChanged;
-                            newComboButtonBox.SelectedIndexChanged += MouseUpTextBox_TextChanged;
+                            newComboBoxForButton.SelectedIndexChanged += MouseUpTextBox_TextChanged;
                         }
                         break;
                     case "KeyDown":
@@ -213,7 +241,7 @@ namespace MacroRePlayer
                         break;
                 }
             }
-        }
+        } //event kterej se spusti kdyz se změní selectnutej index v listu a podle toho se nastaví ovládací prvky(textboxy, comboboxy atd.) a jejich hodnoty
 
         private void DelayTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -233,7 +261,7 @@ namespace MacroRePlayer
                     }
                 }
             }
-        }
+        } //tenhle event se volá v EventNamesOnlyList_SelectionChanged spusti kdyz se změní text v delay textboxu a nastaví hodnotu do delayEventu
 
         private void MouseDownTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -261,10 +289,10 @@ namespace MacroRePlayer
                         mouseEvent.Y = int.Parse(newTextBoxY.Text);
                     }
 
-                    mouseEvent.Button = newComboButtonBox.SelectedItem?.ToString();
+                    mouseEvent.Button = newComboBoxForButton.SelectedItem?.ToString();
                 }
             }
-        }
+        } //tenhle event se volá v EventNamesOnlyList_SelectionChanged se spusti kdyz se změní text v textboxu a nastaví hodnotu do MouseDownEventu
 
         private void MouseUpTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -292,10 +320,10 @@ namespace MacroRePlayer
                         mouseEvent.Y = int.Parse(newTextBoxY.Text);
                     }
 
-                    mouseEvent.Button = newComboButtonBox.SelectedItem?.ToString();
+                    mouseEvent.Button = newComboBoxForButton.SelectedItem?.ToString();
                 }
             }
-        }
+        } //tenhle event se volá v EventNamesOnlyList_SelectionChanged se spusti kdyz se změní text v textboxu a nastaví hodnotu do MouseUpEventu
 
         private void KeyDownTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -308,7 +336,7 @@ namespace MacroRePlayer
                     keyEvent.Key = string.IsNullOrEmpty(newKeyTextBox.Text) ? null : newKeyTextBox.Text;
                 }
             }
-        }
+        } //tenhle event se volá v EventNamesOnlyList_SelectionChanged se spusti kdyz se změní text v textboxu a nastaví hodnotu do KeyDownEventu
 
         private void KeyUpTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -321,36 +349,36 @@ namespace MacroRePlayer
                     keyEvent.Key = string.IsNullOrEmpty(newKeyTextBox.Text) ? null : newKeyTextBox.Text;
                 }
             }
-        }
+        } //tenhle event se volá v EventNamesOnlyList_SelectionChanged se spusti kdyz se změní text v textboxu a nastaví hodnotu do KeyUpEventu
 
         private void ShowMouseEventControls()
         {
             newTextBoxX.Visible = true;
             newTextBoxY.Visible = true;
-            newComboButtonBox.Visible = true;
+            newComboBoxForButton.Visible = true;
             newLabelX.Visible = true;
             newLabelY.Visible = true;
             newLabelCombo.Visible = true;
-        }
+        } //zobrazí ovládací prvky pro myš (X, Y, ComboBox pro mouse button, Label)
 
         private void ShowDelayEventControls()
         {
             newDelayTextBox.Visible = true;
             newDelayLabel.Visible = true;
-        }
+        } //zobrazí ovládací prvky pro delay (TextBox, Label)
 
         private void ShowKeyEventControls()
         {
             newKeyTextBox.Visible = true;
             newKeyLabel.Visible = true;
-        }
+        } //zobrazí ovládací prvky pro klávesnici (TextBox, Label)
 
         private void HideEveryEventControls()
         {
             //k myši
             newTextBoxX.Visible = false;
             newTextBoxY.Visible = false;
-            newComboButtonBox.Visible = false;
+            newComboBoxForButton.Visible = false;
             newLabelX.Visible = false;
             newLabelY.Visible = false;
             newLabelCombo.Visible = false;
@@ -362,7 +390,7 @@ namespace MacroRePlayer
             //ke key
             newKeyTextBox.Visible = false;
             newKeyLabel.Visible = false;
-        }
+        } //skryje všechny ovládací prvky (k myši, k delay, k key) aby se nezobrazovali když je nevybranej event
 
         private void Save_Click(object sender, EventArgs e)
         {
@@ -372,7 +400,7 @@ namespace MacroRePlayer
                 settings.Converters.Add(new InputEventConverter());
 
                 // Update the loadedEvents with the current values from the UI
-                
+
 
                 // Sort the events by their order in the list
                 var sortedEvents = EventNamesOnlyList.Items.Cast<string>()
@@ -384,7 +412,7 @@ namespace MacroRePlayer
                 File.WriteAllText(selectedFile, json);
                 MessageBox.Show("Data byla úspěšně uložena!");
             }
-        }
+        } //tenhle event se spusti kdyz se zmackne save a uloží data do jsonu
 
         private void MoveSelectedIndexUp()
         {
@@ -482,7 +510,7 @@ namespace MacroRePlayer
             HoldTimer.Start();
         } //tenhle event se spusti kdyz se zmackne tlačítko dolu myšítkem a jestli je držený
 
-        private void EditorFormButtonDown_MouseUp(object sender, MouseEventArgs e) //tenhle event se spusti kdyz se odzmackne tlačítko dolu myšítkem
+        private void EditorFormButtonDown_MouseUp(object sender, MouseEventArgs e)
         {
             isHolding = false;
             HoldTimer.Stop();
@@ -495,53 +523,230 @@ namespace MacroRePlayer
             {
                 MoveSelectedIndexToBottom();
             }
-        }
-
-        private void EditorFormButtonAdd_Click(object sender, EventArgs e)
-        {
-            contextMenuStrip1.Show(EditorFormButtonAdd, 70, 0);
-        }
+        } //tenhle event se spusti kdyz se odzmackne tlačítko dolu myšítkem
 
         private void EditorFormButtonDelete_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                loadedEvents.RemoveAt(selectedIndex);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
+            }
+        } //tenhle event se spusti kdyz se zmackne delete a smaže selectnutej index
 
         private void EditorFormButtonCopy_Click(object sender, EventArgs e)
         {
-
-        }
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var selectedEvent = loadedEvents[selectedIndex];
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+                string json = JsonConvert.SerializeObject(selectedEvent, settings);
+                Clipboard.SetText(json);
+            }
+        } //tenhle event se spusti kdyz se zmackne copy a zkopíruje selectnutej index do clipboardu
 
         private void EditorFormButtonExtract_Click(object sender, EventArgs e)
         {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var selectedEvent = loadedEvents[selectedIndex];
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+                string json = JsonConvert.SerializeObject(selectedEvent, settings);
+                Clipboard.SetText(json);
 
-        }
+                EventNamesOnlyList.Items.RemoveAt(selectedIndex);
+                loadedEvents.RemoveAt(selectedIndex);
+                EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
+            }
+        } //tenhle event se spusti kdyz se zmackne extract a zkopíruje selectnutej index do clipboardu a smaže ho z listu (prakticky výjmout)
 
         private void EditorFormButtonPaste_Click(object sender, EventArgs e)
         {
+            if (Clipboard.ContainsText())
+            {
+                string json = Clipboard.GetText();
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new InputEventConverter());
 
-        }
+                try
+                {
+                    var pastedEvent = JsonConvert.DeserializeObject<IInputEvent>(json, settings);
+                    if (pastedEvent != null)
+                    {
+                        int selectedIndex = EventNamesOnlyList.SelectedIndex;
+                        if (selectedIndex != -1)
+                        {
+                            loadedEvents.Insert(selectedIndex + 1, pastedEvent);
+                            EventNamesOnlyList.Items.Insert(selectedIndex + 1, pastedEvent.Type);
+                            EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+                        }
+                        else
+                        {
+                            loadedEvents.Add(pastedEvent);
+                            EventNamesOnlyList.Items.Add(pastedEvent.Type);
+                            EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+                        }
 
+                        // Update the UI controls based on the pasted event
+                        EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    MessageBox.Show("Invalid event data in clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        } //tenhle event se spusti kdyz se zmackne paste a vloží event z clipboardu do listu pod selectnutej index
 
+        private void EditorFormButtonAdd_Click(object sender, EventArgs e)
+        {
+            EditorFormContextMenuEvents.Show(EditorFormButtonAdd, 70, 0);
+        } //tenhle event se spusti kdyz se zmackne add a otevře se context menu s eventama
 
+        private void delayEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            var newDelayEvent = new DelayEvent { Duration = 0 };
 
-        //TODO: pridat delete tlačítko
+            if (selectedIndex != -1)
+            {
+                loadedEvents.Insert(selectedIndex + 1, newDelayEvent);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, newDelayEvent.Type);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+            }
+            else
+            {
+                loadedEvents.Add(newDelayEvent);
+                EventNamesOnlyList.Items.Add(newDelayEvent.Type);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+            }
+
+            ShowDelayEventControls();
+            newDelayTextBox.Text = string.Empty;
+            newDelayTextBox.Focus();
+        } //tenhle event se spusti kdyz se vybere DelayEvent z context menu strip a prida DelayEvent do listu
+
+        private void mouseDownEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            var newMouseDownEvent = new MouseDownEvent { X = 0, Y = 0, Button = "Left" };
+
+            if (selectedIndex != -1)
+            {
+                loadedEvents.Insert(selectedIndex + 1, newMouseDownEvent);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, newMouseDownEvent.Type);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+            }
+            else
+            {
+                loadedEvents.Add(newMouseDownEvent);
+                EventNamesOnlyList.Items.Add(newMouseDownEvent.Type);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+            }
+
+            ShowMouseEventControls();
+            newTextBoxX.Text = string.Empty;
+            newTextBoxY.Text = string.Empty;
+            newComboBoxForButton.SelectedItem = "Left";
+            newTextBoxX.Focus();
+        } //tenhle event se spusti kdyz se vybere MouseUpEvent z context menu strip a prida MouseDownEvent do listu
+
+        private void mouseUpEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            var newMouseUpEvent = new MouseUpEvent { X = 0, Y = 0, Button = "Left" };
+
+            if (selectedIndex != -1)
+            {
+                loadedEvents.Insert(selectedIndex + 1, newMouseUpEvent);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, newMouseUpEvent.Type);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+            }
+            else
+            {
+                loadedEvents.Add(newMouseUpEvent);
+                EventNamesOnlyList.Items.Add(newMouseUpEvent.Type);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+            }
+
+            ShowMouseEventControls();
+            newTextBoxX.Text = string.Empty;
+            newTextBoxY.Text = string.Empty;
+            newComboBoxForButton.SelectedItem = "Left";
+            newTextBoxX.Focus();
+        } //tenhle event se spusti kdyz se vybere MouseUpEvent z context menu strip a prida MouseUpEvent do listu
+
+        private void keyDownEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            var newKeyDownEvent = new KeyDownEvent { Key = string.Empty };
+
+            if (selectedIndex != -1)
+            {
+                loadedEvents.Insert(selectedIndex + 1, newKeyDownEvent);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, newKeyDownEvent.Type);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+            }
+            else
+            {
+                loadedEvents.Add(newKeyDownEvent);
+                EventNamesOnlyList.Items.Add(newKeyDownEvent.Type);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+            }
+
+            ShowKeyEventControls();
+            newKeyTextBox.Text = string.Empty;
+            newKeyTextBox.Focus();
+        } //tenhle event se spusti kdyz se vybere KeyDownEvent z context menu strip a prida KeyDownEvent do listu
+
+        private void keyUpEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = EventNamesOnlyList.SelectedIndex;
+            var newKeyUpEvent = new KeyUpEvent { Key = string.Empty };
+
+            if (selectedIndex != -1)
+            {
+                loadedEvents.Insert(selectedIndex + 1, newKeyUpEvent);
+                EventNamesOnlyList.Items.Insert(selectedIndex + 1, newKeyUpEvent.Type);
+                EventNamesOnlyList.SelectedIndex = selectedIndex + 1;
+            }
+            else
+            {
+                loadedEvents.Add(newKeyUpEvent);
+                EventNamesOnlyList.Items.Add(newKeyUpEvent.Type);
+                EventNamesOnlyList.SelectedIndex = EventNamesOnlyList.Items.Count - 1;
+            }
+
+            ShowKeyEventControls();
+            newKeyTextBox.Text = string.Empty;
+            newKeyTextBox.Focus();
+
+        } //tenhle event se spusti kdyz se vybere KeyUpEvent z context menu strip a prida KeyUpEvent do listu
+
         //TODO: pridat start cyklus (s počtem) tlacitko (a asi i s ID)
         //TODO: pridat konec cyklu tlacitko (s ID)
 
+        //done: funkčnost copy
+        //done: funkčnost paste
+        //done: pridat funkčnost extract
+        //TODO: pridat ošetření aby v textboxu bylo pouze číslo pokud se jedna o souřadnice (a aby to nehodilo error když tam bude něco jinýho)
+        //done: pridat delete tlačítko
         //done: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
         //done: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
         //done: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error !!! WORKING ON IT
-
-        //TODO: fixnout json file selector kdyz zmenim ten file tak se nezmeni ta tabulka
+        //done: fixnout json file selector kdyz zmenim ten file na jinaci file tak se nezmeni ta tabulka
 
         //TODO: dodelat player
         //TODO: udelat to cely nejako hezky
-
     }
 }

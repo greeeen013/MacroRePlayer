@@ -39,8 +39,8 @@ class InputEventConverter : JsonConverter<IInputEvent>
 		return inputEvent;
 	}
 
-	public override void WriteJson(JsonWriter writer, IInputEvent value, JsonSerializer serializer)
-	{
-		serializer.Serialize(writer, value);
-	}
+    public override void WriteJson(JsonWriter writer, IInputEvent value, JsonSerializer serializer)
+    {
+        serializer.Serialize(writer, value);
+    }
 }

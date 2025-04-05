@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorForm));
             this.EventNamesOnlyList = new System.Windows.Forms.ListBox();
             this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
-            this.Save = new System.Windows.Forms.Button();
+            this.EditorFormButtonSave = new System.Windows.Forms.Button();
             this.EditorFormButtonUp = new System.Windows.Forms.Button();
             this.EditorFormButtonDown = new System.Windows.Forms.Button();
             this.EditorFormButtonDelete = new System.Windows.Forms.Button();
@@ -40,7 +40,7 @@
             this.EditorFormButtonPaste = new System.Windows.Forms.Button();
             this.EditorFormButtonExtract = new System.Windows.Forms.Button();
             this.EditorFormButtonAdd = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.EditorFormContextMenuEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.delayEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mouseDownEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +54,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.HoldTimer = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStrip1.SuspendLayout();
+            this.EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,18 +77,20 @@
             this.JsonFileSelectorComboBox.DropDown += new System.EventHandler(this.JsonFileSelectorComboBox_DropDown);
             this.JsonFileSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.JsonFileSelectorComboBox_SelectedIndexChanged);
             // 
-            // Save
+            // EditorFormButtonSave
             // 
-            this.Save.Location = new System.Drawing.Point(231, 348);
-            this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
-            this.Save.TabIndex = 13;
-            this.Save.Text = "Save";
-            this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this.EditorFormButtonSave.Enabled = false;
+            this.EditorFormButtonSave.Location = new System.Drawing.Point(231, 348);
+            this.EditorFormButtonSave.Name = "EditorFormButtonSave";
+            this.EditorFormButtonSave.Size = new System.Drawing.Size(75, 23);
+            this.EditorFormButtonSave.TabIndex = 13;
+            this.EditorFormButtonSave.Text = "Save";
+            this.EditorFormButtonSave.UseVisualStyleBackColor = true;
+            this.EditorFormButtonSave.Click += new System.EventHandler(this.Save_Click);
             // 
             // EditorFormButtonUp
             // 
+            this.EditorFormButtonUp.Enabled = false;
             this.EditorFormButtonUp.Location = new System.Drawing.Point(358, 246);
             this.EditorFormButtonUp.Name = "EditorFormButtonUp";
             this.EditorFormButtonUp.Size = new System.Drawing.Size(75, 23);
@@ -100,6 +102,7 @@
             // 
             // EditorFormButtonDown
             // 
+            this.EditorFormButtonDown.Enabled = false;
             this.EditorFormButtonDown.Location = new System.Drawing.Point(359, 276);
             this.EditorFormButtonDown.Name = "EditorFormButtonDown";
             this.EditorFormButtonDown.Size = new System.Drawing.Size(75, 23);
@@ -111,6 +114,7 @@
             // 
             // EditorFormButtonDelete
             // 
+            this.EditorFormButtonDelete.Enabled = false;
             this.EditorFormButtonDelete.Location = new System.Drawing.Point(359, 305);
             this.EditorFormButtonDelete.Name = "EditorFormButtonDelete";
             this.EditorFormButtonDelete.Size = new System.Drawing.Size(75, 23);
@@ -121,6 +125,7 @@
             // 
             // EditorFormButtonCopy
             // 
+            this.EditorFormButtonCopy.Enabled = false;
             this.EditorFormButtonCopy.Location = new System.Drawing.Point(359, 334);
             this.EditorFormButtonCopy.Name = "EditorFormButtonCopy";
             this.EditorFormButtonCopy.Size = new System.Drawing.Size(75, 23);
@@ -131,6 +136,7 @@
             // 
             // EditorFormButtonPaste
             // 
+            this.EditorFormButtonPaste.Enabled = false;
             this.EditorFormButtonPaste.Location = new System.Drawing.Point(358, 392);
             this.EditorFormButtonPaste.Name = "EditorFormButtonPaste";
             this.EditorFormButtonPaste.Size = new System.Drawing.Size(75, 23);
@@ -141,6 +147,7 @@
             // 
             // EditorFormButtonExtract
             // 
+            this.EditorFormButtonExtract.Enabled = false;
             this.EditorFormButtonExtract.Location = new System.Drawing.Point(359, 363);
             this.EditorFormButtonExtract.Name = "EditorFormButtonExtract";
             this.EditorFormButtonExtract.Size = new System.Drawing.Size(75, 23);
@@ -151,6 +158,7 @@
             // 
             // EditorFormButtonAdd
             // 
+            this.EditorFormButtonAdd.Enabled = false;
             this.EditorFormButtonAdd.Location = new System.Drawing.Point(439, 246);
             this.EditorFormButtonAdd.Name = "EditorFormButtonAdd";
             this.EditorFormButtonAdd.Size = new System.Drawing.Size(75, 23);
@@ -159,15 +167,14 @@
             this.EditorFormButtonAdd.UseVisualStyleBackColor = true;
             this.EditorFormButtonAdd.Click += new System.EventHandler(this.EditorFormButtonAdd_Click);
             // 
-            // contextMenuStrip1
+            // EditorFormContextMenuEvents
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditorFormContextMenuEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
-            this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
+            this.EditorFormContextMenuEvents.Name = "contextMenuStrip1";
+            this.EditorFormContextMenuEvents.Size = new System.Drawing.Size(181, 92);
             // 
             // toolStripMenuItem1
             // 
@@ -184,32 +191,37 @@
             // delayEventToolStripMenuItem
             // 
             this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
-            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.delayEventToolStripMenuItem.Text = "DelayEvent";
+            this.delayEventToolStripMenuItem.Click += new System.EventHandler(this.delayEventToolStripMenuItem_Click);
             // 
             // mouseDownEventToolStripMenuItem
             // 
             this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
-            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
+            this.mouseDownEventToolStripMenuItem.Click += new System.EventHandler(this.mouseDownEventToolStripMenuItem_Click);
             // 
             // mouseUpEventToolStripMenuItem
             // 
             this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
-            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
+            this.mouseUpEventToolStripMenuItem.Click += new System.EventHandler(this.mouseUpEventToolStripMenuItem_Click);
             // 
             // keyDownEventToolStripMenuItem
             // 
             this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
-            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
+            this.keyDownEventToolStripMenuItem.Click += new System.EventHandler(this.keyDownEventToolStripMenuItem_Click);
             // 
             // keyUpEventToolStripMenuItem
             // 
             this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
-            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
+            this.keyUpEventToolStripMenuItem.Click += new System.EventHandler(this.keyUpEventToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -223,13 +235,13 @@
             // startLoopEventToolStripMenuItem
             // 
             this.startLoopEventToolStripMenuItem.Name = "startLoopEventToolStripMenuItem";
-            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.startLoopEventToolStripMenuItem.Text = "StartLoopEvent";
             // 
             // stopLoopEventToolStripMenuItem
             // 
             this.stopLoopEventToolStripMenuItem.Name = "stopLoopEventToolStripMenuItem";
-            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopLoopEventToolStripMenuItem.Text = "StopLoopEvent";
             // 
             // toolStripMenuItem3
@@ -267,13 +279,13 @@
             this.Controls.Add(this.EditorFormButtonDelete);
             this.Controls.Add(this.EditorFormButtonDown);
             this.Controls.Add(this.EditorFormButtonUp);
-            this.Controls.Add(this.Save);
+            this.Controls.Add(this.EditorFormButtonSave);
             this.Controls.Add(this.JsonFileSelectorComboBox);
             this.Controls.Add(this.EventNamesOnlyList);
             this.Name = "EditorForm";
             this.Text = "EditorForm";
             this.Load += new System.EventHandler(this.EditorForm_Load);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.EditorFormContextMenuEvents.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -283,7 +295,7 @@
 
         private System.Windows.Forms.ListBox EventNamesOnlyList;
         private System.Windows.Forms.ComboBox JsonFileSelectorComboBox;
-        private System.Windows.Forms.Button Save;
+        private System.Windows.Forms.Button EditorFormButtonSave;
         private System.Windows.Forms.Button EditorFormButtonUp;
         private System.Windows.Forms.Button EditorFormButtonDown;
         private System.Windows.Forms.Button EditorFormButtonDelete;
@@ -291,7 +303,7 @@
         private System.Windows.Forms.Button EditorFormButtonPaste;
         private System.Windows.Forms.Button EditorFormButtonExtract;
         private System.Windows.Forms.Button EditorFormButtonAdd;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip EditorFormContextMenuEvents;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;

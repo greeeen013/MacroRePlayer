@@ -51,8 +51,8 @@
             // 
             // StartRecording
             // 
-            this.StartRecording.BackColor = System.Drawing.Color.Black;
-            this.StartRecording.ForeColor = System.Drawing.SystemColors.Control;
+            this.StartRecording.BackColor = System.Drawing.Color.White;
+            this.StartRecording.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StartRecording.Location = new System.Drawing.Point(17, 109);
             this.StartRecording.Name = "StartRecording";
             this.StartRecording.Size = new System.Drawing.Size(165, 45);
@@ -73,15 +73,15 @@
             // 
             // StopRecording
             // 
-            this.StopRecording.BackColor = System.Drawing.Color.Black;
-            this.StopRecording.ForeColor = System.Drawing.SystemColors.Control;
+            this.StopRecording.BackColor = System.Drawing.Color.White;
+            this.StopRecording.Enabled = false;
+            this.StopRecording.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StopRecording.Location = new System.Drawing.Point(17, 160);
             this.StopRecording.Name = "StopRecording";
             this.StopRecording.Size = new System.Drawing.Size(165, 45);
             this.StopRecording.TabIndex = 3;
             this.StopRecording.Text = "StopRecording";
             this.StopRecording.UseVisualStyleBackColor = false;
-            this.StopRecording.Visible = false;
             this.StopRecording.Click += new System.EventHandler(this.StopRecording_Click);
             // 
             // JsonFileSelectorForm
@@ -114,7 +114,7 @@
             // 
             this.FolderOpenerButton.BackColor = System.Drawing.Color.Black;
             this.FolderOpenerButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.FolderOpenerButton.Location = new System.Drawing.Point(59, 211);
+            this.FolderOpenerButton.Location = new System.Drawing.Point(17, 211);
             this.FolderOpenerButton.Name = "FolderOpenerButton";
             this.FolderOpenerButton.Size = new System.Drawing.Size(68, 51);
             this.FolderOpenerButton.TabIndex = 7;
@@ -157,6 +157,7 @@
             // 
             // RecorderGroupBox
             // 
+            this.RecorderGroupBox.Controls.Add(this.OpenEditorButton);
             this.RecorderGroupBox.Controls.Add(this.RecorderLabel);
             this.RecorderGroupBox.Controls.Add(this.StartRecording);
             this.RecorderGroupBox.Controls.Add(this.StopRecording);
@@ -172,7 +173,7 @@
             // 
             // OpenEditorButton
             // 
-            this.OpenEditorButton.Location = new System.Drawing.Point(57, 82);
+            this.OpenEditorButton.Location = new System.Drawing.Point(52, 268);
             this.OpenEditorButton.Name = "OpenEditorButton";
             this.OpenEditorButton.Size = new System.Drawing.Size(75, 23);
             this.OpenEditorButton.TabIndex = 15;
@@ -191,7 +192,6 @@
             // 
             // EditorGroupBox
             // 
-            this.EditorGroupBox.Controls.Add(this.OpenEditorButton);
             this.EditorGroupBox.Controls.Add(this.EditorLabel);
             this.EditorGroupBox.Location = new System.Drawing.Point(229, 3);
             this.EditorGroupBox.Name = "EditorGroupBox";
