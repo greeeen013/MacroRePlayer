@@ -41,16 +41,17 @@
             this.FolderDeleteButton = new System.Windows.Forms.Button();
             this.OpenEditorButton = new System.Windows.Forms.Button();
             this.PlayerGroupBox = new System.Windows.Forms.GroupBox();
+            this.EditorStartStopPlayingKeybindTextBox = new System.Windows.Forms.TextBox();
+            this.EditorStartStopKeybindSetButton = new System.Windows.Forms.Button();
+            this.EditorPlaybackSpeedLabel = new System.Windows.Forms.Label();
+            this.EditorPlaybackSpeedComboBox = new System.Windows.Forms.ComboBox();
+            this.EditorPlaybackMethodLabel = new System.Windows.Forms.Label();
             this.EditorPlaybackMethodComboBox = new System.Windows.Forms.ComboBox();
             this.EditorStopPlayingMacroButton = new System.Windows.Forms.Button();
             this.StartPlayingMacroButton = new System.Windows.Forms.Button();
             this.PlayerComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.EditorPlaybackMethodLabel = new System.Windows.Forms.Label();
-            this.EditorPlaybackSpeedLabel = new System.Windows.Forms.Label();
-            this.EditorPlaybackSpeedComboBox = new System.Windows.Forms.ComboBox();
-            this.EditorStartStopKeybindSetButton = new System.Windows.Forms.Button();
-            this.EditorStartStopPlayingKeybindTextBox = new System.Windows.Forms.TextBox();
+            this.TestButton = new System.Windows.Forms.Button();
             this.RecorderGroupBox.SuspendLayout();
             this.PlayerGroupBox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -192,6 +193,7 @@
             // 
             // PlayerGroupBox
             // 
+            this.PlayerGroupBox.Controls.Add(this.TestButton);
             this.PlayerGroupBox.Controls.Add(this.EditorStartStopPlayingKeybindTextBox);
             this.PlayerGroupBox.Controls.Add(this.EditorStartStopKeybindSetButton);
             this.PlayerGroupBox.Controls.Add(this.EditorPlaybackSpeedLabel);
@@ -207,6 +209,65 @@
             this.PlayerGroupBox.Size = new System.Drawing.Size(362, 402);
             this.PlayerGroupBox.TabIndex = 13;
             this.PlayerGroupBox.TabStop = false;
+            // 
+            // EditorStartStopPlayingKeybindTextBox
+            // 
+            this.EditorStartStopPlayingKeybindTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EditorStartStopPlayingKeybindTextBox.Location = new System.Drawing.Point(173, 185);
+            this.EditorStartStopPlayingKeybindTextBox.Name = "EditorStartStopPlayingKeybindTextBox";
+            this.EditorStartStopPlayingKeybindTextBox.ReadOnly = true;
+            this.EditorStartStopPlayingKeybindTextBox.Size = new System.Drawing.Size(50, 35);
+            this.EditorStartStopPlayingKeybindTextBox.TabIndex = 23;
+            this.EditorStartStopPlayingKeybindTextBox.Text = "None";
+            this.EditorStartStopPlayingKeybindTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EditorStartStopKeybindSetButton
+            // 
+            this.EditorStartStopKeybindSetButton.BackColor = System.Drawing.Color.White;
+            this.EditorStartStopKeybindSetButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.EditorStartStopKeybindSetButton.Location = new System.Drawing.Point(82, 184);
+            this.EditorStartStopKeybindSetButton.Name = "EditorStartStopKeybindSetButton";
+            this.EditorStartStopKeybindSetButton.Size = new System.Drawing.Size(85, 45);
+            this.EditorStartStopKeybindSetButton.TabIndex = 21;
+            this.EditorStartStopKeybindSetButton.Text = "Start/Stop keybind";
+            this.EditorStartStopKeybindSetButton.UseVisualStyleBackColor = false;
+            this.EditorStartStopKeybindSetButton.Click += new System.EventHandler(this.EditorStartStopKeybindSetButton_Click);
+            // 
+            // EditorPlaybackSpeedLabel
+            // 
+            this.EditorPlaybackSpeedLabel.AutoSize = true;
+            this.EditorPlaybackSpeedLabel.Location = new System.Drawing.Point(82, 297);
+            this.EditorPlaybackSpeedLabel.Name = "EditorPlaybackSpeedLabel";
+            this.EditorPlaybackSpeedLabel.Size = new System.Drawing.Size(82, 13);
+            this.EditorPlaybackSpeedLabel.TabIndex = 19;
+            this.EditorPlaybackSpeedLabel.Text = "playback speed";
+            // 
+            // EditorPlaybackSpeedComboBox
+            // 
+            this.EditorPlaybackSpeedComboBox.FormattingEnabled = true;
+            this.EditorPlaybackSpeedComboBox.Items.AddRange(new object[] {
+            "0,25x",
+            "0,5x",
+            "0,75x",
+            "1x",
+            "2x",
+            "3x",
+            "4x",
+            "5x",
+            "10x"});
+            this.EditorPlaybackSpeedComboBox.Location = new System.Drawing.Point(85, 313);
+            this.EditorPlaybackSpeedComboBox.Name = "EditorPlaybackSpeedComboBox";
+            this.EditorPlaybackSpeedComboBox.Size = new System.Drawing.Size(79, 21);
+            this.EditorPlaybackSpeedComboBox.TabIndex = 20;
+            // 
+            // EditorPlaybackMethodLabel
+            // 
+            this.EditorPlaybackMethodLabel.AutoSize = true;
+            this.EditorPlaybackMethodLabel.Location = new System.Drawing.Point(82, 252);
+            this.EditorPlaybackMethodLabel.Name = "EditorPlaybackMethodLabel";
+            this.EditorPlaybackMethodLabel.Size = new System.Drawing.Size(88, 13);
+            this.EditorPlaybackMethodLabel.TabIndex = 17;
+            this.EditorPlaybackMethodLabel.Text = "playback method";
             // 
             // EditorPlaybackMethodComboBox
             // 
@@ -236,6 +297,7 @@
             // StartPlayingMacroButton
             // 
             this.StartPlayingMacroButton.BackColor = System.Drawing.Color.White;
+            this.StartPlayingMacroButton.Enabled = false;
             this.StartPlayingMacroButton.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StartPlayingMacroButton.Location = new System.Drawing.Point(82, 82);
             this.StartPlayingMacroButton.Name = "StartPlayingMacroButton";
@@ -253,6 +315,7 @@
             this.PlayerComboBox.Size = new System.Drawing.Size(121, 21);
             this.PlayerComboBox.TabIndex = 10;
             this.PlayerComboBox.DropDown += new System.EventHandler(this.PlayerComboBox_DropDown);
+            this.PlayerComboBox.SelectedIndexChanged += new System.EventHandler(this.PlayerComboBox_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 
@@ -268,65 +331,17 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(604, 417);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
-            // EditorPlaybackMethodLabel
+            // TestButton
             // 
-            this.EditorPlaybackMethodLabel.AutoSize = true;
-            this.EditorPlaybackMethodLabel.Location = new System.Drawing.Point(82, 252);
-            this.EditorPlaybackMethodLabel.Name = "EditorPlaybackMethodLabel";
-            this.EditorPlaybackMethodLabel.Size = new System.Drawing.Size(88, 13);
-            this.EditorPlaybackMethodLabel.TabIndex = 17;
-            this.EditorPlaybackMethodLabel.Text = "playback method";
-            // 
-            // EditorPlaybackSpeedLabel
-            // 
-            this.EditorPlaybackSpeedLabel.AutoSize = true;
-            this.EditorPlaybackSpeedLabel.Location = new System.Drawing.Point(82, 297);
-            this.EditorPlaybackSpeedLabel.Name = "EditorPlaybackSpeedLabel";
-            this.EditorPlaybackSpeedLabel.Size = new System.Drawing.Size(82, 13);
-            this.EditorPlaybackSpeedLabel.TabIndex = 19;
-            this.EditorPlaybackSpeedLabel.Text = "playback speed";
-            // 
-            // EditorPlaybackSpeedComboBox
-            // 
-            this.EditorPlaybackSpeedComboBox.FormattingEnabled = true;
-            this.EditorPlaybackSpeedComboBox.Items.AddRange(new object[] {
-            "0,25x",
-            "0,5x",
-            "0,75x",
-            "1x",
-            "2x",
-            "3x",
-            "4x",
-            "5x",
-            "10x"});
-            this.EditorPlaybackSpeedComboBox.Location = new System.Drawing.Point(85, 313);
-            this.EditorPlaybackSpeedComboBox.Name = "EditorPlaybackSpeedComboBox";
-            this.EditorPlaybackSpeedComboBox.Size = new System.Drawing.Size(79, 21);
-            this.EditorPlaybackSpeedComboBox.TabIndex = 20;
-            // 
-            // EditorStartStopKeybindSetButton
-            // 
-            this.EditorStartStopKeybindSetButton.BackColor = System.Drawing.Color.White;
-            this.EditorStartStopKeybindSetButton.Enabled = false;
-            this.EditorStartStopKeybindSetButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.EditorStartStopKeybindSetButton.Location = new System.Drawing.Point(82, 184);
-            this.EditorStartStopKeybindSetButton.Name = "EditorStartStopKeybindSetButton";
-            this.EditorStartStopKeybindSetButton.Size = new System.Drawing.Size(85, 45);
-            this.EditorStartStopKeybindSetButton.TabIndex = 21;
-            this.EditorStartStopKeybindSetButton.Text = "Start/Stop keybind";
-            this.EditorStartStopKeybindSetButton.UseVisualStyleBackColor = false;
-            this.EditorStartStopKeybindSetButton.Click += new System.EventHandler(this.EditorStartStopKeybindSetButton_Click);
-            // 
-            // EditorStartStopPlayingKeybindTextBox
-            // 
-            this.EditorStartStopPlayingKeybindTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditorStartStopPlayingKeybindTextBox.Location = new System.Drawing.Point(173, 185);
-            this.EditorStartStopPlayingKeybindTextBox.Name = "EditorStartStopPlayingKeybindTextBox";
-            this.EditorStartStopPlayingKeybindTextBox.ReadOnly = true;
-            this.EditorStartStopPlayingKeybindTextBox.Size = new System.Drawing.Size(50, 35);
-            this.EditorStartStopPlayingKeybindTextBox.TabIndex = 23;
-            this.EditorStartStopPlayingKeybindTextBox.Text = "None";
-            this.EditorStartStopPlayingKeybindTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TestButton.BackColor = System.Drawing.Color.White;
+            this.TestButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TestButton.Location = new System.Drawing.Point(281, 184);
+            this.TestButton.Name = "TestButton";
+            this.TestButton.Size = new System.Drawing.Size(51, 45);
+            this.TestButton.TabIndex = 24;
+            this.TestButton.Text = "TestButton";
+            this.TestButton.UseVisualStyleBackColor = false;
+            this.TestButton.Click += new System.EventHandler(this.TestButton_ClickAsync);
             // 
             // Form1
             // 
@@ -377,6 +392,7 @@
         private System.Windows.Forms.ComboBox EditorPlaybackSpeedComboBox;
         private System.Windows.Forms.Button EditorStartStopKeybindSetButton;
         private System.Windows.Forms.TextBox EditorStartStopPlayingKeybindTextBox;
+        private System.Windows.Forms.Button TestButton;
     }
 }
 

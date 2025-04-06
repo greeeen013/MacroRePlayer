@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="InputEvent.cs" />
     <Compile Include="InputEventJsonConvertor.cs" />
+    <Compile Include="InputSender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EditorForm.resx">

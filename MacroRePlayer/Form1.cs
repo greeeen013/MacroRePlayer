@@ -6,8 +6,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Formatting = Newtonsoft.Json.Formatting;
+using System.Threading.Tasks;
+using System.Threading; // kvuli thread sleepu
 
 namespace MacroRePlayer
 {
@@ -163,29 +164,85 @@ namespace MacroRePlayer
 
         private void FolderDeleteButton_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Opravdu chcete smazat složku s makry?", "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            var result = MessageBox.Show("Opravdu chcete smazat složku s makry?", "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Warning); // zobrazí dialogové okno pro potvrzení smazání složky
+            if (result == DialogResult.Yes) // pokud uživatel potvrdí smazání
             {
-                if (Directory.Exists(directoryPath))
+                if (Directory.Exists(directoryPath)) // a pokud složka existuje
                 {
-                    Directory.Delete(directoryPath, true);
-                    MessageBox.Show("Složka byla úspěšně smazána.");
+                    Directory.Delete(directoryPath, true); // tak smaže složku a všechny její podadresáře a soubory
+                    MessageBox.Show("Složka byla úspěšně smazána."); // informuje uživatele o úspěšném smazání složky
                 }
                 else
                 {
-                    MessageBox.Show("Složka neexistuje.");
+                    MessageBox.Show("Složka neexistuje."); // pokud složka neexistuje, zobrazí chybovou hlášku
                 }
             }
         }
 
         private void PlayerComboBox_DropDown(object sender, EventArgs e)
         {
-
+            PlayerComboBox.Items.Clear(); // vyčistí položky ComboBoxu
+            if (Directory.Exists(directoryPath)) // ověří existenci složky
+            {
+                var files = Directory.GetFiles(directoryPath, "*.json"); // získá všechny .json soubory ve složce
+                foreach (var file in files)
+                {
+                    PlayerComboBox.Items.Add(Path.GetFileName(file)); // přidá název souboru do ComboBoxu
+                }
+            }
         }
 
-        private void StartPlayingMacroButton_Click(object sender, EventArgs e)
+        private void PlayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (PlayerComboBox.SelectedItem != null) // pokud je vybrán nějaký soubor
+            {
+                StartPlayingMacroButton.Enabled = true; // povolí tlačítko pro spuštění makra
+            }
+            else
+            {
+                StartPlayingMacroButton.Enabled = false; // zakáže tlačítko pro spuštění makra
+            }
+        }
 
+        private async void StartPlayingMacroButton_Click(object sender, EventArgs e)
+        {
+            if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
+
+            string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem.ToString()); // vytvoření cesty k souboru
+            if (!File.Exists(fileName)) return; // pokud soubor neexistuje, nic se nestane (ošetření)
+
+            
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new InputEventConverter());
+            var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboru
+            foreach (var inputEvent in events)
+            {
+                switch (inputEvent.Type)
+                {
+                    case "DelayEvent":
+                        var delayEvent = (DelayEvent)inputEvent;
+                        var end = DateTime.Now.AddMilliseconds(delayEvent.Duration);
+                        await Task.Delay(delayEvent.Duration);
+
+                        break;
+                   // case "MouseDown":
+                   //     var mouseDownEvent = (MouseDownEvent)inputEvent;
+                   //     MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftDown, mouseDownEvent.X, mouseDownEvent.Y);
+                   //     break;
+                   // case "MouseUp":
+                   //     var mouseUpEvent = (MouseUpEvent)inputEvent;
+                   //     MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftUp, mouseUpEvent.X, mouseUpEvent.Y);
+                   //     break;
+                    case "KeyDown":
+                        var keyDownEvent = (KeyDownEvent)inputEvent;
+                        //SimulateKeyDown((Keys)Enum.Parse(typeof(Keys), keyDownEvent.Key));
+                        break;
+                    case "KeyUp":
+                        var keyUpEvent = (KeyUpEvent)inputEvent;
+                        //SimulateKeyUp((Keys)Enum.Parse(typeof(Keys), keyUpEvent.Key));
+                        break;
+                }
+            }
         }
 
         private void StopPlayingMacroButton_Click(object sender, EventArgs e)
@@ -197,6 +254,106 @@ namespace MacroRePlayer
         {
 
         }
+
+
+
+        //VECI KE KEYUP A KEYDOWN
+        //private const int KEYEVENTF_KEYDOWN = 0x0000;   // Nic speciálního, jen "stisk"
+        //private const int KEYEVENTF_KEYUP = 0x0002;   // Uvolnění (pusť klávesu)
+        //
+        //[DllImport("user32.dll", SetLastError = true)]
+        //public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
+        
+        private void LeftDrag(Point start, Point end)
+        {
+            InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
+
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.LeftDown,
+                }
+            });
+
+            Thread.Sleep(100);
+
+            InputSender.SetCursorPosition(end.X, end.Y); // Přetáhne kurzor na koncovou pozici
+
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.LeftUp,
+                }
+            });
+        }
+
+        private void RightDrag(Point start, Point end)
+        {
+            InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
+
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.RightDown,
+                }
+            });
+
+            Thread.Sleep(100);
+
+            InputSender.SetCursorPosition(end.X, end.Y); // Přetáhne kurzor na koncovou pozici
+
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.RightUp,
+                }
+            });
+        }
+
+        private void PaintLines()
+        {
+            Point p = new Point(15, 175);
+            Rectangle r = Screen.GetWorkingArea(this);
+
+            for (int i = 1; i <= 10; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    LeftDrag(p, new Point(r.Width - 25, p.Y)); // Přetáhne kurzor na koncovou pozici
+                }
+                else
+                {
+                    RightDrag(p, new Point(r.Width - 25, p.Y)); // Přetáhne kurzor na koncovou pozici
+                }
+
+                p = new Point(p.X, p.Y + 50); // Posune kurzor dolů o 50 pixelů
+
+                Thread.Sleep(500); // Počká 500ms mezi tahy
+            }
+        }
+
+        async void TestButton_ClickAsync(object sender, EventArgs e)
+        {
+            // Spustí Notepad
+            //System.Diagnostics.Process.Start("notepad.exe");
+            await Task.Delay(1000);
+
+            SendToBack(); // Přesune okno na pozadí
+            Thread.Sleep(1000); // Počká 1 sekundu
+            PaintLines();
+            Activate();
+            MessageBox.Show("Test"); // Zobrazí zprávu
+
+            
+        }
+
+
+
 
         //TODO: smazání složky s makrama button s "are you sure message"
         //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej
