@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace MacroRePlayer
 {
+    //got it from https://www.codeproject.com/Articles/5264831/How-to-Send-Inputs-using-Csharp
     public class InputSender
     {
         #region Imports/Structs/Enums

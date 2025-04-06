@@ -74,7 +74,6 @@ namespace MacroRePlayer
         private List<IInputEvent> loadedEvents = new List<IInputEvent>();
         private string selectedFile = "";
 
-        bool isHolding = false; // kvuli drzeni tlacitka nahoru a dolu
         DateTime pressStartTime; // taky kvuli drzeni tlacitka nahoru a dolu
 
         private void EditorForm_Load(object sender, EventArgs e)
@@ -453,13 +452,11 @@ namespace MacroRePlayer
         private void EditorFormButtonUp_MouseDown(object sender, MouseEventArgs e)
         {
             pressStartTime = DateTime.Now;
-            isHolding = true;
             HoldTimer.Start();
         } //tenhle event se spusti kdyz se zmackne tlačítko nahoru myšítkem a jestli je držený
 
         private void EditorFormButtonUp_MouseUp(object sender, MouseEventArgs e)
         {
-            isHolding = false;
             HoldTimer.Stop();
 
             if ((DateTime.Now - pressStartTime) < TimeSpan.FromMilliseconds(HoldTimer.Interval)) //pokud je to rychleji nez interval tak to posune nahoru
@@ -508,13 +505,11 @@ namespace MacroRePlayer
         private void EditorFormButtonDown_MouseDown(object sender, MouseEventArgs e)
         {
             pressStartTime = DateTime.Now;
-            isHolding = true;
             HoldTimer.Start();
         } //tenhle event se spusti kdyz se zmackne tlačítko dolu myšítkem a jestli je držený
 
         private void EditorFormButtonDown_MouseUp(object sender, MouseEventArgs e)
         {
-            isHolding = false;
             HoldTimer.Stop();
 
             if ((DateTime.Now - pressStartTime) < TimeSpan.FromMilliseconds(HoldTimer.Interval)) //pokud je to rychleji nez interval tak to posune nahoru
@@ -603,7 +598,7 @@ namespace MacroRePlayer
                         EventNamesOnlyList_SelectionChanged(null, EventArgs.Empty);
                     }
                 }
-                catch (JsonException ex)
+                catch (JsonException)
                 {
                     MessageBox.Show("Invalid event data in clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

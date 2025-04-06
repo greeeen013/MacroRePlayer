@@ -1,6 +1,6 @@
 ﻿namespace MacroRePlayer
 {
-    partial class Form1
+    partial class RePlayerForm
     {
         /// <summary>
         /// Vyžaduje se proměnná návrháře.

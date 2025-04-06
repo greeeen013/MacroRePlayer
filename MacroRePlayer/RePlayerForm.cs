@@ -8,11 +8,15 @@ using System.Linq;
 using System.Windows.Forms;
 using Formatting = Newtonsoft.Json.Formatting;
 using System.Threading.Tasks;
-using System.Threading; // kvuli thread sleepu
+using System.Threading;
+using System.Runtime.InteropServices;
+using System.Globalization;
+using System.Text;
+using Microsoft.Win32; // kvuli thread sleepu
 
 namespace MacroRePlayer
 {
-    public partial class Form1 : Form
+    public partial class RePlayerForm : Form
     {
         private List<IInputEvent> events = new List<IInputEvent>();
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
@@ -22,11 +26,9 @@ namespace MacroRePlayer
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
 
-        public Form1()
+        public RePlayerForm()
         {
             InitializeComponent();
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -41,8 +43,6 @@ namespace MacroRePlayer
 
             this.EditorPlaybackSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList; // nastavení stylu ComboBoxu na DropDownList
             this.EditorPlaybackSpeedComboBox.SelectedIndex = 3; // nastavení výchozího indexu na 3 (čtvrtá položka v ComboBoxu což je 1x speed)
-
-
         } // tento event se spouští při načtení formuláře a předepíše výchozí název souboru (což je dnešní datum a čas) pro ukládání makra
 
         private void StartRecording_Click(object sender, EventArgs e)
@@ -228,10 +228,34 @@ namespace MacroRePlayer
 
                         break;
                     case "MouseDown":
-                        
+                        InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // Nastaví kurzor na pozici
+                        switch (((MouseDownEvent)inputEvent).Button)
+                        {
+                            case "Left":
+                                MouseOperation((uint)InputSender.MouseEventF.LeftDown);
+                                break;
+                            case "Right":
+                                MouseOperation((uint)InputSender.MouseEventF.RightDown);
+                                break;
+                            case "Middle":
+                                MouseOperation((uint)InputSender.MouseEventF.MiddleDown);
+                                break;
+                        }
                         break;
                     case "MouseUp":
-                        
+                        InputSender.SetCursorPosition(((MouseUpEvent)inputEvent).X, ((MouseUpEvent)inputEvent).Y); // Nastaví kurzor na pozici
+                        switch (((MouseUpEvent)inputEvent).Button)
+                        {
+                            case "Left":
+                                MouseOperation((uint)InputSender.MouseEventF.LeftUp);
+                                break;
+                            case "Right":
+                                MouseOperation((uint)InputSender.MouseEventF.RightUp);
+                                break;
+                            case "Middle":
+                                MouseOperation((uint)InputSender.MouseEventF.MiddleUp);
+                                break;
+                        }
                         break;
                     case "KeyDown":
                         
@@ -256,120 +280,287 @@ namespace MacroRePlayer
 
 
 
-
-        //got it from https://www.codeproject.com/Articles/5264831/How-to-Send-Inputs-using-Csharp
-        private void LeftDrag(Point start, Point end)
+        private void ShowCurrentKeyboardLayout()
         {
-            InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
+            string layoutText = KeyboardLayoutHelper.GetKeyboardLayoutText();
+            MessageBox.Show($"Current keyboard layout: {layoutText} keyboard");
+        } //funkce kterou zavoláme a vrátí název aktuálního jazykového rozložení klávesnice s pomocí KeyboardLayoutHelper.cs
 
-            InputSender.SendMouseInput(new InputSender.MouseInput[]
-            {
-                new InputSender.MouseInput
-                {
-                    dwFlags = (uint)InputSender.MouseEventF.LeftDown,
-                }
-            });
 
-            Thread.Sleep(100);
-
-            InputSender.SetCursorPosition(end.X, end.Y); // Přetáhne kurzor na koncovou pozici
-
-            InputSender.SendMouseInput(new InputSender.MouseInput[]
-            {
-                new InputSender.MouseInput
-                {
-                    dwFlags = (uint)InputSender.MouseEventF.LeftUp,
-                }
-            });
-        }
-
-        private void LeftMouseClick() //int x, int y, 
+        private void MouseOperation(uint button) //int x, int y, 
         {
             //InputSender.SetCursorPosition(x, y); // Nastaví kurzor na pozici
             InputSender.SendMouseInput(new InputSender.MouseInput[]
             {
                 new InputSender.MouseInput
                 {
-                    dwFlags = (uint)InputSender.MouseEventF.LeftDown,
+                    dwFlags = button,
                 }
             });
         }
 
-        private void LeftMouseClickk() //int x, int y, 
+        private void Type(string str)
         {
-            //InputSender.SetCursorPosition(x, y); // Nastaví kurzor na pozici
-            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            char c;
+            ushort scanCode;
+
+            for(int i = 0; i < str.Length; i++)
             {
-                new InputSender.MouseInput
+                c = char.Parse(str.Substring(i,1));
+                scanCode = GetScanCode(c);
+
+                if (ShiftRequired(c))
                 {
-                    dwFlags = (uint)InputSender.MouseEventF.LeftUp,
-                }
-            });
-        }
-        private void RightDrag(Point start, Point end)
-        {
-            InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
-
-            InputSender.SendMouseInput(new InputSender.MouseInput[]
-            {
-                new InputSender.MouseInput
-                {
-                    dwFlags = (uint)InputSender.MouseEventF.RightDown,
-                }
-            });
-
-            Thread.Sleep(100);
-
-            InputSender.SetCursorPosition(end.X, end.Y); // Přetáhne kurzor na koncovou pozici
-
-            InputSender.SendMouseInput(new InputSender.MouseInput[]
-            {
-                new InputSender.MouseInput
-                {
-                    dwFlags = (uint)InputSender.MouseEventF.RightUp,
-                }
-            });
-        }
-
-        private void PaintLines()
-        {
-            Point p = new Point(15, 175);
-            Rectangle r = Screen.GetWorkingArea(this);
-
-            for (int i = 1; i <= 10; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    LeftDrag(p, new Point(r.Width - 25, p.Y)); // Přetáhne kurzor na koncovou pozici
+                    
+                    PressCombo(0x2a, scanCode);
                 }
                 else
                 {
-                    RightDrag(p, new Point(r.Width - 25, p.Y)); // Přetáhne kurzor na koncovou pozici
+                    InputSender.ClickKey(scanCode);
+
                 }
 
-                p = new Point(p.X, p.Y + 50); // Posune kurzor dolů o 50 pixelů
-
-                Thread.Sleep(500); // Počká 500ms mezi tahy
             }
+        }
+
+        private ushort GetScanCode(char c)
+        {
+            switch (KeyboardLayoutHelper.GetKeyboardLayoutText())
+            {
+                case "Czech":
+                    switch (Char.ToLower(c))
+                    {
+                        case 'a': return 0x1e;
+                        case 'b': return 0x30;
+                        case 'c': return 0x2e;
+                        case 'd': return 0x20;
+                        case 'e': return 0x12;
+                        case 'f': return 0x21;
+                        case 'g': return 0x22;
+                        case 'h': return 0x23;
+                        case 'i': return 0x17;
+                        case 'j': return 0x24;
+                        case 'k': return 0x25;
+                        case 'l': return 0x26;
+                        case 'm': return 0x32;
+                        case 'n': return 0x31;
+                        case 'o': return 0x18;
+                        case 'p': return 0x19;
+                        case 'q': return 0x10;
+                        case 'r': return 0x13;
+                        case 's': return 0x1f;
+                        case 't': return 0x14;
+                        case 'u': return 0x16;
+                        case 'v': return 0x2f;
+                        case 'w': return 0x11;
+                        case 'x': return 0x2d;
+                        case 'y': return 0x2c; // Y is Z in Czech layout
+                        case 'z': return 0x15; // Z is Y in Czech layout
+                        case '0': return 0x0b;
+                        case '1': return 0x02;
+                        case '2': return 0x03;
+                        case '3': return 0x04;
+                        case '4': return 0x05;
+                        case '5': return 0x06;
+                        case '6': return 0x07;
+                        case '7': return 0x08;
+                        case '8': return 0x09;
+                        case '9': return 0x0a;
+                        case '.': return 0x34; // tečka
+                        case ',': return 0x33; // čárka
+                        case ';': return 0x33; // česká čárka s Shiftem (např. pro středník)
+                        case ':': return 0x34; // česká tečka s Shiftem (např. pro dvojtečku)
+                        case '-': return 0x0c;
+                        case '=': return 0x0d;
+                        case '+': return 0x0d; // Shift na stejné klávese jako =
+                        case '\\': return 0x2b;
+                        case '\'': return 0x28;
+                        case '"': return 0x28;
+                        case '/': return 0x35;
+                        case '?': return 0x35;
+                        case '<': return 0x56; // český `<` na extra klávese vedle levého Shiftu
+                        case ' ': return 0x39;
+                        case '\n': return 0x1c;
+                        case '\t': return 0x0f;
+                        case '\b': return 0x0e;
+                        case '\x1b': return 0x01;
+                        case '\x7f': return 0x0e;
+                        default: return 0x00;
+                    }
+                case "US":
+                    switch (Char.ToLower(c))
+                    {
+                        case 'a': return 0x1e;
+                        case 'b': return 0x30;
+                        case 'c': return 0x2e;
+                        case 'd': return 0x20;
+                        case 'e': return 0x12;
+                        case 'f': return 0x21;
+                        case 'g': return 0x22;
+                        case 'h': return 0x23;
+                        case 'i': return 0x17;
+                        case 'j': return 0x24;
+                        case 'k': return 0x25;
+                        case 'l': return 0x26;
+                        case 'm': return 0x32;
+                        case 'n': return 0x31;
+                        case 'o': return 0x18;
+                        case 'p': return 0x19;
+                        case 'q': return 0x10;
+                        case 'r': return 0x13;
+                        case 's': return 0x1f;
+                        case 't': return 0x14;
+                        case 'u': return 0x16;
+                        case 'v': return 0x2f;
+                        case 'w': return 0x11;
+                        case 'x': return 0x2d;
+                        case 'y': return 0x15;
+                        case 'z': return 0x2c;
+                        case '0': return 0x0b;
+                        case '1': return 0x02;
+                        case '2': return 0x03;
+                        case '3': return 0x04;
+                        case '4': return 0x05;
+                        case '5': return 0x06;
+                        case '6': return 0x07;
+                        case '7': return 0x08;
+                        case '8': return 0x09;
+                        case '9': return 0x0a;
+                        case '.': return 0x34;
+                        case ',': return 0x33;
+                        case ';': return 0x27;
+                        case ':': return 0x27;
+                        case '!': return 0x02;
+                        case '@': return 0x03;
+                        case '#': return 0x04;
+                        case '$': return 0x05;
+                        case '%': return 0x06;
+                        case '^': return 0x07;
+                        case '&': return 0x08;
+                        case '*': return 0x09;
+                        case '(': return 0x0a;
+                        case ')': return 0x0b;
+                        case '-': return 0x0c;
+                        case '_': return 0x0c;
+                        case '=': return 0x0d;
+                        case '+': return 0x0d;
+                        case '[': return 0x1a;
+                        case ']': return 0x1b;
+                        case '{': return 0x1a;
+                        case '}': return 0x1b;
+                        case '\\': return 0x2b;
+                        case '|': return 0x2b;
+                        case '\'': return 0x28;
+                        case '"': return 0x28;
+                        case '/': return 0x35;
+                        case '?': return 0x35;
+                        case '<': return 0x33;
+                        case '>': return 0x34;
+                        case '`': return 0x29;
+                        case '~': return 0x29;
+                        case '\t': return 0x0f; // Tab
+                        case '\b': return 0x0e; // Backspace
+                        case '\n': return 0x1c; // Enter
+                        case ' ': return 0x39; // Space
+                        case '\x1b': return 0x01; // Escape
+                        case '\x7f': return 0x0e; // Delete
+                        default: return 0x00; // Unknown character
+                    }
+                default:
+                    MessageBox.Show("Error please select english keyboard your keyboard:"+ KeyboardLayoutHelper.GetKeyboardLayoutText()); // Unknown layout
+                    return 0x00; // Return a default value
+            }
+        }
+
+        private bool ShiftRequired(char c)
+        {
+            // Seznam znaků, které vyžadují Shift
+            char[] chars = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?' }; //TODO ?
+            if (chars.Contains(c))
+            {
+                return true; // Pokud znak vyžaduje Shift, vrátí true
+            }
+            
+            if(Char.IsUpper(c)) // TODO ? kdz6 je velkz C ma to uplne jinaci funcknost
+            {
+                return true; // Pokud je znak velké písmeno, vrátí true
+            }
+
+            return false; // Jinak vrátí false
+        }
+
+        private static void PressCombo(ushort code1, ushort code2)
+        {
+
+            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+            {
+                      new InputSender.KeyboardInput
+                      {
+                          wScan = code1,
+                          dwFlags = (uint)(InputSender.KeyEventF.KeyDown | InputSender.KeyEventF.Scancode)
+                      },
+                      new InputSender.KeyboardInput
+                      {
+                          wScan = code2,
+                          dwFlags = (uint)(InputSender.KeyEventF.KeyDown | InputSender.KeyEventF.Scancode)
+                      }
+            });
+
+
+            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+            {
+                      new InputSender.KeyboardInput
+                      {
+                          wScan = code2,
+                          dwFlags = (uint)(InputSender.KeyEventF.KeyUp | InputSender.KeyEventF.Scancode)
+                      },
+                      new InputSender.KeyboardInput
+                      {
+                          wScan = code1,
+                          dwFlags = (uint)(InputSender.KeyEventF.KeyUp | InputSender.KeyEventF.Scancode)
+                      }
+            });
+
+
+        }
+
+        private static void PressExtended(ushort code)
+        {
+
+            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+            {
+                new InputSender.KeyboardInput
+                {
+                    wScan = 0xe0,
+                    dwFlags = (uint)(InputSender.KeyEventF.ExtendedKey | InputSender.KeyEventF.Scancode),
+                },
+                new InputSender.KeyboardInput
+                {
+                    wScan = code,
+                    dwFlags = (uint)(InputSender.KeyEventF.ExtendedKey | InputSender.KeyEventF.Scancode)
+                }
+            });
         }
 
         async void TestButton_ClickAsync(object sender, EventArgs e)
         {
             // Spustí Notepad
-            //System.Diagnostics.Process.Start("notepad.exe");
+            System.Diagnostics.Process.Start("notepad.exe");
             await Task.Delay(1000); // -1432 1015, -1432 942
+            Type("test");
+            Type(Environment.NewLine);
 
-            InputSender.SetCursorPosition(-1432, 1015);
-            await Task.Delay(50);
-            LeftMouseClick();
-            await Task.Delay(400);
-            InputSender.SetCursorPosition(-1432, 942);
-            await Task.Delay(50);
-            LeftMouseClickk();
+
+
+            //InputSender.SetCursorPosition(-1432, 1015);
+            //await Task.Delay(50);
+            //MouseOperation((uint)InputSender.MouseEventF.LeftDown);
+            //await Task.Delay(400);
+            //InputSender.SetCursorPosition(-1432, 942);
+            //await Task.Delay(50);
+            //MouseOperation((uint)InputSender.MouseEventF.LeftUp);
 
             //SendToBack(); // Přesune okno na pozadí
-            //Thread.Sleep(1000); // Počká 1 sekundu
-            //PaintLines();
             //Activate();
             //MessageBox.Show("Test"); // Zobrazí zprávu
 
@@ -379,7 +570,6 @@ namespace MacroRePlayer
 
 
 
-        //TODO: smazání složky s makrama button s "are you sure message"
         //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej
         //TODO: nejako zjistit a fixnou verticalní zarovnání v StartStopPlayingKeybindTextBox (idk jestli to je vubec possible)
     }
