@@ -128,6 +128,7 @@ hotkey_play = ""
 - **Saving and loading macros**: Export and share macros with others.
 - **startup delay**
 - **setting form**: with option tu execute macro in python (it won't be soon) and skin etc.
+- **Full movement tracking** *(Planned, but not soon)* 
 
 ---
 
