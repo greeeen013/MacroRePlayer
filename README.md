@@ -10,9 +10,9 @@
 ## Table of Contents
 1. [Key Features](#key-features-✨)
 2. [Installation](#installation-🛠️)
-3. [Prerequisites](#Prerequisites-🎯)
+3. [Requirements](#Requirements-🎯)
 4. [Getting Started](#getting-started-🚀)
-5. [Detailed Usage](#detailed-usage-📖)
+5. [Detailed Use](#Detailed-Use-📖)
    - [Recording](#Recording)
    - [Editing](#Editing)
    - [Replaying](#(Re)Playing)
@@ -31,14 +31,14 @@
   - Copying, pasting, and deleting events.
   - Inserting custom delays between events.
   - Adding custom loops (TODO).
-- **Replaying**:
+- **(Re)Play**:
   - Replay actions with few millisecond accuracy 
   - The ability to set a custom **keybind** to start or stop playback.
-  - Selecting a replay mode:
+  - Select a replay mode:
     - **One-time**  
     - **Repeat X times** (TODO)
     - **Infinite** (TODO)
-  - Adjusting the **playback speed** from **0.25×** to **10×** (TODO).
+  - Adjust the **playback speed** from **0.25×** to **10×** (TODO).
 - **User-friendly interface** – easy to understand for users with no prior macro experience and many tool tips.
 - **Advanced configuration options** for any future (TODO) additions.
 
@@ -55,7 +55,7 @@
 
 ---
 
-### Prerequisites 🎯
+### Requirements 🎯
 
   - none at this time
 
@@ -80,15 +80,15 @@ Configure your replay mode and speed, then start playback.
 
 ---
 
-## Detailed Usage 📖
+## Detailed Use 📖
 
-### Recording
+### Record
 1. Click **Start Recoring** (or use a defined keybind).
 2. The application begins recording all mouse and keyboard actions in the order they're performed.
 3. When finished, click **Stop Recording** (or the same keybind) again to stop.
 4. And it will save the sessions as `.json` files
 
-### Editing
+### Edit
 1. Click the **Open Editor** button
 2. The Editor window will appear. Then, select your `.json` file from the dropdown menu to display a complete timeline of all recorded events in the list.
 2. You can:
@@ -96,11 +96,11 @@ Configure your replay mode and speed, then start playback.
    - **Delete** - Remove unwanted events.
    - **Copy** actions to quickly duplicate the events.
    - **Extract** will delete and copy the action to quickly rearrange the events
-   - **Insert** to insert copied event under selected item
+   - **Insert** copied event under selected item
    - **Adjust time delays** between events.
    - Insert **conditions, loops** (TODO).
 
-### (Re)Playing
+### (Re)Play
 1. Set a **keybind** to **Start** / **Stop** the playback (optional). 
 2. In the **Player** window, choose:
    - **Mode** (one-time, repeat X times, infinite) (TODO).
@@ -122,16 +122,17 @@ hotkey_play = ""
 
 ## Planned Features 🗺️ (TODO)
 
-- **Repeating**: Replay the macro a specific number of times or indefinitely.
+- **Repeat**: Replay the macro a specific number of times or indefinitely.
 - **Variable speeds**: Adjust playback speed up to 10× or slow it down to 0.25×.
 - **Advanced loops**: Create your own loops or conditional logic (e.g.,`for loop`).
-- **Saving and loading macros**: Export and share macros with others.
+- **Save and load macros**: Export and share macros with others.
 - **startup delay**
 - **setting form**: with option tu execute macro in python (it won't be soon) and skin etc.
+- **Full movement tracking** *(Planned, but not soon)* 
 
 ---
 
-## Contributing
+## Contribution
 
 If you have suggestions for improvements or want to report a bug, feel free to open an **Issue** or submit a **Pull Request**. We welcome your contributions!
 
@@ -145,5 +146,7 @@ If you have suggestions for improvements or want to report a bug, feel free to o
 6. **Push & Create PR:**
    ```bash
    git push origin feature/your-feature
-   
 
+---
+
+Thank you for your interest in MacroRePlayer! We hope it helps you automate repetitive tasks and allows you to focus on more important and creative work. If you have any questions or ideas, feel free to reach out in the [Issues](https://github.com/greeeen013/MacroRePlayer/issues).
