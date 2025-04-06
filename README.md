@@ -146,5 +146,7 @@ If you have suggestions for improvements or want to report a bug, feel free to o
 6. **Push & Create PR:**
    ```bash
    git push origin feature/your-feature
-   
+
+---
+
 Thank you for your interest in MacroRePlayer! We hope it helps you automate repetitive tasks and allows you to focus on more important and creative work. If you have any questions or ideas, feel free to reach out in the [Issues](https://github.com/greeeen013/MacroRePlayer/issues).
