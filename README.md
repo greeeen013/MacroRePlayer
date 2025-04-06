@@ -1,6 +1,6 @@
 # MacroRePlayer ⌨️🖱️
 
-![GitHub](https://img.shields.io/github/license/greeeen013/MacroRePlayer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/greeeen013/MacroRePlayer)](https://github.com/greeeen013/MacroRePlayer/stargazers)
 
 **MacroRePlayer** is an application designed for **recording**, **editing**, and **replaying** mouse and keyboard events. The main goal is to simplify the automation of repetitive tasks on a computer without the need to write custom scripts. The project is designed to provide a user-friendly interface with **maximum control** over recorded events, and will eventually allow additional advanced features like custom loops, infinite replay, or adjustable speeds.
