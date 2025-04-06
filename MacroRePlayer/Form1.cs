@@ -224,22 +224,20 @@ namespace MacroRePlayer
                         var end = DateTime.Now.AddMilliseconds(delayEvent.Duration);
                         await Task.Delay(delayEvent.Duration);
 
+                        //pridal bych ze to tady checkne jestli je zmacknutej keybind na stop prehravani makra TODO
+
                         break;
-                   // case "MouseDown":
-                   //     var mouseDownEvent = (MouseDownEvent)inputEvent;
-                   //     MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftDown, mouseDownEvent.X, mouseDownEvent.Y);
-                   //     break;
-                   // case "MouseUp":
-                   //     var mouseUpEvent = (MouseUpEvent)inputEvent;
-                   //     MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftUp, mouseUpEvent.X, mouseUpEvent.Y);
-                   //     break;
+                    case "MouseDown":
+                        
+                        break;
+                    case "MouseUp":
+                        
+                        break;
                     case "KeyDown":
-                        var keyDownEvent = (KeyDownEvent)inputEvent;
-                        //SimulateKeyDown((Keys)Enum.Parse(typeof(Keys), keyDownEvent.Key));
+                        
                         break;
                     case "KeyUp":
-                        var keyUpEvent = (KeyUpEvent)inputEvent;
-                        //SimulateKeyUp((Keys)Enum.Parse(typeof(Keys), keyUpEvent.Key));
+                        
                         break;
                 }
             }
@@ -257,14 +255,9 @@ namespace MacroRePlayer
 
 
 
-        //VECI KE KEYUP A KEYDOWN
-        //private const int KEYEVENTF_KEYDOWN = 0x0000;   // Nic speciálního, jen "stisk"
-        //private const int KEYEVENTF_KEYUP = 0x0002;   // Uvolnění (pusť klávesu)
-        //
-        //[DllImport("user32.dll", SetLastError = true)]
-        //public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
-        
+
+        //got it from https://www.codeproject.com/Articles/5264831/How-to-Send-Inputs-using-Csharp
         private void LeftDrag(Point start, Point end)
         {
             InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
@@ -290,6 +283,29 @@ namespace MacroRePlayer
             });
         }
 
+        private void LeftMouseClick() //int x, int y, 
+        {
+            //InputSender.SetCursorPosition(x, y); // Nastaví kurzor na pozici
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.LeftDown,
+                }
+            });
+        }
+
+        private void LeftMouseClickk() //int x, int y, 
+        {
+            //InputSender.SetCursorPosition(x, y); // Nastaví kurzor na pozici
+            InputSender.SendMouseInput(new InputSender.MouseInput[]
+            {
+                new InputSender.MouseInput
+                {
+                    dwFlags = (uint)InputSender.MouseEventF.LeftUp,
+                }
+            });
+        }
         private void RightDrag(Point start, Point end)
         {
             InputSender.SetCursorPosition(start.X, start.Y); // Nastaví kurzor na počáteční pozici
@@ -341,15 +357,23 @@ namespace MacroRePlayer
         {
             // Spustí Notepad
             //System.Diagnostics.Process.Start("notepad.exe");
-            await Task.Delay(1000);
+            await Task.Delay(1000); // -1432 1015, -1432 942
 
-            SendToBack(); // Přesune okno na pozadí
-            Thread.Sleep(1000); // Počká 1 sekundu
-            PaintLines();
-            Activate();
-            MessageBox.Show("Test"); // Zobrazí zprávu
+            InputSender.SetCursorPosition(-1432, 1015);
+            await Task.Delay(50);
+            LeftMouseClick();
+            await Task.Delay(400);
+            InputSender.SetCursorPosition(-1432, 942);
+            await Task.Delay(50);
+            LeftMouseClickk();
 
-            
+            //SendToBack(); // Přesune okno na pozadí
+            //Thread.Sleep(1000); // Počká 1 sekundu
+            //PaintLines();
+            //Activate();
+            //MessageBox.Show("Test"); // Zobrazí zprávu
+
+
         }
 
 
