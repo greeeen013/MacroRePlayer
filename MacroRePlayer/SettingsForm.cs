@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,43 @@ namespace MacroRePlayer
 
         private void SettingsSaveButton_Click(object sender, EventArgs e)
         {
+            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
+            if (File.Exists(settingsPath))
+            {
+                var settings = WriteOutSettings();
+                File.WriteAllText(settingsPath, settings.ToString());
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
+                var settings = WriteOutSettings();
+                File.WriteAllText(settingsPath, settings.ToString());
+            }
+        }
 
+        private StringBuilder WriteOutSettings()
+        {
+            var settings = new StringBuilder();
+            settings.AppendLine("[settings]");
+            settings.AppendLine($"ExecutionPlayer=\"{SettingsExecutionLanguageComboBox.SelectedItem}\"");
+            settings.AppendLine($"FormTheme=\"{SettingsFormThemeComboBox.SelectedItem}\"");
+            if (int.TryParse(SettingsStartUpDelayTextBox.Text, out int startUpDelay))
+            {
+                settings.AppendLine($"PlayerStartUpDelay={startUpDelay}");
+            }
+            else
+            {
+                // Handle the error appropriately, e.g., set a default value or show a message to the user
+                settings.AppendLine("PlayerStartUpDelay=0");
+            }
+            settings.AppendLine($"DefaultPlaybackMethod=\"{SettingsPlaybackMethodComboBox.SelectedItem}\"");
+            settings.AppendLine($"DefaultPlaybackSpeed=\"{SettingsPlaybackSpeedComboBox.SelectedItem}\"");
+            settings.AppendLine($"PlayerDelayEventOffset={(int)SettingsDelayEventOffsetTrackBar.Value}");
+            settings.AppendLine($"KeyRepeating={(bool)SettingsKeyRepeatingCheckBox.Checked}");
+            settings.AppendLine($"KeyDelayBeforeRepetetion={(int)SettingsKeyDelayBeforeRepetetionTrackBar.Value}");
+            settings.AppendLine($"KeyRepetetionRate={(int)SettingsKeyRepetetionRateTrackBar.Value}");
+
+            return settings;
         }
     }
 }

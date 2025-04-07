@@ -43,16 +43,17 @@
             this.SettingsDefaultPlaybackSpeedLabel = new System.Windows.Forms.Label();
             this.SettingsPlaybackSpeedComboBox = new System.Windows.Forms.ComboBox();
             this.SettingsKeyDelayBeforeRepeationLabel = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.SettingsKeyRepeatingCheckBox = new System.Windows.Forms.CheckBox();
             this.SettingsKeyDelayBeforeRepetetionTrackBar = new System.Windows.Forms.TrackBar();
             this.SettingsKeyRepetetionRateTrackBar = new System.Windows.Forms.TrackBar();
             this.SettingsKeyRepetitionRateLabel = new System.Windows.Forms.Label();
             this.SettingsPlayerDelayOffsetLabel = new System.Windows.Forms.Label();
-            this.SettingsDelayEventOffsetTextBox = new System.Windows.Forms.TextBox();
             this.SettingsKeyDelayBeforeRepeationWValueLabel = new System.Windows.Forms.Label();
             this.SettingsKeyRepetitionRateWValueLabel = new System.Windows.Forms.Label();
+            this.SettingsDelayEventOffsetTrackBar = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsKeyDelayBeforeRepetetionTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsKeyRepetetionRateTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsDelayEventOffsetTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // ExecutionPlayerMakroLabel
@@ -214,17 +215,17 @@
             this.SettingsKeyDelayBeforeRepeationLabel.TabIndex = 22;
             this.SettingsKeyDelayBeforeRepeationLabel.Text = "key delay before repetition";
             // 
-            // checkBox1
+            // SettingsKeyRepeatingCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(8, 181);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(96, 17);
-            this.checkBox1.TabIndex = 23;
-            this.checkBox1.Text = "Key Repeating";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.SettingsKeyRepeatingCheckBox.AutoSize = true;
+            this.SettingsKeyRepeatingCheckBox.Checked = true;
+            this.SettingsKeyRepeatingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SettingsKeyRepeatingCheckBox.Location = new System.Drawing.Point(8, 181);
+            this.SettingsKeyRepeatingCheckBox.Name = "SettingsKeyRepeatingCheckBox";
+            this.SettingsKeyRepeatingCheckBox.Size = new System.Drawing.Size(96, 17);
+            this.SettingsKeyRepeatingCheckBox.TabIndex = 23;
+            this.SettingsKeyRepeatingCheckBox.Text = "Key Repeating";
+            this.SettingsKeyRepeatingCheckBox.UseVisualStyleBackColor = true;
             // 
             // SettingsKeyDelayBeforeRepetetionTrackBar
             // 
@@ -268,14 +269,6 @@
             this.SettingsPlayerDelayOffsetLabel.TabIndex = 27;
             this.SettingsPlayerDelayOffsetLabel.Text = "Player DelayEvent offset";
             // 
-            // SettingsDelayEventOffsetTextBox
-            // 
-            this.SettingsDelayEventOffsetTextBox.Location = new System.Drawing.Point(191, 201);
-            this.SettingsDelayEventOffsetTextBox.Name = "SettingsDelayEventOffsetTextBox";
-            this.SettingsDelayEventOffsetTextBox.Size = new System.Drawing.Size(100, 20);
-            this.SettingsDelayEventOffsetTextBox.TabIndex = 28;
-            this.SettingsDelayEventOffsetTextBox.Text = "0";
-            // 
             // SettingsKeyDelayBeforeRepeationWValueLabel
             // 
             this.SettingsKeyDelayBeforeRepeationWValueLabel.AutoSize = true;
@@ -294,19 +287,27 @@
             this.SettingsKeyRepetitionRateWValueLabel.TabIndex = 30;
             this.SettingsKeyRepetitionRateWValueLabel.Text = "Label na kterym bude hodnota";
             // 
+            // SettingsDelayEventOffsetTrackBar
+            // 
+            this.SettingsDelayEventOffsetTrackBar.Location = new System.Drawing.Point(191, 201);
+            this.SettingsDelayEventOffsetTrackBar.Maximum = 100;
+            this.SettingsDelayEventOffsetTrackBar.Name = "SettingsDelayEventOffsetTrackBar";
+            this.SettingsDelayEventOffsetTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.SettingsDelayEventOffsetTrackBar.TabIndex = 31;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(395, 456);
+            this.Controls.Add(this.SettingsDelayEventOffsetTrackBar);
             this.Controls.Add(this.SettingsKeyRepetitionRateWValueLabel);
             this.Controls.Add(this.SettingsKeyDelayBeforeRepeationWValueLabel);
-            this.Controls.Add(this.SettingsDelayEventOffsetTextBox);
             this.Controls.Add(this.SettingsPlayerDelayOffsetLabel);
             this.Controls.Add(this.SettingsKeyRepetitionRateLabel);
             this.Controls.Add(this.SettingsKeyRepetetionRateTrackBar);
             this.Controls.Add(this.SettingsKeyDelayBeforeRepetetionTrackBar);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.SettingsKeyRepeatingCheckBox);
             this.Controls.Add(this.SettingsKeyDelayBeforeRepeationLabel);
             this.Controls.Add(this.SettingsPlaybackSpeedComboBox);
             this.Controls.Add(this.SettingsDefaultPlaybackSpeedLabel);
@@ -327,6 +328,7 @@
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.SettingsKeyDelayBeforeRepetetionTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsKeyRepetetionRateTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsDelayEventOffsetTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -348,13 +350,13 @@
         private System.Windows.Forms.Label SettingsDefaultPlaybackSpeedLabel;
         private System.Windows.Forms.ComboBox SettingsPlaybackSpeedComboBox;
         private System.Windows.Forms.Label SettingsKeyDelayBeforeRepeationLabel;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox SettingsKeyRepeatingCheckBox;
         private System.Windows.Forms.TrackBar SettingsKeyDelayBeforeRepetetionTrackBar;
         private System.Windows.Forms.TrackBar SettingsKeyRepetetionRateTrackBar;
         private System.Windows.Forms.Label SettingsKeyRepetitionRateLabel;
         private System.Windows.Forms.Label SettingsPlayerDelayOffsetLabel;
-        private System.Windows.Forms.TextBox SettingsDelayEventOffsetTextBox;
         private System.Windows.Forms.Label SettingsKeyDelayBeforeRepeationWValueLabel;
         private System.Windows.Forms.Label SettingsKeyRepetitionRateWValueLabel;
+        private System.Windows.Forms.TrackBar SettingsDelayEventOffsetTrackBar;
     }
 }
