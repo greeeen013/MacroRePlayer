@@ -29,5 +29,20 @@ namespace MacroRePlayer
 
             SettingsPlaybackSpeedComboBox.SelectedIndex = 3;
         }
+
+        private void SettingsKeyDelayBeforeRepetetionTrackBar_Scroll(object sender, EventArgs e)
+        {
+            SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms";
+        }
+
+        private void SettingsKeyRepetetionRateTrackBar_Scroll(object sender, EventArgs e)
+        {
+            SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters";
+        }
+
+        private void SettingsSaveButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -314,12 +314,12 @@ namespace MacroRePlayer
 
         private void PlayerStopPlayingMacroButton_Click(object sender, EventArgs e)
         {
-
+            //TODO
         }
 
         private void PlayerStartStopKeybindSetButton_Click(object sender, EventArgs e)
         {
-
+            //TODO
         }
 
 
@@ -329,7 +329,7 @@ namespace MacroRePlayer
         {
             string layoutText = KeyboardLayoutHelper.GetKeyboardLayoutText();
             MessageBox.Show($"Current keyboard layout: {layoutText} keyboard");
-        } //funkce kterou zavoláme a vrátí název aktuálního jazykového rozložení klávesnice s pomocí KeyboardLayoutHelper.cs
+        } //funkce kterou zavoláme a vrátí název aktuálního jazykového rozložení klávesnice s pomocí KeyboardLayoutHelper.cs TODO
 
 
         private void MouseOperation(uint button)
@@ -591,7 +591,7 @@ namespace MacroRePlayer
             // Spustí Notepad
             System.Diagnostics.Process.Start("notepad.exe");
             await Task.Delay(1000); // -1432 1015, -1432 942
-            Type("!!!");
+            InputSender.ClickKey(0x15); // Z TODO meni se to podle rozložení klávesnice
             Type(Environment.NewLine);
 
 
@@ -611,16 +611,22 @@ namespace MacroRePlayer
 
         } //TESTOVACI FUNKCE
 
+        
+
+
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             SettingsForm settingsForm = new SettingsForm(); // vytvoření instance nastavení
             settingsForm.Show(); // zobrazení nastavení
             this.Enabled = false; // Disable the current form to make it non-clickable
-            settingsForm.FormClosed += (s, args) => this.Enabled = true; // Re-enable the current form when the settings form is closed
+            settingsForm.FormClosed += SettingsForm_FormClosed; // Attach event handler for FormClosed event
         } // tento event se spouští při kliknutí na tlačítko pro otevření nastavení a zobrazuje formulář pro nastavení aplikace
 
-
-
+        private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Enabled = true; // Re-enable the current form when the settings form is closed
+            //TODO
+        } // tento event se spouští při zavření formuláře nastavení a opět povolí hlavní formulář
 
 
         //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej
