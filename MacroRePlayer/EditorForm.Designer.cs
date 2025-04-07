@@ -54,8 +54,10 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.EditorFormToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.HoldTimer = new System.Windows.Forms.Timer(this.components);
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // EventNamesOnlyList
@@ -265,11 +267,20 @@
             // 
             this.HoldTimer.Interval = 200;
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(377, 46);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
+            this.dataGridView1.TabIndex = 23;
+            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.EditorFormButtonAdd);
             this.Controls.Add(this.EditorFormButtonExtract);
@@ -286,6 +297,7 @@
             this.Load += new System.EventHandler(this.EditorForm_Load);
             this.EditorFormContextMenuEvents.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -316,5 +328,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolTip EditorFormToolTip;
         private System.Windows.Forms.Timer HoldTimer;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
