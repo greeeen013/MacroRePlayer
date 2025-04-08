@@ -22,8 +22,6 @@ namespace MacroRePlayer
         private List<IInputEvent> loadedEvents = new List<IInputEvent>();
         private string selectedFile = "";
 
-        DateTime pressStartTime; // taky kvuli drzeni tlacitka nahoru a dolu
-
         int dragRow = -1;
         Label dragLabel = null;
 
@@ -59,14 +57,12 @@ namespace MacroRePlayer
                 loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
                 //MessageBox.Show($"{loadedEvents}");  
 
-                // Display the loaded events  
-                EditorEventsDataGridView.Rows.Clear(); // Corrected from Items.Clear() to Rows.Clear()  
+                EditorEventsDataGridView.Rows.Clear(); 
                 foreach (var inputEvent in loadedEvents)
                 {
                     string eventName = inputEvent.Type;
                     string eventValue = "";
 
-                    // Determine the value to display based on the event type  
                     switch (inputEvent)
                     {
                         case DelayEvent delayEvent:
@@ -85,8 +81,7 @@ namespace MacroRePlayer
                             eventValue = $"Key: {keyUpEvent.Key}";
                             break;
                     }
-
-                    // Add a new row to the DataGridView  
+                    
                     EditorEventsDataGridView.Rows.Add(null, eventName, eventValue, null);
                 }
             }
@@ -100,9 +95,57 @@ namespace MacroRePlayer
         {
             if (!string.IsNullOrEmpty(selectedFile))
             {
-                
+                var eventsToSave = new List<object>();
+
+                foreach (DataGridViewRow row in EditorEventsDataGridView.Rows)
+                {
+                    if (row.Cells[1].Value == null || row.Cells[2].Value == null)
+                        continue;
+
+                    string eventType = row.Cells[1].Value.ToString();
+                    string eventValue = row.Cells[2].Value.ToString();
+
+                    switch (eventType)
+                    {
+                        case "DelayEvent":
+                            if (int.TryParse(eventValue.Replace("Duration: ", "").Replace(" ms", ""), out int duration))
+                            {
+                                eventsToSave.Add(new { Type = "DelayEvent", Duration = duration });
+                            }
+                            break;
+                        case "MouseDown":
+                        case "MouseUp":
+                            var mouseParts = eventValue.Split(new[] { ", " }, StringSplitOptions.None);
+                            if (mouseParts.Length == 3 &&
+                                int.TryParse(mouseParts[0].Replace("X: ", ""), out int x) &&
+                                int.TryParse(mouseParts[1].Replace("Y: ", ""), out int y))
+                            {
+                                string button = mouseParts[2].Replace("Button: ", "");
+                                eventsToSave.Add(new { Type = eventType, X = x, Y = y, Button = button });
+                            }
+                            break;
+                        case "KeyDown":
+                        case "KeyUp":
+                            var keyParts = eventValue.Split(new[] { ", " }, StringSplitOptions.None);
+                            if (keyParts.Length == 2)
+                            {
+                                string key = keyParts[0].Replace("Key: ", "");
+                                string code = keyParts[1].Replace("Code: ", "");
+                                eventsToSave.Add(new { Type = eventType, Key = key, Code = code });
+                            }
+                            break;
+                    }
+                }
+
+                var json = JsonConvert.SerializeObject(eventsToSave, Formatting.Indented);
+                File.WriteAllText(selectedFile, json);
+                MessageBox.Show("File saved successfully!", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-        } //tenhle event se spusti kdyz se zmackne save a uloží data do jsonu
+            else
+            {
+                MessageBox.Show("No file selected to save.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void EditorEventsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -124,6 +167,7 @@ namespace MacroRePlayer
                     // Aktualizuj hodnoty v DataGridView
                     selectedRow.Cells[1].Value = form.SelectedEventType;
                     selectedRow.Cells[2].Value = form.UpdatedEventValue;
+                    selectedRow.Cells[3].Value = form.UpdateSecretValue; // Nastavení hodnoty na null pro další použití
                 }
             }
         }
@@ -141,22 +185,12 @@ namespace MacroRePlayer
 
         private void EditorEventsDataGridView_MouseMove(object sender, MouseEventArgs e)
         {
+            EditorEventsDataGridView.ClearSelection();
             if (e.Button == MouseButtons.Left && dragLabel != null)
             {
                 dragLabel.Location = e.Location;
-                EditorEventsDataGridView.ClearSelection();
+                
             }
-        }
-
-        private void EditorEventsDataGridView_DragOver(object sender, DragEventArgs e)
-        {
-            // Allow move effect during drag-and-drop
-            e.Effect = DragDropEffects.Move;
-        }
-
-        private void EditorEventsDataGridView_DragDrop(object sender, DragEventArgs e)
-        {
-            
         }
 
         private void EditorEventsDataGridView_MouseUp(object sender, MouseEventArgs e)
@@ -187,6 +221,11 @@ namespace MacroRePlayer
                 dragLabel.Dispose();
                 dragLabel = null;
             }
+        }
+
+        private void EditorEventsDataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            EditorEventsDataGridView.ClearSelection(); // to tady je protože jinak když přetahuju ty eventy tak tam problikava select modře a nevim jak jinak to fixnout
         }
 
 

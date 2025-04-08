@@ -185,14 +185,14 @@ namespace MacroRePlayer
         {
             if (isRecording)
             {
-                AddDelayEvent();
+                AddDelayEvent(); // přidání zpoždění mezi událostmi
 
-                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC); // získání skenovacího kódu klávesy
 
-                events.Add(new KeyUpEvent
+                events.Add(new KeyUpEvent // zaznamenání události uvolnění klávesy
                 {
-                    Key = e.KeyCode.ToString(),
-                    Code = $"0x{scancode:X}"
+                    Key = e.KeyCode.ToString(), // název klávesy
+                    Code = $"0x{scancode:X}" // skenovací kód ve formátu hexadecimálního čísla
                 });
 
                 lastEventTime = DateTime.Now;
@@ -613,7 +613,7 @@ namespace MacroRePlayer
             // Spustí Notepad
             System.Diagnostics.Process.Start("notepad.exe");
             await Task.Delay(1000); // -1432 1015, -1432 942
-            InputSender.ClickKey(0x15); // Z TODO meni se to podle rozložení klávesnice
+            InputSender.ClickKey(0x14); // Z TODO meni se to podle rozložení klávesnice
             Type(Environment.NewLine);
 
 

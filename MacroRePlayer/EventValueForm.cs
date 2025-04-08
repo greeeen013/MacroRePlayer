@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Gma.System.MouseKeyHook;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,18 +15,31 @@ namespace MacroRePlayer.EventValueForms
 {
     public partial class EventValueForm : Form
     {
+        //kvuli zavolání funkce pro ziskání konkrétní hardware klávesy
+        [DllImport("user32.dll")]
+        static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
+        const uint MAPVK_VK_TO_VSC = 0;
+
+        private IKeyboardMouseEvents globalHook; // Globální hook pro sledování vstupů
+
         public string SelectedEventType { get; private set; }
         public string UpdatedEventValue { get; private set; }
+        public string UpdateSecretValue { get; private set; }
+
+        public string HexKey { get; private set; } // Přidáno pro zpřístupnění HexKey mim
         public EventValueForm(string eventType, string eventValue)
         {
             InitializeComponent();
 
+            
+
             EventValueTypeOfEventComboBox.Items.AddRange(new string[] {
-            "MouseDown", "MouseUp", "KeyDown", "KeyUp", "DelayEvent"});
+                "MouseDown", "MouseUp", "KeyDown", "KeyUp", "DelayEvent"});
 
             
 
-        EventValueTypeOfEventComboBox.SelectedIndexChanged += EventValueTypeOfEventComboBox_SelectedIndexChanged;
+            EventValueTypeOfEventComboBox.SelectedIndexChanged += EventValueTypeOfEventComboBox_SelectedIndexChanged;
 
             // Nastavení typu události + inicializace UI
             EventValueTypeOfEventComboBox.SelectedItem = eventType;
@@ -119,7 +134,8 @@ namespace MacroRePlayer.EventValueForms
             }
             else if (SelectedEventType == "KeyDown" || SelectedEventType == "KeyUp")
             {
-                string key = EventValueFirstTextBox.Text.Trim();
+                string key = richTextBox1.Text.Trim();
+                UpdateSecretValue = HexKey;
                 UpdatedEventValue = $"Key: {key}";
             }
             else if (SelectedEventType == "DelayEvent")
@@ -131,6 +147,39 @@ namespace MacroRePlayer.EventValueForms
             // Zavřít formulář a vrátit výsledek
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void EventValueRecordButtonButton_Click(object sender, EventArgs e)
+        {
+            if (globalHook != null)
+            {
+                // Unsubscribe from the global hook if already subscribed
+                globalHook.KeyDown -= HookManager_KeyDown;
+                globalHook = null;
+            }
+            else
+            {
+                // Start recording key presses
+                globalHook = Hook.GlobalEvents();
+                globalHook.KeyDown += HookManager_KeyDown;
+            }
+        }
+
+        private void HookManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+            var Key = e.KeyCode.ToString();
+            HexKey = $"0x{scancode:X}";
+
+
+            richTextBox1.Text=Key;
+
+
+            if (globalHook != null) // odhlásí se od hooku
+            {
+                globalHook.KeyDown -= HookManager_KeyDown;
+                globalHook = null;
+            }
         }
     }
 

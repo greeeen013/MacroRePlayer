@@ -39,6 +39,8 @@
             this.EventValueMouseHelpButton = new System.Windows.Forms.Button();
             this.EventValueMouseTypeOfEventLabel = new System.Windows.Forms.Label();
             this.EventValueTypeOfEventComboBox = new System.Windows.Forms.ComboBox();
+            this.EventValueRecordButtonButton = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // EventValueButtonComboBox
@@ -142,11 +144,33 @@
             this.EventValueTypeOfEventComboBox.TabIndex = 32;
             this.EventValueTypeOfEventComboBox.SelectedIndexChanged += new System.EventHandler(this.EventValueTypeOfEventComboBox_SelectedIndexChanged);
             // 
+            // EventValueRecordButtonButton
+            // 
+            this.EventValueRecordButtonButton.Location = new System.Drawing.Point(35, 156);
+            this.EventValueRecordButtonButton.Name = "EventValueRecordButtonButton";
+            this.EventValueRecordButtonButton.Size = new System.Drawing.Size(60, 40);
+            this.EventValueRecordButtonButton.TabIndex = 33;
+            this.EventValueRecordButtonButton.Text = "Record button";
+            this.EventValueRecordButtonButton.UseVisualStyleBackColor = true;
+            this.EventValueRecordButtonButton.Click += new System.EventHandler(this.EventValueRecordButtonButton_Click);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.richTextBox1.Location = new System.Drawing.Point(41, 12);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(74, 62);
+            this.richTextBox1.TabIndex = 34;
+            this.richTextBox1.Text = "TEST";
+            // 
             // EventValueForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(297, 265);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.EventValueRecordButtonButton);
             this.Controls.Add(this.EventValueTypeOfEventComboBox);
             this.Controls.Add(this.EventValueMouseTypeOfEventLabel);
             this.Controls.Add(this.EventValueMouseHelpButton);
@@ -178,5 +202,7 @@
         private System.Windows.Forms.Button EventValueMouseHelpButton;
         private System.Windows.Forms.Label EventValueMouseTypeOfEventLabel;
         private System.Windows.Forms.ComboBox EventValueTypeOfEventComboBox;
+        private System.Windows.Forms.Button EventValueRecordButtonButton;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

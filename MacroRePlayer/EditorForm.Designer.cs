@@ -50,6 +50,7 @@
             this.EditorIconColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.EditorEventColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditorValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SecretValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditorCommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -179,6 +180,7 @@
             this.EditorIconColumn,
             this.EditorEventColumn,
             this.EditorValueColumn,
+            this.SecretValue,
             this.EditorCommentColumn});
             this.EditorEventsDataGridView.Location = new System.Drawing.Point(26, 42);
             this.EditorEventsDataGridView.Name = "EditorEventsDataGridView";
@@ -187,8 +189,7 @@
             this.EditorEventsDataGridView.Size = new System.Drawing.Size(650, 159);
             this.EditorEventsDataGridView.TabIndex = 23;
             this.EditorEventsDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EditorEventsDataGridView_CellDoubleClick);
-            this.EditorEventsDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.EditorEventsDataGridView_DragDrop);
-            this.EditorEventsDataGridView.DragOver += new System.Windows.Forms.DragEventHandler(this.EditorEventsDataGridView_DragOver);
+            this.EditorEventsDataGridView.SelectionChanged += new System.EventHandler(this.EditorEventsDataGridView_SelectionChanged);
             this.EditorEventsDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseDown);
             this.EditorEventsDataGridView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseMove);
             this.EditorEventsDataGridView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseUp);
@@ -211,6 +212,13 @@
             this.EditorValueColumn.Name = "EditorValueColumn";
             this.EditorValueColumn.ReadOnly = true;
             this.EditorValueColumn.Width = 200;
+            // 
+            // SecretValue
+            // 
+            this.SecretValue.HeaderText = "SecretValue";
+            this.SecretValue.Name = "SecretValue";
+            this.SecretValue.ReadOnly = true;
+            this.SecretValue.Visible = false;
             // 
             // EditorCommentColumn
             // 
@@ -257,6 +265,7 @@
         private System.Windows.Forms.DataGridViewImageColumn EditorIconColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorEventColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorValueColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SecretValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorCommentColumn;
     }
 }
