@@ -59,6 +59,12 @@
     <Compile Include="EditorForm.Designer.cs">
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EventValueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EventValueForm.Designer.cs">
+      <DependentUpon>EventValueForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeyboardLayoutHelper.cs" />
     <Compile Include="RePlayerForm.cs">
       <SubType>Form</SubType>
@@ -79,6 +85,9 @@
     </Compile>
     <EmbeddedResource Include="EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EventValueForm.resx">
+      <DependentUpon>EventValueForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RePlayerForm.resx">
       <DependentUpon>RePlayerForm.cs</DependentUpon>

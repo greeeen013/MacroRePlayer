@@ -45,6 +45,7 @@ namespace MacroRePlayer
     {
         public string Type => "KeyDown";
         public string Key { get; set; } // Např. "A", "B", "Enter"
+        public string Code { get; set; } // Např. "0x1e"
 
         public void draw() { }
     }
@@ -53,6 +54,7 @@ namespace MacroRePlayer
     {
         public string Type => "KeyUp";
         public string Key { get; set; } // Např. "A", "B", "Enter"
+        public string Code { get; set; } // Např. "0x1e"
 
         public void draw() { }
     }

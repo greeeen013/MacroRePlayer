@@ -25,6 +25,11 @@ namespace MacroRePlayer
         private HashSet<string> pressedKeys = new HashSet<string>(); // Sledování stisknutých kláves
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
+        //kvuli zavolání funkce pro ziskání konkrétní hardware klávesy
+        [DllImport("user32.dll")]
+        static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
+        const uint MAPVK_VK_TO_VSC = 0;
 
         public RePlayerForm()
         {
@@ -159,22 +164,39 @@ namespace MacroRePlayer
 
         private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
         {
-            if (isRecording && pressedKeys.Add(e.KeyCode.ToString())) // pokud je nahrávání povoleno a klávesa ještě nebyla stisknuta
+            if (isRecording && pressedKeys.Add(e.KeyCode.ToString()))
             {
-                AddDelayEvent(); // přidání zpoždění mezi událostmi
-                events.Add(new KeyDownEvent { Key = e.KeyCode.ToString() }); // zaznamenání události stisknutí klávesy
-                lastEventTime = DateTime.Now; // aktualizace posledního času události
+                AddDelayEvent();
+
+                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+
+                events.Add(new KeyDownEvent
+                {
+                    Key = e.KeyCode.ToString(),
+                    Code = $"0x{scancode:X}" // např. "0x1E"
+                });
+
+                lastEventTime = DateTime.Now;
             }
-        } // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
+        }
+        // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
 
         private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
         {
-            if (isRecording) // pokud je nahrávání povoleno
+            if (isRecording)
             {
-                AddDelayEvent(); // přidání zpoždění mezi událostmi
-                events.Add(new KeyUpEvent { Key = e.KeyCode.ToString() }); // zaznamenání události uvolnění klávesy
-                lastEventTime = DateTime.Now; // aktualizace posledního času události
-                pressedKeys.Remove(e.KeyCode.ToString()); // odstranění klávesy ze sledovaných stisknutých kláves
+                AddDelayEvent();
+
+                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+
+                events.Add(new KeyUpEvent
+                {
+                    Key = e.KeyCode.ToString(),
+                    Code = $"0x{scancode:X}"
+                });
+
+                lastEventTime = DateTime.Now;
+                pressedKeys.Remove(e.KeyCode.ToString());
             }
         } // tento event se spouští při uvolnění klávesy a zaznamenává událost do seznamu událostí
 

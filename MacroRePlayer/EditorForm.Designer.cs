@@ -30,16 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorForm));
-            this.EventNamesOnlyList = new System.Windows.Forms.ListBox();
             this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.EditorFormButtonSave = new System.Windows.Forms.Button();
-            this.EditorFormButtonUp = new System.Windows.Forms.Button();
-            this.EditorFormButtonDown = new System.Windows.Forms.Button();
-            this.EditorFormButtonDelete = new System.Windows.Forms.Button();
-            this.EditorFormButtonCopy = new System.Windows.Forms.Button();
-            this.EditorFormButtonInsert = new System.Windows.Forms.Button();
-            this.EditorFormButtonExtract = new System.Windows.Forms.Button();
-            this.EditorFormButtonAdd = new System.Windows.Forms.Button();
             this.EditorFormContextMenuEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.delayEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,20 +46,15 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.EditorFormToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.HoldTimer = new System.Windows.Forms.Timer(this.components);
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.EditorEventsDataGridView = new System.Windows.Forms.DataGridView();
+            this.EditorIconColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.EditorEventColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EditorValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EditorCommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EditorEventsDataGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // EventNamesOnlyList
-            // 
-            this.EventNamesOnlyList.FormattingEnabled = true;
-            this.EventNamesOnlyList.Location = new System.Drawing.Point(232, 246);
-            this.EventNamesOnlyList.Name = "EventNamesOnlyList";
-            this.EventNamesOnlyList.Size = new System.Drawing.Size(120, 95);
-            this.EventNamesOnlyList.TabIndex = 0;
-            this.EventNamesOnlyList.SelectedIndexChanged += new System.EventHandler(this.EventNamesOnlyList_SelectionChanged);
             // 
             // JsonFileSelectorComboBox
             // 
@@ -82,92 +69,13 @@
             // EditorFormButtonSave
             // 
             this.EditorFormButtonSave.Enabled = false;
-            this.EditorFormButtonSave.Location = new System.Drawing.Point(231, 348);
+            this.EditorFormButtonSave.Location = new System.Drawing.Point(249, 379);
             this.EditorFormButtonSave.Name = "EditorFormButtonSave";
             this.EditorFormButtonSave.Size = new System.Drawing.Size(75, 23);
             this.EditorFormButtonSave.TabIndex = 13;
             this.EditorFormButtonSave.Text = "Save";
             this.EditorFormButtonSave.UseVisualStyleBackColor = true;
             this.EditorFormButtonSave.Click += new System.EventHandler(this.Save_Click);
-            // 
-            // EditorFormButtonUp
-            // 
-            this.EditorFormButtonUp.Enabled = false;
-            this.EditorFormButtonUp.Location = new System.Drawing.Point(358, 246);
-            this.EditorFormButtonUp.Name = "EditorFormButtonUp";
-            this.EditorFormButtonUp.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonUp.TabIndex = 14;
-            this.EditorFormButtonUp.Text = "▲ UP";
-            this.EditorFormButtonUp.UseVisualStyleBackColor = true;
-            this.EditorFormButtonUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonUp_MouseDown);
-            this.EditorFormButtonUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonUp_MouseUp);
-            // 
-            // EditorFormButtonDown
-            // 
-            this.EditorFormButtonDown.Enabled = false;
-            this.EditorFormButtonDown.Location = new System.Drawing.Point(359, 276);
-            this.EditorFormButtonDown.Name = "EditorFormButtonDown";
-            this.EditorFormButtonDown.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonDown.TabIndex = 15;
-            this.EditorFormButtonDown.Text = "▼ DOWN";
-            this.EditorFormButtonDown.UseVisualStyleBackColor = true;
-            this.EditorFormButtonDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonDown_MouseDown);
-            this.EditorFormButtonDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorFormButtonDown_MouseUp);
-            // 
-            // EditorFormButtonDelete
-            // 
-            this.EditorFormButtonDelete.Enabled = false;
-            this.EditorFormButtonDelete.Location = new System.Drawing.Point(359, 305);
-            this.EditorFormButtonDelete.Name = "EditorFormButtonDelete";
-            this.EditorFormButtonDelete.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonDelete.TabIndex = 16;
-            this.EditorFormButtonDelete.Text = "🗑 Delete";
-            this.EditorFormButtonDelete.UseVisualStyleBackColor = true;
-            this.EditorFormButtonDelete.Click += new System.EventHandler(this.EditorFormButtonDelete_Click);
-            // 
-            // EditorFormButtonCopy
-            // 
-            this.EditorFormButtonCopy.Enabled = false;
-            this.EditorFormButtonCopy.Location = new System.Drawing.Point(359, 334);
-            this.EditorFormButtonCopy.Name = "EditorFormButtonCopy";
-            this.EditorFormButtonCopy.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonCopy.TabIndex = 17;
-            this.EditorFormButtonCopy.Text = "📋 Copy";
-            this.EditorFormButtonCopy.UseVisualStyleBackColor = true;
-            this.EditorFormButtonCopy.Click += new System.EventHandler(this.EditorFormButtonCopy_Click);
-            // 
-            // EditorFormButtonInsert
-            // 
-            this.EditorFormButtonInsert.Enabled = false;
-            this.EditorFormButtonInsert.Location = new System.Drawing.Point(358, 392);
-            this.EditorFormButtonInsert.Name = "EditorFormButtonInsert";
-            this.EditorFormButtonInsert.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonInsert.TabIndex = 19;
-            this.EditorFormButtonInsert.Text = "📋 Insert";
-            this.EditorFormButtonInsert.UseVisualStyleBackColor = true;
-            this.EditorFormButtonInsert.Click += new System.EventHandler(this.EditorFormButtonInsert_Click);
-            // 
-            // EditorFormButtonExtract
-            // 
-            this.EditorFormButtonExtract.Enabled = false;
-            this.EditorFormButtonExtract.Location = new System.Drawing.Point(359, 363);
-            this.EditorFormButtonExtract.Name = "EditorFormButtonExtract";
-            this.EditorFormButtonExtract.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonExtract.TabIndex = 18;
-            this.EditorFormButtonExtract.Text = "📋 Extract";
-            this.EditorFormButtonExtract.UseVisualStyleBackColor = true;
-            this.EditorFormButtonExtract.Click += new System.EventHandler(this.EditorFormButtonExtract_Click);
-            // 
-            // EditorFormButtonAdd
-            // 
-            this.EditorFormButtonAdd.Enabled = false;
-            this.EditorFormButtonAdd.Location = new System.Drawing.Point(439, 246);
-            this.EditorFormButtonAdd.Name = "EditorFormButtonAdd";
-            this.EditorFormButtonAdd.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonAdd.TabIndex = 20;
-            this.EditorFormButtonAdd.Text = "✔ Add";
-            this.EditorFormButtonAdd.UseVisualStyleBackColor = true;
-            this.EditorFormButtonAdd.Click += new System.EventHandler(this.EditorFormButtonAdd_Click);
             // 
             // EditorFormContextMenuEvents
             // 
@@ -195,35 +103,30 @@
             this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
             this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.delayEventToolStripMenuItem.Text = "DelayEvent";
-            this.delayEventToolStripMenuItem.Click += new System.EventHandler(this.delayEventToolStripMenuItem_Click);
             // 
             // mouseDownEventToolStripMenuItem
             // 
             this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
             this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
-            this.mouseDownEventToolStripMenuItem.Click += new System.EventHandler(this.mouseDownEventToolStripMenuItem_Click);
             // 
             // mouseUpEventToolStripMenuItem
             // 
             this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
             this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
-            this.mouseUpEventToolStripMenuItem.Click += new System.EventHandler(this.mouseUpEventToolStripMenuItem_Click);
             // 
             // keyDownEventToolStripMenuItem
             // 
             this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
             this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
-            this.keyDownEventToolStripMenuItem.Click += new System.EventHandler(this.keyDownEventToolStripMenuItem_Click);
             // 
             // keyUpEventToolStripMenuItem
             // 
             this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
             this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
-            this.keyUpEventToolStripMenuItem.Click += new System.EventHandler(this.keyUpEventToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -267,53 +170,75 @@
             // 
             this.HoldTimer.Interval = 200;
             // 
-            // dataGridView1
+            // EditorEventsDataGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(377, 46);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
-            this.dataGridView1.TabIndex = 23;
+            this.EditorEventsDataGridView.AllowUserToResizeRows = false;
+            this.EditorEventsDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.EditorEventsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.EditorEventsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.EditorIconColumn,
+            this.EditorEventColumn,
+            this.EditorValueColumn,
+            this.EditorCommentColumn});
+            this.EditorEventsDataGridView.Location = new System.Drawing.Point(26, 42);
+            this.EditorEventsDataGridView.Name = "EditorEventsDataGridView";
+            this.EditorEventsDataGridView.RowHeadersVisible = false;
+            this.EditorEventsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.EditorEventsDataGridView.Size = new System.Drawing.Size(650, 159);
+            this.EditorEventsDataGridView.TabIndex = 23;
+            this.EditorEventsDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EditorEventsDataGridView_CellDoubleClick);
+            this.EditorEventsDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.EditorEventsDataGridView_DragDrop);
+            this.EditorEventsDataGridView.DragOver += new System.Windows.Forms.DragEventHandler(this.EditorEventsDataGridView_DragOver);
+            this.EditorEventsDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseDown);
+            this.EditorEventsDataGridView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseMove);
+            this.EditorEventsDataGridView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseUp);
+            // 
+            // EditorIconColumn
+            // 
+            this.EditorIconColumn.HeaderText = "Icon";
+            this.EditorIconColumn.Name = "EditorIconColumn";
+            this.EditorIconColumn.ReadOnly = true;
+            // 
+            // EditorEventColumn
+            // 
+            this.EditorEventColumn.HeaderText = "Event";
+            this.EditorEventColumn.Name = "EditorEventColumn";
+            this.EditorEventColumn.ReadOnly = true;
+            // 
+            // EditorValueColumn
+            // 
+            this.EditorValueColumn.HeaderText = "Value";
+            this.EditorValueColumn.Name = "EditorValueColumn";
+            this.EditorValueColumn.ReadOnly = true;
+            this.EditorValueColumn.Width = 200;
+            // 
+            // EditorCommentColumn
+            // 
+            this.EditorCommentColumn.HeaderText = "Comment";
+            this.EditorCommentColumn.Name = "EditorCommentColumn";
             // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.EditorEventsDataGridView);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.EditorFormButtonAdd);
-            this.Controls.Add(this.EditorFormButtonExtract);
-            this.Controls.Add(this.EditorFormButtonInsert);
-            this.Controls.Add(this.EditorFormButtonCopy);
-            this.Controls.Add(this.EditorFormButtonDelete);
-            this.Controls.Add(this.EditorFormButtonDown);
-            this.Controls.Add(this.EditorFormButtonUp);
             this.Controls.Add(this.EditorFormButtonSave);
             this.Controls.Add(this.JsonFileSelectorComboBox);
-            this.Controls.Add(this.EventNamesOnlyList);
             this.Name = "EditorForm";
             this.Text = "EditorForm";
             this.Load += new System.EventHandler(this.EditorForm_Load);
             this.EditorFormContextMenuEvents.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EditorEventsDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox EventNamesOnlyList;
         private System.Windows.Forms.ComboBox JsonFileSelectorComboBox;
         private System.Windows.Forms.Button EditorFormButtonSave;
-        private System.Windows.Forms.Button EditorFormButtonUp;
-        private System.Windows.Forms.Button EditorFormButtonDown;
-        private System.Windows.Forms.Button EditorFormButtonDelete;
-        private System.Windows.Forms.Button EditorFormButtonCopy;
-        private System.Windows.Forms.Button EditorFormButtonInsert;
-        private System.Windows.Forms.Button EditorFormButtonExtract;
-        private System.Windows.Forms.Button EditorFormButtonAdd;
         private System.Windows.Forms.ContextMenuStrip EditorFormContextMenuEvents;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
@@ -328,6 +253,10 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolTip EditorFormToolTip;
         private System.Windows.Forms.Timer HoldTimer;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView EditorEventsDataGridView;
+        private System.Windows.Forms.DataGridViewImageColumn EditorIconColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EditorEventColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EditorValueColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EditorCommentColumn;
     }
 }
