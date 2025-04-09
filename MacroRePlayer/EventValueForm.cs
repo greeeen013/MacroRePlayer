@@ -92,6 +92,9 @@ namespace MacroRePlayer.EventValueForms
 
             EventValueMouseKeyLabel.Visible = false;
 
+            richTextBox1.Visible = false;
+            EventValueRecordButtonButton.Visible = false;
+
             if (eventType == "MouseDown" || eventType == "MouseUp")
             {
                 EventValueMouseFirstLabel.Text = "X:";
@@ -107,9 +110,8 @@ namespace MacroRePlayer.EventValueForms
             }
             else if (eventType == "KeyDown" || eventType == "KeyUp")
             {
-                EventValueMouseKeyLabel.Text = "Key:";
-                EventValueMouseKeyLabel.Visible = true;
-                EventValueFirstTextBox.Visible = true;
+                EventValueRecordButtonButton.Visible = true;
+                richTextBox1.Visible = true;
             }
             else if (eventType == "DelayEvent")
             {

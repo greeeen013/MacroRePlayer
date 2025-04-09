@@ -278,7 +278,6 @@ namespace MacroRePlayer
             string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem.ToString()); // vytvoření cesty k souboru
             if (!File.Exists(fileName)) return; // pokud soubor neexistuje, nic se nestane (ošetření)
 
-            
             var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
             settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
             var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboru
@@ -288,11 +287,7 @@ namespace MacroRePlayer
                 {
                     case "DelayEvent":
                         var delayEvent = (DelayEvent)inputEvent; // převede událost na DelayEvent
-                        var end = DateTime.Now.AddMilliseconds(delayEvent.Duration); // vypočítá konec zpoždění
                         await Task.Delay(delayEvent.Duration); // čeká na zpoždění
-
-                        //pridal bych ze to tady checkne jestli je zmacknutej keybind na stop prehravani makra TODO
-
                         break;
                     case "MouseDown":
                         InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // Nastaví kurzor na pozici
@@ -325,10 +320,26 @@ namespace MacroRePlayer
                         }
                         break;
                     case "KeyDown":
-                        //TODO
+                        var keyDownEvent = (KeyDownEvent)inputEvent; // převede událost na KeyDownEvent
+                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+                        {
+                            new InputSender.KeyboardInput
+                            {
+                                wScan = Convert.ToUInt16(keyDownEvent.Code, 16), // převede hexadecimální kód na číslo
+                                dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode // příznak pro stisknutí klávesy
+                            }
+                        });
                         break;
                     case "KeyUp":
-                        //TODO
+                        var keyUpEvent = (KeyUpEvent)inputEvent; // převede událost na KeyUpEvent
+                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+                        {
+                            new InputSender.KeyboardInput
+                            {
+                                wScan = Convert.ToUInt16(keyUpEvent.Code, 16), // převede hexadecimální kód na číslo
+                                dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode // příznak pro uvolnění klávesy
+                            }
+                        });
                         break;
                 }
             }
@@ -336,7 +347,7 @@ namespace MacroRePlayer
 
         private void PlayerStopPlayingMacroButton_Click(object sender, EventArgs e)
         {
-            //TODO
+            
         }
 
         private void PlayerStartStopKeybindSetButton_Click(object sender, EventArgs e)

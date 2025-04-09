@@ -48,9 +48,9 @@
             this.EventValueButtonComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.EventValueButtonComboBox.FormattingEnabled = true;
             this.EventValueButtonComboBox.Items.AddRange(new object[] {
-            "Left click",
-            "Right click",
-            "Middle click"});
+            "Left",
+            "Right",
+            "Middle"});
             this.EventValueButtonComboBox.Location = new System.Drawing.Point(137, 116);
             this.EventValueButtonComboBox.Name = "EventValueButtonComboBox";
             this.EventValueButtonComboBox.Size = new System.Drawing.Size(116, 21);
