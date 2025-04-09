@@ -59,11 +59,12 @@ namespace MacroRePlayer
                 loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings);
                 //MessageBox.Show($"{loadedEvents}");  
 
-                EditorEventsDataGridView.Rows.Clear(); 
+                EditorEventsDataGridView.Rows.Clear();
                 foreach (var inputEvent in loadedEvents)
                 {
                     string eventName = inputEvent.Type;
                     string eventValue = "";
+                    string secretValue = null; // Default to null if not provided
 
                     switch (inputEvent)
                     {
@@ -78,13 +79,15 @@ namespace MacroRePlayer
                             break;
                         case KeyDownEvent keyDownEvent:
                             eventValue = $"Key: {keyDownEvent.Key}";
+                            secretValue = keyDownEvent.Code;
                             break;
                         case KeyUpEvent keyUpEvent:
                             eventValue = $"Key: {keyUpEvent.Key}";
+                            secretValue = keyUpEvent.Code;
                             break;
                     }
-                    
-                    EditorEventsDataGridView.Rows.Add(null, eventName, eventValue, null);
+
+                    EditorEventsDataGridView.Rows.Add(null, eventName, eventValue, secretValue, null);
                 }
             }
             else if (JsonFileSelectorComboBox.SelectedItem == null || JsonFileSelectorComboBox.SelectedItem.ToString() == "")
@@ -106,6 +109,7 @@ namespace MacroRePlayer
 
                     string eventType = row.Cells[1].Value.ToString();
                     string eventValue = row.Cells[2].Value.ToString();
+                    string secretValue = row.Cells[3]?.Value?.ToString();
 
                     switch (eventType)
                     {
@@ -128,14 +132,13 @@ namespace MacroRePlayer
                             break;
                         case "KeyDown":
                         case "KeyUp":
-                            var keyParts = eventValue.Split(new[] { ", " }, StringSplitOptions.None);
-                            if (keyParts.Length == 2)
+                            if (!string.IsNullOrEmpty(secretValue))
                             {
-                                string key = keyParts[0].Replace("Key: ", "");
-                                string code = keyParts[1].Replace("Code: ", "");
-                                eventsToSave.Add(new { Type = eventType, Key = key, Code = code });
+                                string key = eventValue.Replace("Key: ", "");
+                                eventsToSave.Add(new { Type = eventType, Key = key, Code = secretValue });
                             }
                             break;
+                        default: break;
                     }
                 }
 

@@ -59,7 +59,7 @@
             // JsonFileSelectorComboBox
             // 
             this.JsonFileSelectorComboBox.FormattingEnabled = true;
-            this.JsonFileSelectorComboBox.Location = new System.Drawing.Point(231, 219);
+            this.JsonFileSelectorComboBox.Location = new System.Drawing.Point(26, 12);
             this.JsonFileSelectorComboBox.Name = "JsonFileSelectorComboBox";
             this.JsonFileSelectorComboBox.Size = new System.Drawing.Size(121, 21);
             this.JsonFileSelectorComboBox.TabIndex = 12;
@@ -68,7 +68,6 @@
             // 
             // EditorFormButtonSave
             // 
-            this.EditorFormButtonSave.Enabled = false;
             this.EditorFormButtonSave.Location = new System.Drawing.Point(249, 379);
             this.EditorFormButtonSave.Name = "EditorFormButtonSave";
             this.EditorFormButtonSave.Size = new System.Drawing.Size(75, 23);
@@ -158,7 +157,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(520, 246);
+            this.pictureBox1.Location = new System.Drawing.Point(705, 210);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(20, 20);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
