@@ -21,7 +21,7 @@ namespace MacroRePlayer
         private List<IInputEvent> events = new List<IInputEvent>();
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
         private bool isRecording; // Indikátor nahrávání
-        private IKeyboardMouseEvents globalHook; // Globální hook pro sledování vstupů
+        private IKeyboardMouseEvents? globalHook; // Globální hook pro sledování vstupů
         private HashSet<string> pressedKeys = new HashSet<string>(); // Sledování stisknutých kláves
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
@@ -142,7 +142,7 @@ namespace MacroRePlayer
             MessageBox.Show($"Soubor {fileName} byl úspěšně vytvořen."); // informace o úspěšném vytvoření souboru
         } // tento event se spouští při uložení událostí do JSON souboru a informuje uživatele o úspěšném vytvoření souboru
 
-        private void GlobalHook_MouseDownExt(object sender, MouseEventExtArgs e)
+        private void GlobalHook_MouseDownExt(object? sender, MouseEventExtArgs e)
         {
             if (isRecording) // pokud je nahrávání povoleno
             {
@@ -152,7 +152,7 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při stisknutí myši a zaznamenává událost do seznamu událostí
 
-        private void GlobalHook_MouseUpExt(object sender, MouseEventExtArgs e)
+        private void GlobalHook_MouseUpExt(object? sender, MouseEventExtArgs e)
         {
             if (isRecording) // pokud je nahrávání povoleno
             {
@@ -162,7 +162,7 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při uvolnění myši a zaznamenává událost do seznamu událostí
 
-        private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
+        private void GlobalHook_KeyDown(object? sender, KeyEventArgs e)
         {
             if (isRecording && pressedKeys.Add(e.KeyCode.ToString()))
             {
@@ -181,7 +181,7 @@ namespace MacroRePlayer
         }
         // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
 
-        private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
+        private void GlobalHook_KeyUp(object? sender, KeyEventArgs e)
         {
             if (isRecording)
             {
@@ -277,25 +277,39 @@ namespace MacroRePlayer
         {
             if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
 
-            string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem.ToString()); // vytvoření cesty k souboru
+            string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem?.ToString() ?? ""); // vytvoření cesty k souboru
             if (!File.Exists(fileName)) return; // pokud soubor neexistuje, nic se nestane (ošetření)
 
             var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
             settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
             var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboruisPlayingMacro = true; // Set playing flag to true
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            long previousTimestamp = 0;
+
             isPlayingMacro = true; // nastaví přehrávání na true
 
-            foreach (var inputEvent in events) // pro každou událost
+            foreach (var inputEvent in events ?? Enumerable.Empty<IInputEvent>()) // pro každou událost
             {
                 if (!isPlayingMacro) break; // pokud je přehrávání zastaveno, ukončí smyčku
 
+                if (inputEvent is DelayEvent delayEvent)
+                {
+                    long targetTimestamp = previousTimestamp + delayEvent.Duration;
+                    while (stopwatch.ElapsedMilliseconds < targetTimestamp)
+                    {
+                        await Task.Delay(1); // malý polling delay
+                    }
+                    previousTimestamp = targetTimestamp;
+                    continue;
+                }
+
                 switch (inputEvent.Type) // podle typu události
                 {
-                    case "DelayEvent":
-                        var delayEvent = (DelayEvent)inputEvent; // převede událost na DelayEvent
-                        await Task.Delay(delayEvent.Duration); // čeká na zpoždění
-                        break;
+                    //case "DelayEvent":
+                    //    var delayEvent = (DelayEvent)inputEvent; // převede událost na DelayEvent
+                    //    await Task.Delay(delayEvent.Duration); // čeká na zpoždění
+                    //    break;
                     case "MouseDown":
                         InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // nastaví kurzor na pozici
                         switch (((MouseDownEvent)inputEvent).Button) // podle tlačítka myši
@@ -382,106 +396,12 @@ namespace MacroRePlayer
             });
         } // funkce pro stisknutí nebo uvolnění tlačítka myši používá se v přehrávači makra
 
-        private void Type(string str)
-        {
-            char c; // proměnná pro znak
-            ushort scanCode; // proměnná pro skenovací kód
-
-            for (int i = 0; i < str.Length; i++) // pro každý znak v řetězci
-            {
-                c = char.Parse(str.Substring(i,1)); // získá znak z řetězce
-                //scanCode = GetScanCode(c); // získá skenovací kód pro znak
-
-                if (ShiftRequired(c)) // pokud je potřeba shift
-                {
-                    
-                    //PressCombo(0x2a, scanCode); // zavolá funkci pro stisknutí kombinace kláves
-                }
-                else
-                {
-                    //InputSender.ClickKey(scanCode); // když není potřeba shift, zavolá funkci pro stisknutí klávesy
-
-                }
-
-            }
-        } // funkce pro napsání textu pomocí stisknutí klávesy, používá se v přehrávači makra
-
-        private bool ShiftRequired(char c)
-        {
-            char[] chars = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?' }; //seznam znaků, které vyžadují Shift TODO každý jazyk je má jiný
-            if (chars.Contains(c))
-            {
-                return true; // Pokud znak vyžaduje Shift, vrátí true
-            }
-            
-            if(Char.IsUpper(c)) // TODO ? kdz6 je velkz C ma to uplne jinaci funcknost ?? absolutně nevím co jsem tím myslel
-            {
-                return true; // Pokud je znak velké písmeno, vrátí true
-            }
-
-            return false; // Jinak vrátí false
-        } // funkce pro kontrolu, zda je potřeba Shift pro daný znak, používá se v přehrávači makra (TODO asi to dám do souboru bokem)
-
-        private static void PressCombo(ushort code1, ushort code2)
-        {
-
-            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá skenovací kódy pro stisknutí klávesy
-            {
-                      new InputSender.KeyboardInput // první klávesa
-                      {
-                          wScan = code1, // skenovací kód
-                          dwFlags = (uint)(InputSender.KeyEventF.KeyDown | InputSender.KeyEventF.Scancode) // příznak pro stisknutí klávesy
-                      },
-                      new InputSender.KeyboardInput // druhá klávesa
-                      {
-                          wScan = code2, // skenovací kód
-                          dwFlags = (uint)(InputSender.KeyEventF.KeyDown | InputSender.KeyEventF.Scancode) // příznak pro stisknutí klávesy
-                      }
-            });
-
-
-            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá skenovací kódy pro uvolnění klávesy
-            {
-                      new InputSender.KeyboardInput // první klávesa
-                      {
-                          wScan = code2, // skenovací kód
-                          dwFlags = (uint)(InputSender.KeyEventF.KeyUp | InputSender.KeyEventF.Scancode) // příznak pro uvolnění klávesy
-                      },
-                      new InputSender.KeyboardInput // druhá klávesa
-                      {
-                          wScan = code1, // skenovací kód
-                          dwFlags = (uint)(InputSender.KeyEventF.KeyUp | InputSender.KeyEventF.Scancode) // příznak pro uvolnění klávesy
-                      }
-            });
-
-
-        } // funkce pro stisknutí kombinace kláves (např. Shift + A) používá se v přehrávači makra
-
-        private static void PressExtended(ushort code)
-        {
-
-            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
-            {
-                new InputSender.KeyboardInput
-                {
-                    wScan = 0xe0,
-                    dwFlags = (uint)(InputSender.KeyEventF.ExtendedKey | InputSender.KeyEventF.Scancode),
-                },
-                new InputSender.KeyboardInput
-                {
-                    wScan = code,
-                    dwFlags = (uint)(InputSender.KeyEventF.ExtendedKey | InputSender.KeyEventF.Scancode)
-                }
-            });
-        } // funkce pro stisknutí rozšířené klávesy (např. Ctrl + A) používá se v přehrávači makra nevím k čemu to tady je TODO
-
         async void TestButton_ClickAsync(object sender, EventArgs e)
         {
             // Spustí Notepad
             System.Diagnostics.Process.Start("notepad.exe");
             await Task.Delay(1000); // -1432 1015, -1432 942
             InputSender.ClickKey(0x14); // Z TODO meni se to podle rozložení klávesnice
-            //InputSender.ClickKey(Environment.NewLine);
 
 
 
@@ -511,7 +431,7 @@ namespace MacroRePlayer
             settingsForm.FormClosed += SettingsForm_FormClosed; // Attach event handler for FormClosed event
         } // tento event se spouští při kliknutí na tlačítko pro otevření nastavení a zobrazuje formulář pro nastavení aplikace
 
-        private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void SettingsForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
             this.Enabled = true; // Re-enable the current form when the settings form is closed
             //TODO

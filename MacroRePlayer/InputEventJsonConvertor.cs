@@ -11,36 +11,28 @@ class InputEventConverter : JsonConverter<IInputEvent>
     {
         var jsonObject = JObject.Load(reader);
         var type = jsonObject["Type"]?.ToString() ?? "";
-
-        IInputEvent inputEvent;
-
-		switch (type)
-		{
-			case "DelayEvent":
-				inputEvent = new DelayEvent();
-				break;
-			case "MouseDown":
-				inputEvent = new MouseDownEvent();
-				break;
-			case "MouseUp":
-				inputEvent = new MouseUpEvent();
-				break;
-			case "KeyDown":
-				inputEvent = new KeyDownEvent();
-				break;
-			case "KeyUp":
-				inputEvent = new KeyUpEvent();
-				break;
-			default:
-				throw new Exception("Unknown type");
-		}
-		
-		serializer.Populate(jsonObject.CreateReader(), inputEvent);
+        IInputEvent inputEvent = type switch
+        {
+            "DelayEvent" => new DelayEvent(),
+            "MouseDown" => new MouseDownEvent(),
+            "MouseUp" => new MouseUpEvent(),
+            "KeyDown" => new KeyDownEvent(),
+            "KeyUp" => new KeyUpEvent(),
+            _ => throw new Exception("Unknown type"),
+        };
+        serializer.Populate(jsonObject.CreateReader(), inputEvent);
 		return inputEvent;
 	}
 
-    public override void WriteJson(JsonWriter writer, IInputEvent value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, IInputEvent? value, JsonSerializer serializer)
     {
-		serializer.Serialize(writer, value);
+        if (value == null)
+        {
+            writer.WriteNull();
+        }
+        else
+        {
+            serializer.Serialize(writer, value);
+        }
     }
 }

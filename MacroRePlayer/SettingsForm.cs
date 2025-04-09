@@ -51,7 +51,12 @@ namespace MacroRePlayer
             }
             else
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
+                var directory = Path.GetDirectoryName(settingsPath);
+                if (!string.IsNullOrEmpty(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
                 var settings = WriteOutSettings();
                 File.WriteAllText(settingsPath, settings.ToString());
             }

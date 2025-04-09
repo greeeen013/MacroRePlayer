@@ -19,11 +19,11 @@ namespace MacroRePlayer
 
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
 
-        private List<IInputEvent> loadedEvents = new List<IInputEvent>();
+        private readonly List<IInputEvent> loadedEvents = [];
         private string selectedFile = "";
 
-        int dragRow = -1;
-        Label? dragLabel = null;
+        private int dragRow = -1;
+        private Label? dragLabel = null;
         private Point mouseDownLocation;
         private bool isDragging = false;
 
@@ -43,9 +43,8 @@ namespace MacroRePlayer
             if (Directory.Exists(directoryPath)) // zkontroluje jestli existuje adresář
             {
                 JsonFileSelectorComboBox.Items.AddRange( // přidá všechny soubory do comboboxu
-                Directory.GetFiles(directoryPath, "*.json") // získá všechny json soubory
-                .Select(filePath => Path.GetFileName(filePath) ?? string.Empty) // získá název souboru
-                .ToArray() // převede na pole
+                [.. Directory.GetFiles(directoryPath, "*.json") // získá všechny json soubory
+                .Select(filePath => Path.GetFileName(filePath) ?? string.Empty)] // převede na pole
                 );
             }
         } //event kterej se spustí když se otevře combobox a naplní ho dostupnejma jsonama
@@ -63,7 +62,7 @@ namespace MacroRePlayer
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new InputEventConverter());
 
-                List<IInputEvent>? loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings) ?? new List<IInputEvent>(); ;
+                List<IInputEvent>? loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings) ?? []; ;
                 //MessageBox.Show($"{loadedEvents}");  
 
                 EditorEventsDataGridView.Rows.Clear();
@@ -128,7 +127,7 @@ namespace MacroRePlayer
                             break;
                         case "MouseDown":
                         case "MouseUp":
-                            var mouseParts = (eventValue ?? "").Split(new[] { ", " }, StringSplitOptions.None);
+                            var mouseParts = (eventValue ?? "").Split([", "], StringSplitOptions.None);
                             if (mouseParts.Length == 3 &&
                                 int.TryParse(mouseParts[0].Replace("X: ", ""), out int x) &&
                                 int.TryParse(mouseParts[1].Replace("Y: ", ""), out int y))
@@ -194,7 +193,7 @@ namespace MacroRePlayer
             dragRow = hit.RowIndex;
             isDragging = false; // ještě nezačalo tažení
 
-            if (dragLabel == null) dragLabel = new Label();
+            dragLabel ??= new Label();
             dragLabel.Text = EditorEventsDataGridView[hit.ColumnIndex, hit.RowIndex].Value?.ToString();
             dragLabel.Parent = EditorEventsDataGridView;
             dragLabel.Location = e.Location;
@@ -227,7 +226,7 @@ namespace MacroRePlayer
             if (isDragging)
             {
                 var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
-                int dropRow = -1;
+                int dropRow;
                 if (hit.Type != DataGridViewHitTestType.None)
                 {
                     dropRow = hit.RowIndex;
