@@ -271,6 +271,82 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při změně výběru v Player ComboBoxu a povolí nebo zakáže tlačítko pro spuštění makra podle toho, zda je vybrán nějaký soubor
 
+        //private async void PlayerStartPlayingMacroButton_Click(object sender, EventArgs e)
+        //{
+        //    if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
+        //
+        //    string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem.ToString()); // vytvoření cesty k souboru
+        //    if (!File.Exists(fileName)) return; // pokud soubor neexistuje, nic se nestane (ošetření)
+        //
+        //    var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
+        //    settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
+        //    var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboru
+        //    foreach (var inputEvent in events) // pro každou událost
+        //    {
+        //        switch (inputEvent.Type) // podle typu události
+        //        {
+        //            case "DelayEvent":
+        //                var delayEvent = (DelayEvent)inputEvent; // převede událost na DelayEvent
+        //                await Task.Delay(delayEvent.Duration); // čeká na zpoždění
+        //                break;
+        //            case "MouseDown":
+        //                InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // Nastaví kurzor na pozici
+        //                switch (((MouseDownEvent)inputEvent).Button) // podle tlačítka myši
+        //                {
+        //                    case "Left":
+        //                        MouseOperation((uint)InputSender.MouseEventF.LeftDown); // zavolá funkci pro stisknutí levého tlačítka myši
+        //                        break;
+        //                    case "Right":
+        //                        MouseOperation((uint)InputSender.MouseEventF.RightDown); // zavolá funkci pro stisknutí pravého tlačítka myši
+        //                        break;
+        //                    case "Middle":
+        //                        MouseOperation((uint)InputSender.MouseEventF.MiddleDown); // zavolá funkci pro stisknutí prostředního tlačítka myši
+        //                        break;
+        //                }
+        //                break;
+        //            case "MouseUp":
+        //                InputSender.SetCursorPosition(((MouseUpEvent)inputEvent).X, ((MouseUpEvent)inputEvent).Y); // Nastaví kurzor na pozici
+        //                switch (((MouseUpEvent)inputEvent).Button) // podle tlačítka myši
+        //                {
+        //                    case "Left":
+        //                        MouseOperation((uint)InputSender.MouseEventF.LeftUp); // zavolá funkci pro uvolnění levého tlačítka myši
+        //                        break;
+        //                    case "Right":
+        //                        MouseOperation((uint)InputSender.MouseEventF.RightUp); // zavolá funkci pro uvolnění pravého tlačítka myši
+        //                        break;
+        //                    case "Middle":
+        //                        MouseOperation((uint)InputSender.MouseEventF.MiddleUp); // zavolá funkci pro uvolnění prostředního tlačítka myši
+        //                        break;
+        //                }
+        //                break;
+        //            case "KeyDown":
+        //                var keyDownEvent = (KeyDownEvent)inputEvent; // převede událost na KeyDownEvent
+        //                InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+        //                {
+        //                    new InputSender.KeyboardInput
+        //                    {
+        //                        wScan = Convert.ToUInt16(keyDownEvent.Code, 16), // převede hexadecimální kód na číslo
+        //                        dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode // příznak pro stisknutí klávesy
+        //                    }
+        //                });
+        //                break;
+        //            case "KeyUp":
+        //                var keyUpEvent = (KeyUpEvent)inputEvent; // převede událost na KeyUpEvent
+        //                InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+        //                {
+        //                    new InputSender.KeyboardInput
+        //                    {
+        //                        wScan = Convert.ToUInt16(keyUpEvent.Code, 16), // převede hexadecimální kód na číslo
+        //                        dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode // příznak pro uvolnění klávesy
+        //                    }
+        //                });
+        //                break;
+        //        }
+        //    }
+        //}
+
+        private bool isPlayingMacro = false; // Flag to track if macro is playing
+
         private async void PlayerStartPlayingMacroButton_Click(object sender, EventArgs e)
         {
             if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
@@ -280,9 +356,14 @@ namespace MacroRePlayer
 
             var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
             settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
-            var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboru
+            var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboruisPlayingMacro = true; // Set playing flag to true
+
+            isPlayingMacro = true; // nastaví přehrávání na true
+
             foreach (var inputEvent in events) // pro každou událost
             {
+                if (!isPlayingMacro) break; // pokud je přehrávání zastaveno, ukončí smyčku
+
                 switch (inputEvent.Type) // podle typu události
                 {
                     case "DelayEvent":
@@ -290,7 +371,7 @@ namespace MacroRePlayer
                         await Task.Delay(delayEvent.Duration); // čeká na zpoždění
                         break;
                     case "MouseDown":
-                        InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // Nastaví kurzor na pozici
+                        InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // nastaví kurzor na pozici
                         switch (((MouseDownEvent)inputEvent).Button) // podle tlačítka myši
                         {
                             case "Left":
@@ -305,7 +386,7 @@ namespace MacroRePlayer
                         }
                         break;
                     case "MouseUp":
-                        InputSender.SetCursorPosition(((MouseUpEvent)inputEvent).X, ((MouseUpEvent)inputEvent).Y); // Nastaví kurzor na pozici
+                        InputSender.SetCursorPosition(((MouseUpEvent)inputEvent).X, ((MouseUpEvent)inputEvent).Y); // nastaví kurzor na pozici
                         switch (((MouseUpEvent)inputEvent).Button) // podle tlačítka myši
                         {
                             case "Left":
@@ -321,9 +402,9 @@ namespace MacroRePlayer
                         break;
                     case "KeyDown":
                         var keyDownEvent = (KeyDownEvent)inputEvent; // převede událost na KeyDownEvent
-                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost stisknutí klávesy
                         {
-                            new InputSender.KeyboardInput
+                            new InputSender.KeyboardInput // vytvoří novou instanci klávesové události
                             {
                                 wScan = Convert.ToUInt16(keyDownEvent.Code, 16), // převede hexadecimální kód na číslo
                                 dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode // příznak pro stisknutí klávesy
@@ -332,9 +413,9 @@ namespace MacroRePlayer
                         break;
                     case "KeyUp":
                         var keyUpEvent = (KeyUpEvent)inputEvent; // převede událost na KeyUpEvent
-                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
+                        InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost uvolnění klávesy
                         {
-                            new InputSender.KeyboardInput
+                            new InputSender.KeyboardInput // vytvoří novou instanci klávesové události
                             {
                                 wScan = Convert.ToUInt16(keyUpEvent.Code, 16), // převede hexadecimální kód na číslo
                                 dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode // příznak pro uvolnění klávesy
@@ -343,11 +424,13 @@ namespace MacroRePlayer
                         break;
                 }
             }
+
+            isPlayingMacro = false; // resetuje přehrávání na false po dokončení událostí
         }
 
         private void PlayerStopPlayingMacroButton_Click(object sender, EventArgs e)
         {
-            
+            isPlayingMacro = false; // nastaví přehrávání na false
         }
 
         private void PlayerStartStopKeybindSetButton_Click(object sender, EventArgs e)
