@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ namespace MacroRePlayer
     static class Program
     {
         /// <summary>
-        /// HlavnÃ­ vstupnÃ­ bod aplikace.
+        /// Hlavní vstupní bod aplikace.
         /// </summary>
         [STAThread]
         static void Main()
