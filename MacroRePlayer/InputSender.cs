@@ -166,37 +166,6 @@ namespace MacroRePlayer
             SendKeyboardInput(inputs);
         } // funkce po zavolání zmáčkne písmeno, ale neudělá to víckrát, ale jen jednou
 
-        public static void ClickKeyWithDelay(ushort scanCode, int delayMs)
-        {
-            // Vytvoření pole vstupů pro klávesnici
-            var inputs = new KeyboardInput[]
-            {
-                // První vstup: stisknutí klávesy
-                new KeyboardInput
-                {
-                    wScan = scanCode, // Nastavení scan kódu klávesy
-                    dwFlags = (uint)(KeyEventF.KeyDown | KeyEventF.Scancode), // Nastavení příznaků pro stisknutí klávesy
-                    dwExtraInfo = GetMessageExtraInfo() // Získání dodatečných informací o zprávě
-                },
-                // Druhý vstup: uvolnění klávesy
-                new KeyboardInput
-                {
-                    wScan = scanCode, // Nastavení scan kódu klávesy
-                    dwFlags = (uint)(KeyEventF.KeyUp | KeyEventF.Scancode), // Nastavení příznaků pro uvolnění klávesy
-                    dwExtraInfo = GetMessageExtraInfo() // Získání dodatečných informací o zprávě
-                }
-            };
-
-            // Odeslání vstupu pro stisknutí klávesy
-            SendKeyboardInput(new KeyboardInput[] { inputs[0] });
-
-            // Čekání po dobu zadané prodlevy
-            Task.Delay(delayMs).Wait();
-
-            // Odeslání vstupu pro uvolnění klávesy
-            SendKeyboardInput(new KeyboardInput[] { inputs[1] });
-        } // moje custom přidaná funkce dělá to to co má, ale třeba nenapíše to písmeno víckrát v notepadu, ale podrží to písmenu po tu dobu // funkce dělá uplně to stejný co ClickKey, ale s delayem mezi stisknutím a uvolněním klávesy
-
         public static void SendMouseInput(MouseInput[] mInputs)
         {
             Input[] inputs = new Input[mInputs.Length];

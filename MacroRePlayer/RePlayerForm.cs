@@ -18,7 +18,7 @@ namespace MacroRePlayer
 {
     public partial class RePlayerForm : Form
     {
-        private List<IInputEvent> events = new List<IInputEvent>();
+        private readonly List<IInputEvent> events = [];
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
         private bool isRecording; // Indikátor nahrávání
         private IKeyboardMouseEvents? globalHook; // Globální hook pro sledování vstupů
