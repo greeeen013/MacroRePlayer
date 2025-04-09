@@ -45,7 +45,6 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.EditorFormToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.HoldTimer = new System.Windows.Forms.Timer(this.components);
             this.EditorEventsDataGridView = new System.Windows.Forms.DataGridView();
             this.EditorIconColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.EditorEventColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -167,10 +166,6 @@
             this.pictureBox1.TabStop = false;
             this.EditorFormToolTip.SetToolTip(this.pictureBox1, resources.GetString("pictureBox1.ToolTip"));
             // 
-            // HoldTimer
-            // 
-            this.HoldTimer.Interval = 200;
-            // 
             // EditorEventsDataGridView
             // 
             this.EditorEventsDataGridView.AllowUserToResizeRows = false;
@@ -260,7 +255,6 @@
         private System.Windows.Forms.ToolStripMenuItem stopLoopEventToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolTip EditorFormToolTip;
-        private System.Windows.Forms.Timer HoldTimer;
         private System.Windows.Forms.DataGridView EditorEventsDataGridView;
         private System.Windows.Forms.DataGridViewImageColumn EditorIconColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorEventColumn;

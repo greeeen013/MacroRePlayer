@@ -147,9 +147,6 @@ an opening loop and a closing loop!
 without this it will not allow you to save 
 the program. :)</value>
   </data>
-  <metadata name="HoldTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>409, 23</value>
-  </metadata>
   <metadata name="EditorIconColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

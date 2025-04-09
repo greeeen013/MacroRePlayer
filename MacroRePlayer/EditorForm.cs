@@ -24,6 +24,8 @@ namespace MacroRePlayer
 
         int dragRow = -1;
         Label dragLabel = null;
+        private Point mouseDownLocation;
+        private bool isDragging = false;
 
         private void EditorForm_Load(object sender, EventArgs e)
         {
@@ -176,62 +178,90 @@ namespace MacroRePlayer
         {
             var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
             if (hit.RowIndex < 0 || hit.ColumnIndex < 0) return;
+
+            mouseDownLocation = e.Location;
             dragRow = hit.RowIndex;
+            isDragging = false; // ještě nezačalo tažení
+
             if (dragLabel == null) dragLabel = new Label();
             dragLabel.Text = EditorEventsDataGridView[hit.ColumnIndex, hit.RowIndex].Value?.ToString();
             dragLabel.Parent = EditorEventsDataGridView;
             dragLabel.Location = e.Location;
+            dragLabel.Visible = false; // schováme, zobrazíme až při skutečném tažení
         }
 
         private void EditorEventsDataGridView_MouseMove(object sender, MouseEventArgs e)
         {
-            EditorEventsDataGridView.ClearSelection();
             if (e.Button == MouseButtons.Left && dragLabel != null)
             {
-                dragLabel.Location = e.Location;
-                
+                int dx = Math.Abs(e.X - mouseDownLocation.X);
+                int dy = Math.Abs(e.Y - mouseDownLocation.Y);
+
+                if (!isDragging && (dx > 5 || dy > 5)) // spustíme tažení
+                {
+                    isDragging = true;
+                    dragLabel.Visible = true;
+                    EditorEventsDataGridView.ClearSelection(); // nevybíráme během drag
+                }
+
+                if (isDragging)
+                {
+                    dragLabel.Location = e.Location;
+                }
             }
         }
 
         private void EditorEventsDataGridView_MouseUp(object sender, MouseEventArgs e)
         {
-            var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
-            int dropRow = -1;
-            if (hit.Type != DataGridViewHitTestType.None)
+            if (isDragging)
             {
-                dropRow = hit.RowIndex;
-                if (dragRow >= 0)
+                var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
+                int dropRow = -1;
+                if (hit.Type != DataGridViewHitTestType.None)
                 {
-                    int tgtRow = dropRow + (dragRow > dropRow ? 1 : 0);
-                    if (tgtRow != dragRow)
+                    dropRow = hit.RowIndex;
+                    if (dragRow >= 0)
                     {
-                        DataGridViewRow row = EditorEventsDataGridView.Rows[dragRow];
-                        EditorEventsDataGridView.Rows.Remove(row);
-                        EditorEventsDataGridView.Rows.Insert(tgtRow, row);
+                        int tgtRow = dropRow + (dragRow > dropRow ? 1 : 0);
+                        if (tgtRow != dragRow)
+                        {
+                            DataGridViewRow row = EditorEventsDataGridView.Rows[dragRow];
+                            EditorEventsDataGridView.Rows.Remove(row);
+                            EditorEventsDataGridView.Rows.Insert(tgtRow, row);
 
-                        EditorEventsDataGridView.ClearSelection();
-                        row.Selected = true;
+                            EditorEventsDataGridView.ClearSelection();
+                            row.Selected = true;
+                        }
                     }
                 }
+                else
+                {
+                    EditorEventsDataGridView.Rows[dragRow].Selected = true;
+                }
             }
-            else { EditorEventsDataGridView.Rows[dragRow].Selected = true; }
 
+            // Resetujeme stav
             if (dragLabel != null)
             {
                 dragLabel.Dispose();
                 dragLabel = null;
             }
+
+            isDragging = false;
         }
 
         private void EditorEventsDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            EditorEventsDataGridView.ClearSelection(); // to tady je protože jinak když přetahuju ty eventy tak tam problikava select modře a nevim jak jinak to fixnout
+            if (isDragging)
+            {
+                EditorEventsDataGridView.ClearSelection();
+            }
         }
 
 
 
 
-
+        //TODO: opravit scrollovani v DataGridView když držím prvek
 
         //TODO: pridat start cyklus (s počtem) tlacitko (a asi i s ID)
         //TODO: pridat konec cyklu tlacitko (s ID)
