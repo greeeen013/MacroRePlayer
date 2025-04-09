@@ -7,12 +7,12 @@ using System.Windows.Forms;
 
 class InputEventConverter : JsonConverter<IInputEvent>
 {
-	public override IInputEvent ReadJson(JsonReader reader, Type objectType, IInputEvent existingValue, bool hasExistingValue, JsonSerializer serializer)
-	{
-		var jsonObject = JObject.Load(reader);
-		var type = jsonObject["Type"].ToString();
+    public override IInputEvent? ReadJson(JsonReader reader, Type objectType, IInputEvent? existingValue, bool hasExistingValue, JsonSerializer serializer)
+    {
+        var jsonObject = JObject.Load(reader);
+        var type = jsonObject["Type"]?.ToString() ?? "";
 
-		IInputEvent inputEvent;
+        IInputEvent inputEvent;
 
 		switch (type)
 		{
@@ -34,13 +34,13 @@ class InputEventConverter : JsonConverter<IInputEvent>
 			default:
 				throw new Exception("Unknown type");
 		}
-
+		
 		serializer.Populate(jsonObject.CreateReader(), inputEvent);
 		return inputEvent;
 	}
 
     public override void WriteJson(JsonWriter writer, IInputEvent value, JsonSerializer serializer)
     {
-        serializer.Serialize(writer, value);
+		serializer.Serialize(writer, value);
     }
 }

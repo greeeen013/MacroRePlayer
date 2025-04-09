@@ -367,11 +367,7 @@ namespace MacroRePlayer
 
 
 
-        private void ShowCurrentKeyboardLayout()
-        {
-            string layoutText = KeyboardLayoutHelper.GetKeyboardLayoutText();
-            MessageBox.Show($"Current keyboard layout: {layoutText} keyboard");
-        } //funkce kterou zavoláme a vrátí název aktuálního jazykového rozložení klávesnice s pomocí KeyboardLayoutHelper.cs TODO
+        
 
 
         private void MouseOperation(uint button)
@@ -394,170 +390,21 @@ namespace MacroRePlayer
             for (int i = 0; i < str.Length; i++) // pro každý znak v řetězci
             {
                 c = char.Parse(str.Substring(i,1)); // získá znak z řetězce
-                scanCode = GetScanCode(c); // získá skenovací kód pro znak
+                //scanCode = GetScanCode(c); // získá skenovací kód pro znak
 
                 if (ShiftRequired(c)) // pokud je potřeba shift
                 {
                     
-                    PressCombo(0x2a, scanCode); // zavolá funkci pro stisknutí kombinace kláves
+                    //PressCombo(0x2a, scanCode); // zavolá funkci pro stisknutí kombinace kláves
                 }
                 else
                 {
-                    InputSender.ClickKey(scanCode); // když není potřeba shift, zavolá funkci pro stisknutí klávesy
+                    //InputSender.ClickKey(scanCode); // když není potřeba shift, zavolá funkci pro stisknutí klávesy
 
                 }
 
             }
         } // funkce pro napsání textu pomocí stisknutí klávesy, používá se v přehrávači makra
-
-        private ushort GetScanCode(char c)
-        {
-            switch (KeyboardLayoutHelper.GetKeyboardLayoutText())
-            {
-                case "Czech":
-                    switch (Char.ToLower(c))
-                    {
-                        case 'a': return 0x1e;
-                        case 'b': return 0x30;
-                        case 'c': return 0x2e;
-                        case 'd': return 0x20;
-                        case 'e': return 0x12;
-                        case 'f': return 0x21;
-                        case 'g': return 0x22;
-                        case 'h': return 0x23;
-                        case 'i': return 0x17;
-                        case 'j': return 0x24;
-                        case 'k': return 0x25;
-                        case 'l': return 0x26;
-                        case 'm': return 0x32;
-                        case 'n': return 0x31;
-                        case 'o': return 0x18;
-                        case 'p': return 0x19;
-                        case 'q': return 0x10;
-                        case 'r': return 0x13;
-                        case 's': return 0x1f;
-                        case 't': return 0x14;
-                        case 'u': return 0x16;
-                        case 'v': return 0x2f;
-                        case 'w': return 0x11;
-                        case 'x': return 0x2d;
-                        case 'y': return 0x2c; // Y is Z in Czech layout
-                        case 'z': return 0x15; // Z is Y in Czech layout
-                        case '0': return 0x0b;
-                        case '1': return 0x02;
-                        case '2': return 0x03;
-                        case '3': return 0x04;
-                        case '4': return 0x05;
-                        case '5': return 0x06;
-                        case '6': return 0x07;
-                        case '7': return 0x08;
-                        case '8': return 0x09;
-                        case '9': return 0x0a;
-                        case '.': return 0x34; // tečka
-                        case ',': return 0x33; // čárka
-                        case ';': return 0x33; // česká čárka s Shiftem (např. pro středník)
-                        case ':': return 0x34; // česká tečka s Shiftem (např. pro dvojtečku)
-                        case '-': return 0x0c;
-                        case '=': return 0x0d;
-                        case '+': return 0x0d; // Shift na stejné klávese jako =
-                        case '\\': return 0x2b;
-                        case '\'': return 0x28;
-                        case '"': return 0x28;
-                        case '/': return 0x35;
-                        case '?': return 0x35;
-                        case '<': return 0x56; // český `<` na extra klávese vedle levého Shiftu
-                        case ' ': return 0x39;
-                        case '\n': return 0x1c;
-                        case '\t': return 0x0f;
-                        case '\b': return 0x0e;
-                        case '\x1b': return 0x01;
-                        case '\x7f': return 0x0e;
-                        default: return 0x00;
-                    }
-                case "US":
-                    switch (Char.ToLower(c))
-                    {
-                        case 'a': return 0x1e;
-                        case 'b': return 0x30;
-                        case 'c': return 0x2e;
-                        case 'd': return 0x20;
-                        case 'e': return 0x12;
-                        case 'f': return 0x21;
-                        case 'g': return 0x22;
-                        case 'h': return 0x23;
-                        case 'i': return 0x17;
-                        case 'j': return 0x24;
-                        case 'k': return 0x25;
-                        case 'l': return 0x26;
-                        case 'm': return 0x32;
-                        case 'n': return 0x31;
-                        case 'o': return 0x18;
-                        case 'p': return 0x19;
-                        case 'q': return 0x10;
-                        case 'r': return 0x13;
-                        case 's': return 0x1f;
-                        case 't': return 0x14;
-                        case 'u': return 0x16;
-                        case 'v': return 0x2f;
-                        case 'w': return 0x11;
-                        case 'x': return 0x2d;
-                        case 'y': return 0x15;
-                        case 'z': return 0x2c;
-                        case '0': return 0x0b;
-                        case '1': return 0x02;
-                        case '2': return 0x03;
-                        case '3': return 0x04;
-                        case '4': return 0x05;
-                        case '5': return 0x06;
-                        case '6': return 0x07;
-                        case '7': return 0x08;
-                        case '8': return 0x09;
-                        case '9': return 0x0a;
-                        case '.': return 0x34;
-                        case ',': return 0x33;
-                        case ';': return 0x27;
-                        case ':': return 0x27;
-                        case '!': return 0x02;
-                        case '@': return 0x03;
-                        case '#': return 0x04;
-                        case '$': return 0x05;
-                        case '%': return 0x06;
-                        case '^': return 0x07;
-                        case '&': return 0x08;
-                        case '*': return 0x09;
-                        case '(': return 0x0a;
-                        case ')': return 0x0b;
-                        case '-': return 0x0c;
-                        case '_': return 0x0c;
-                        case '=': return 0x0d;
-                        case '+': return 0x0d;
-                        case '[': return 0x1a;
-                        case ']': return 0x1b;
-                        case '{': return 0x1a;
-                        case '}': return 0x1b;
-                        case '\\': return 0x2b;
-                        case '|': return 0x2b;
-                        case '\'': return 0x28;
-                        case '"': return 0x28;
-                        case '/': return 0x35;
-                        case '?': return 0x35;
-                        case '<': return 0x33;
-                        case '>': return 0x34;
-                        case '`': return 0x29;
-                        case '~': return 0x29;
-                        case '\t': return 0x0f; // Tab
-                        case '\b': return 0x0e; // Backspace
-                        case '\n': return 0x1c; // Enter
-                        case ' ': return 0x39; // Space
-                        case '\x1b': return 0x01; // Escape
-                        case '\x7f': return 0x0e; // Delete
-                        default: return 0x00; // Unknown character
-                    }
-                default:
-                    MessageBox.Show("Error please select english keyboard your keyboard:"+ KeyboardLayoutHelper.GetKeyboardLayoutText()); // Unknown layout
-                    return 0x00; // Return a default value
-            }
-        } // funkce pro získání skenovacího kódu pro znak podle jazykového rozložení klávesnice, používá se v přehrávači makra (TODO asi to dám do souboru bokem)
 
         private bool ShiftRequired(char c)
         {
@@ -634,7 +481,7 @@ namespace MacroRePlayer
             System.Diagnostics.Process.Start("notepad.exe");
             await Task.Delay(1000); // -1432 1015, -1432 942
             InputSender.ClickKey(0x14); // Z TODO meni se to podle rozložení klávesnice
-            Type(Environment.NewLine);
+            //InputSender.ClickKey(Environment.NewLine);
 
 
 
