@@ -28,213 +28,216 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorForm));
-            this.JsonFileSelectorComboBox = new System.Windows.Forms.ComboBox();
-            this.EditorFormButtonSave = new System.Windows.Forms.Button();
-            this.EditorFormContextMenuEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.delayEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mouseDownEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mouseUpEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyDownEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyUpEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.startLoopEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopLoopEventToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.EditorFormToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.EditorEventsDataGridView = new System.Windows.Forms.DataGridView();
-            this.EditorIconColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.EditorEventColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EditorValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SecretValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EditorCommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EditorFormContextMenuEvents.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.EditorEventsDataGridView)).BeginInit();
-            this.SuspendLayout();
+            JsonFileSelectorComboBox = new ComboBox();
+            EditorFormButtonSave = new Button();
+            EditorFormContextMenuEvents = new ContextMenuStrip(components);
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            delayEventToolStripMenuItem = new ToolStripMenuItem();
+            mouseDownEventToolStripMenuItem = new ToolStripMenuItem();
+            mouseUpEventToolStripMenuItem = new ToolStripMenuItem();
+            keyDownEventToolStripMenuItem = new ToolStripMenuItem();
+            keyUpEventToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripMenuItem();
+            startLoopEventToolStripMenuItem = new ToolStripMenuItem();
+            stopLoopEventToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripMenuItem();
+            pictureBox1 = new PictureBox();
+            EditorFormToolTip = new ToolTip(components);
+            EditorEventsDataGridView = new DataGridView();
+            EditorIconColumn = new DataGridViewImageColumn();
+            EditorEventColumn = new DataGridViewTextBoxColumn();
+            EditorValueColumn = new DataGridViewTextBoxColumn();
+            SecretValue = new DataGridViewTextBoxColumn();
+            EditorCommentColumn = new DataGridViewTextBoxColumn();
+            EditorChooseAFileLabel = new Label();
+            EditorFormContextMenuEvents.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)EditorEventsDataGridView).BeginInit();
+            SuspendLayout();
             // 
             // JsonFileSelectorComboBox
             // 
-            this.JsonFileSelectorComboBox.FormattingEnabled = true;
-            this.JsonFileSelectorComboBox.Location = new System.Drawing.Point(26, 12);
-            this.JsonFileSelectorComboBox.Name = "JsonFileSelectorComboBox";
-            this.JsonFileSelectorComboBox.Size = new System.Drawing.Size(121, 21);
-            this.JsonFileSelectorComboBox.TabIndex = 12;
-            this.JsonFileSelectorComboBox.DropDown += new System.EventHandler(this.JsonFileSelectorComboBox_DropDown);
-            this.JsonFileSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.JsonFileSelectorComboBox_SelectedIndexChanged);
+            JsonFileSelectorComboBox.FormattingEnabled = true;
+            JsonFileSelectorComboBox.Location = new Point(13, 28);
+            JsonFileSelectorComboBox.Margin = new Padding(4, 3, 4, 3);
+            JsonFileSelectorComboBox.Name = "JsonFileSelectorComboBox";
+            JsonFileSelectorComboBox.Size = new Size(140, 23);
+            JsonFileSelectorComboBox.TabIndex = 12;
+            JsonFileSelectorComboBox.DropDown += JsonFileSelectorComboBox_DropDown;
+            JsonFileSelectorComboBox.SelectedIndexChanged += JsonFileSelectorComboBox_SelectedIndexChanged;
             // 
             // EditorFormButtonSave
             // 
-            this.EditorFormButtonSave.Location = new System.Drawing.Point(249, 379);
-            this.EditorFormButtonSave.Name = "EditorFormButtonSave";
-            this.EditorFormButtonSave.Size = new System.Drawing.Size(75, 23);
-            this.EditorFormButtonSave.TabIndex = 13;
-            this.EditorFormButtonSave.Text = "Save";
-            this.EditorFormButtonSave.UseVisualStyleBackColor = true;
-            this.EditorFormButtonSave.Click += new System.EventHandler(this.Save_Click);
+            EditorFormButtonSave.Location = new Point(13, 420);
+            EditorFormButtonSave.Margin = new Padding(4, 3, 4, 3);
+            EditorFormButtonSave.Name = "EditorFormButtonSave";
+            EditorFormButtonSave.Size = new Size(506, 27);
+            EditorFormButtonSave.TabIndex = 13;
+            EditorFormButtonSave.Text = "Save";
+            EditorFormButtonSave.UseVisualStyleBackColor = true;
+            EditorFormButtonSave.Click += Save_Click;
             // 
             // EditorFormContextMenuEvents
             // 
-            this.EditorFormContextMenuEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
-            this.EditorFormContextMenuEvents.Name = "contextMenuStrip1";
-            this.EditorFormContextMenuEvents.Size = new System.Drawing.Size(181, 70);
+            EditorFormContextMenuEvents.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripMenuItem2, toolStripMenuItem3 });
+            EditorFormContextMenuEvents.Name = "contextMenuStrip1";
+            EditorFormContextMenuEvents.Size = new Size(181, 70);
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.delayEventToolStripMenuItem,
-            this.mouseDownEventToolStripMenuItem,
-            this.mouseUpEventToolStripMenuItem,
-            this.keyDownEventToolStripMenuItem,
-            this.keyUpEventToolStripMenuItem});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem1.Text = "BasicEvents";
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { delayEventToolStripMenuItem, mouseDownEventToolStripMenuItem, mouseUpEventToolStripMenuItem, keyDownEventToolStripMenuItem, keyUpEventToolStripMenuItem });
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(180, 22);
+            toolStripMenuItem1.Text = "BasicEvents";
             // 
             // delayEventToolStripMenuItem
             // 
-            this.delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
-            this.delayEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.delayEventToolStripMenuItem.Text = "DelayEvent";
+            delayEventToolStripMenuItem.Name = "delayEventToolStripMenuItem";
+            delayEventToolStripMenuItem.Size = new Size(170, 22);
+            delayEventToolStripMenuItem.Text = "DelayEvent";
             // 
             // mouseDownEventToolStripMenuItem
             // 
-            this.mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
-            this.mouseDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
+            mouseDownEventToolStripMenuItem.Name = "mouseDownEventToolStripMenuItem";
+            mouseDownEventToolStripMenuItem.Size = new Size(170, 22);
+            mouseDownEventToolStripMenuItem.Text = "MouseDownEvent";
             // 
             // mouseUpEventToolStripMenuItem
             // 
-            this.mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
-            this.mouseUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
+            mouseUpEventToolStripMenuItem.Name = "mouseUpEventToolStripMenuItem";
+            mouseUpEventToolStripMenuItem.Size = new Size(170, 22);
+            mouseUpEventToolStripMenuItem.Text = "MouseUpEvent";
             // 
             // keyDownEventToolStripMenuItem
             // 
-            this.keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
-            this.keyDownEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
+            keyDownEventToolStripMenuItem.Name = "keyDownEventToolStripMenuItem";
+            keyDownEventToolStripMenuItem.Size = new Size(170, 22);
+            keyDownEventToolStripMenuItem.Text = "KeyDownEvent";
             // 
             // keyUpEventToolStripMenuItem
             // 
-            this.keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
-            this.keyUpEventToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
+            keyUpEventToolStripMenuItem.Name = "keyUpEventToolStripMenuItem";
+            keyUpEventToolStripMenuItem.Size = new Size(170, 22);
+            keyUpEventToolStripMenuItem.Text = "KeyUpEvent";
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startLoopEventToolStripMenuItem,
-            this.stopLoopEventToolStripMenuItem});
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "LoopEvents";
+            toolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[] { startLoopEventToolStripMenuItem, stopLoopEventToolStripMenuItem });
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(180, 22);
+            toolStripMenuItem2.Text = "LoopEvents";
             // 
             // startLoopEventToolStripMenuItem
             // 
-            this.startLoopEventToolStripMenuItem.Name = "startLoopEventToolStripMenuItem";
-            this.startLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.startLoopEventToolStripMenuItem.Text = "StartLoopEvent";
+            startLoopEventToolStripMenuItem.Name = "startLoopEventToolStripMenuItem";
+            startLoopEventToolStripMenuItem.Size = new Size(154, 22);
+            startLoopEventToolStripMenuItem.Text = "StartLoopEvent";
             // 
             // stopLoopEventToolStripMenuItem
             // 
-            this.stopLoopEventToolStripMenuItem.Name = "stopLoopEventToolStripMenuItem";
-            this.stopLoopEventToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.stopLoopEventToolStripMenuItem.Text = "StopLoopEvent";
+            stopLoopEventToolStripMenuItem.Name = "stopLoopEventToolStripMenuItem";
+            stopLoopEventToolStripMenuItem.Size = new Size(154, 22);
+            stopLoopEventToolStripMenuItem.Text = "StopLoopEvent";
             // 
             // toolStripMenuItem3
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "toolStripMenuItem3";
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(180, 22);
+            toolStripMenuItem3.Text = "toolStripMenuItem3";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(705, 210);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 22;
-            this.pictureBox1.TabStop = false;
-            this.EditorFormToolTip.SetToolTip(this.pictureBox1, resources.GetString("pictureBox1.ToolTip"));
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(496, 28);
+            pictureBox1.Margin = new Padding(4, 3, 4, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(23, 23);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 22;
+            pictureBox1.TabStop = false;
+            EditorFormToolTip.SetToolTip(pictureBox1, "you can drag and drop between the events and soon many more feature lol");
             // 
             // EditorEventsDataGridView
             // 
-            this.EditorEventsDataGridView.AllowUserToResizeRows = false;
-            this.EditorEventsDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.EditorEventsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.EditorEventsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.EditorIconColumn,
-            this.EditorEventColumn,
-            this.EditorValueColumn,
-            this.SecretValue,
-            this.EditorCommentColumn});
-            this.EditorEventsDataGridView.Location = new System.Drawing.Point(26, 42);
-            this.EditorEventsDataGridView.Name = "EditorEventsDataGridView";
-            this.EditorEventsDataGridView.RowHeadersVisible = false;
-            this.EditorEventsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.EditorEventsDataGridView.Size = new System.Drawing.Size(650, 159);
-            this.EditorEventsDataGridView.TabIndex = 23;
-            this.EditorEventsDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EditorEventsDataGridView_CellDoubleClick);
-            this.EditorEventsDataGridView.SelectionChanged += new System.EventHandler(this.EditorEventsDataGridView_SelectionChanged);
-            this.EditorEventsDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseDown);
-            this.EditorEventsDataGridView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseMove);
-            this.EditorEventsDataGridView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EditorEventsDataGridView_MouseUp);
+            EditorEventsDataGridView.AllowUserToAddRows = false;
+            EditorEventsDataGridView.AllowUserToResizeRows = false;
+            EditorEventsDataGridView.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            EditorEventsDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            EditorEventsDataGridView.Columns.AddRange(new DataGridViewColumn[] { EditorIconColumn, EditorEventColumn, EditorValueColumn, SecretValue, EditorCommentColumn });
+            EditorEventsDataGridView.Location = new Point(13, 57);
+            EditorEventsDataGridView.Margin = new Padding(4, 3, 4, 3);
+            EditorEventsDataGridView.Name = "EditorEventsDataGridView";
+            EditorEventsDataGridView.RowHeadersVisible = false;
+            EditorEventsDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            EditorEventsDataGridView.Size = new Size(506, 357);
+            EditorEventsDataGridView.TabIndex = 23;
+            EditorEventsDataGridView.CellDoubleClick += EditorEventsDataGridView_CellDoubleClick;
+            EditorEventsDataGridView.SelectionChanged += EditorEventsDataGridView_SelectionChanged;
+            EditorEventsDataGridView.MouseDown += EditorEventsDataGridView_MouseDown;
+            EditorEventsDataGridView.MouseMove += EditorEventsDataGridView_MouseMove;
+            EditorEventsDataGridView.MouseUp += EditorEventsDataGridView_MouseUp;
             // 
             // EditorIconColumn
             // 
-            this.EditorIconColumn.HeaderText = "Icon";
-            this.EditorIconColumn.Name = "EditorIconColumn";
-            this.EditorIconColumn.ReadOnly = true;
+            EditorIconColumn.HeaderText = "Icon";
+            EditorIconColumn.Name = "EditorIconColumn";
+            EditorIconColumn.ReadOnly = true;
             // 
             // EditorEventColumn
             // 
-            this.EditorEventColumn.HeaderText = "Event";
-            this.EditorEventColumn.Name = "EditorEventColumn";
-            this.EditorEventColumn.ReadOnly = true;
+            EditorEventColumn.HeaderText = "Event";
+            EditorEventColumn.Name = "EditorEventColumn";
+            EditorEventColumn.ReadOnly = true;
             // 
             // EditorValueColumn
             // 
-            this.EditorValueColumn.HeaderText = "Value";
-            this.EditorValueColumn.Name = "EditorValueColumn";
-            this.EditorValueColumn.ReadOnly = true;
-            this.EditorValueColumn.Width = 200;
+            EditorValueColumn.HeaderText = "Value";
+            EditorValueColumn.Name = "EditorValueColumn";
+            EditorValueColumn.ReadOnly = true;
+            EditorValueColumn.Width = 200;
             // 
             // SecretValue
             // 
-            this.SecretValue.HeaderText = "SecretValue";
-            this.SecretValue.Name = "SecretValue";
-            this.SecretValue.ReadOnly = true;
-            this.SecretValue.Visible = false;
+            SecretValue.HeaderText = "SecretValue";
+            SecretValue.Name = "SecretValue";
+            SecretValue.ReadOnly = true;
+            SecretValue.Visible = false;
             // 
             // EditorCommentColumn
             // 
-            this.EditorCommentColumn.HeaderText = "Comment";
-            this.EditorCommentColumn.Name = "EditorCommentColumn";
+            EditorCommentColumn.HeaderText = "Comment";
+            EditorCommentColumn.Name = "EditorCommentColumn";
+            // 
+            // EditorChooseAFileLabel
+            // 
+            EditorChooseAFileLabel.AutoSize = true;
+            EditorChooseAFileLabel.Location = new Point(13, 10);
+            EditorChooseAFileLabel.Name = "EditorChooseAFileLabel";
+            EditorChooseAFileLabel.Size = new Size(78, 15);
+            EditorChooseAFileLabel.TabIndex = 24;
+            EditorChooseAFileLabel.Text = "Choose a file:";
             // 
             // EditorForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.EditorEventsDataGridView);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.EditorFormButtonSave);
-            this.Controls.Add(this.JsonFileSelectorComboBox);
-            this.Name = "EditorForm";
-            this.Text = "EditorForm";
-            this.Load += new System.EventHandler(this.EditorForm_Load);
-            this.EditorFormContextMenuEvents.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.EditorEventsDataGridView)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(532, 458);
+            Controls.Add(EditorChooseAFileLabel);
+            Controls.Add(EditorEventsDataGridView);
+            Controls.Add(pictureBox1);
+            Controls.Add(EditorFormButtonSave);
+            Controls.Add(JsonFileSelectorComboBox);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "EditorForm";
+            Text = "EditorForm";
+            Load += EditorForm_Load;
+            EditorFormContextMenuEvents.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)EditorEventsDataGridView).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -260,5 +263,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn SecretValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn EditorCommentColumn;
+        private Label EditorChooseAFileLabel;
     }
 }

@@ -20,17 +20,92 @@ namespace MacroRePlayer
             InitializeComponent();
         }
 
+        private string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
+
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            this.SettingsPlayerKeyboardLanguageComboBox.SelectedIndex = 0;
-
-            this.SettingsExecutionLanguageComboBox.SelectedIndex = 0;
-
-            this.SettingsFormThemeComboBox.SelectedIndex = 0;
-
-            this.SettingsPlaybackMethodComboBox.SelectedIndex = 0;
-
-            SettingsPlaybackSpeedComboBox.SelectedIndex = 3;
+            if (File.Exists(settingsPath))
+            {
+                var settings = File.ReadAllLines(settingsPath);
+                foreach (var line in settings)
+                {
+                    if (line.StartsWith("ExecutionPlayer="))
+                    {
+                        var value = line.Split('=')[1].Trim('"');
+                        SettingsExecutionLanguageComboBox.SelectedItem = value;
+                    }
+                    else if (line.StartsWith("FormTheme="))
+                    {
+                        var value = line.Split('=')[1].Trim('"');
+                        SettingsFormThemeComboBox.SelectedItem = value;
+                    }
+                    else if (line.StartsWith("PlayerStartUpDelay="))
+                    {
+                        var value = int.Parse(line.Split('=')[1]);
+                        SettingsStartUpDelayNumericUpDown.Value = value;
+                    }
+                    else if (line.StartsWith("DefaultPlaybackMethod="))
+                    {
+                        var value = line.Split('=')[1].Trim('"');
+                        SettingsPlaybackMethodComboBox.SelectedItem = value;
+                    }
+                    else if (line.StartsWith("DefaultPlaybackHowManyTimesRepeat="))
+                    {
+                        var value = int.Parse(line.Split('=')[1]);
+                        SettingsHowManyTimesNumericUpDown.Value = value;
+                    }
+                    else if (line.StartsWith("DefaultPlaybackSpeed="))
+                    {
+                        var value = line.Split('=')[1].Trim('"');
+                        SettingsPlaybackSpeedComboBox.SelectedItem = value;
+                    }
+                    else if (line.StartsWith("KeyRepeating="))
+                    {
+                        var value = bool.Parse(line.Split('=')[1]);
+                        SettingsKeyRepeatingCheckBox.Checked = value;
+                    }
+                    else if (line.StartsWith("KeyDelayBeforeRepetetion="))
+                    {
+                        var value = int.Parse(line.Split('=')[1]);
+                        SettingsKeyDelayBeforeRepetetionTrackBar.Value = value;
+                    }
+                    else if (line.StartsWith("PlayerDelayEventOffset="))
+                    {
+                        var value = int.Parse(line.Split('=')[1]);
+                        SettingsDelayEventOffsetTrackBar.Value = value;
+                    }
+                    else if (line.StartsWith("KeyRepetetionRate="))
+                    {
+                        var value = int.Parse(line.Split('=')[1]);
+                        SettingsKeyRepetetionRateTrackBar.Value = value;
+                    }
+                    else if (line.StartsWith("AutoDeleteLastClick="))
+                    {
+                        var value = bool.Parse(line.Split('=')[1]);
+                        SettingsAutodelteLastClickCheckBox.Checked = value;
+                    }
+                    else if (line.StartsWith("StartStopPlayingMacroKey="))
+                    {
+                        var value = line.Split('=')[1].Trim('"');
+                        richTextBox1.Text = value;
+                    }
+                    else if (line.StartsWith("StartStopPlayingMacroHexKey="))
+                    {
+                        var value = line.Split('=')[1];
+                        HexKey = value;
+                    }
+                }
+            }
+            else
+            {
+                // vychozí hodnoty pokud soubor neexistuje
+                this.SettingsExecutionLanguageComboBox.SelectedIndex = 0;
+                this.SettingsFormThemeComboBox.SelectedIndex = 0;
+                this.SettingsPlaybackMethodComboBox.SelectedIndex = 0;
+                SettingsPlaybackSpeedComboBox.SelectedIndex = 3;
+            }
+            SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms";
+            SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters";
         }
 
         private void SettingsKeyDelayBeforeRepetetionTrackBar_Scroll(object sender, EventArgs e)
@@ -45,7 +120,7 @@ namespace MacroRePlayer
 
         private void SettingsSaveButton_Click(object sender, EventArgs e)
         {
-            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
+            settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
             if (File.Exists(settingsPath))
             {
                 var settings = WriteOutSettings();
@@ -62,6 +137,7 @@ namespace MacroRePlayer
                 var settings = WriteOutSettings();
                 File.WriteAllText(settingsPath, settings.ToString());
             }
+            this.Close(); // zavře okno nastavení
         }
 
         private StringBuilder WriteOutSettings()
@@ -90,7 +166,6 @@ namespace MacroRePlayer
             settings.AppendLine($"AutoDeleteLastClick={(bool)SettingsAutodelteLastClickCheckBox.Checked}");
             settings.AppendLine($"StartStopPlayingMacroKey=\"{richTextBox1.Text}\"");
             settings.AppendLine($"StartStopPlayingMacroHexKey={HexKey}");
-            settings.AppendLine($"AutoSave={(bool)SettingsAutoSaveCheckBox.Checked}");
 
 
             return settings;
