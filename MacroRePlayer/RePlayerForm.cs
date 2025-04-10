@@ -73,6 +73,7 @@ namespace MacroRePlayer
                 autoDeleteLastClick = bool.Parse(settings["AutoDeleteLastClick"]); // přečtení nastavení pro automatické mazání posledního kliknutí
                 HexKeyStartStopMacro = settings["StartStopPlayingMacroHexKey"]; // přečtení klávesové zkratky pro spuštění/zastavení přehrávání makra
                 delayOffSet = int.Parse(settings["PlayerDelayEventOffset"]); // přečtení offsetu pro zpoždění
+                PlayerHowManyTimesNumericUpDown.Value = int.Parse(settings["DefaultPlaybackHowManyTimesRepeat"]); // přečtení počtu opakování přehrávání makra
             }
         }
 
@@ -137,6 +138,14 @@ namespace MacroRePlayer
                 string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json"); // vytvoření cesty k souboru s koncovkou .json
                 File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented)); // uložení událostí do JSON souboru
                 MessageBox.Show($"File {fileName} was successfully created."); // informace o úspěšném vytvoření souboru
+
+                // Přidání nově vytvořeného souboru do PlayerComboBox
+                if (!PlayerComboBox.Items.Contains(JsonFileSelectorForm.Text + ".json"))
+                {
+                    PlayerComboBox.Items.Add(JsonFileSelectorForm.Text + ".json");
+                }
+                PlayerComboBox.SelectedItem = JsonFileSelectorForm.Text + ".json"; // Předvyplnění ComboBoxu novým souborem
+
             }
             catch (ArgumentException ex) // zachytí chybu při neplatném názvu souboru
             {
@@ -243,6 +252,7 @@ namespace MacroRePlayer
                 {
                     Directory.Delete(directoryPath, true); // tak smaže složku a všechny její podadresáře a soubory
                     PlayerComboBox.SelectedIndex = -1; // vyčistí text v ComboBoxu
+                    PlayerComboBox.Items.Clear(); // vyčistí položky v ComboBoxu
                     MessageBox.Show("Složka byla úspěšně smazána."); // informuje uživatele o úspěšném smazání složky
                 }
                 else
@@ -254,16 +264,22 @@ namespace MacroRePlayer
 
         private void PlayerComboBox_DropDown(object sender, EventArgs e)
         {
-            PlayerComboBox.Items.Clear(); // vyčistí položky ComboBoxu
             if (Directory.Exists(directoryPath)) // ověří existenci složky
             {
-                var files = Directory.GetFiles(directoryPath, "*.json"); // získá všechny .json soubory ve složce
-                foreach (var file in files)
+                var files = Directory.GetFiles(directoryPath, "*.json") // získá všechny .json soubory ve složce
+                                    .Select(Path.GetFileName) // získá pouze názvy souborů
+                                    .ToHashSet(); // převede na HashSet pro rychlé porovnání
+
+                var existingItems = PlayerComboBox.Items.Cast<string>().ToHashSet(); // získá existující položky v ComboBoxu jako HashSet
+
+                var missingFiles = files.Except(existingItems); // najde soubory, které chybí v ComboBoxu
+
+                foreach (var file in missingFiles)
                 {
-                    PlayerComboBox.Items.Add(Path.GetFileName(file)); // přidá název souboru do ComboBoxu
+                    PlayerComboBox.Items.Add(file); // přidá chybějící soubory do ComboBoxu
                 }
             }
-        } // tento event se spouští při rozbalení Player ComboBoxu a načítá všechny .json soubory ze složky do ComboBoxu
+        } // tento event se spouští při rozbalení Player ComboBoxu a přidává pouze chybějící .json soubory ze složky do ComboBoxu
 
         private void PlayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {

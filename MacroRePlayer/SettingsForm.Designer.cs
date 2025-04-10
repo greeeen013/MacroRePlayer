@@ -54,6 +54,7 @@
             SettingsPlayerKeyBind = new Label();
             SettingsPlayerKeybindButton = new Button();
             SettingsRecordedKeybindRichTextBox = new RichTextBox();
+            SettingsPlayerDelayEventOffsetLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyDelayBeforeRepetetionTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyRepetetionRateTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsDelayEventOffsetTrackBar).BeginInit();
@@ -64,7 +65,7 @@
             // ExecutionPlayerMakroLabel
             // 
             ExecutionPlayerMakroLabel.AutoSize = true;
-            ExecutionPlayerMakroLabel.Location = new Point(13, 8);
+            ExecutionPlayerMakroLabel.Location = new Point(13, 9);
             ExecutionPlayerMakroLabel.Margin = new Padding(4, 0, 4, 0);
             ExecutionPlayerMakroLabel.Name = "ExecutionPlayerMakroLabel";
             ExecutionPlayerMakroLabel.Size = new Size(131, 15);
@@ -76,7 +77,7 @@
             SettingsSaveButton.Location = new Point(13, 357);
             SettingsSaveButton.Margin = new Padding(4, 3, 4, 3);
             SettingsSaveButton.Name = "SettingsSaveButton";
-            SettingsSaveButton.Size = new Size(350, 27);
+            SettingsSaveButton.Size = new Size(348, 27);
             SettingsSaveButton.TabIndex = 5;
             SettingsSaveButton.Text = "Save and close";
             SettingsSaveButton.UseVisualStyleBackColor = true;
@@ -96,7 +97,7 @@
             // SettingsFormThemeLabel
             // 
             SettingsFormThemeLabel.AutoSize = true;
-            SettingsFormThemeLabel.Location = new Point(223, 8);
+            SettingsFormThemeLabel.Location = new Point(223, 9);
             SettingsFormThemeLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsFormThemeLabel.Name = "SettingsFormThemeLabel";
             SettingsFormThemeLabel.Size = new Size(72, 15);
@@ -108,7 +109,7 @@
             SettingsFormThemeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SettingsFormThemeComboBox.FormattingEnabled = true;
             SettingsFormThemeComboBox.Items.AddRange(new object[] { "White" });
-            SettingsFormThemeComboBox.Location = new Point(223, 27);
+            SettingsFormThemeComboBox.Location = new Point(221, 27);
             SettingsFormThemeComboBox.Margin = new Padding(4, 3, 4, 3);
             SettingsFormThemeComboBox.Name = "SettingsFormThemeComboBox";
             SettingsFormThemeComboBox.Size = new Size(140, 23);
@@ -117,7 +118,7 @@
             // SettingsStartUpDelayLabel
             // 
             SettingsStartUpDelayLabel.AutoSize = true;
-            SettingsStartUpDelayLabel.Location = new Point(223, 68);
+            SettingsStartUpDelayLabel.Location = new Point(223, 53);
             SettingsStartUpDelayLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsStartUpDelayLabel.Name = "SettingsStartUpDelayLabel";
             SettingsStartUpDelayLabel.Size = new Size(113, 15);
@@ -149,7 +150,7 @@
             // SettingsDefaultPlaybackSpeedLabel
             // 
             SettingsDefaultPlaybackSpeedLabel.AutoSize = true;
-            SettingsDefaultPlaybackSpeedLabel.Location = new Point(223, 128);
+            SettingsDefaultPlaybackSpeedLabel.Location = new Point(223, 97);
             SettingsDefaultPlaybackSpeedLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsDefaultPlaybackSpeedLabel.Name = "SettingsDefaultPlaybackSpeedLabel";
             SettingsDefaultPlaybackSpeedLabel.Size = new Size(129, 15);
@@ -161,7 +162,7 @@
             SettingsPlaybackSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SettingsPlaybackSpeedComboBox.FormattingEnabled = true;
             SettingsPlaybackSpeedComboBox.Items.AddRange(new object[] { "0,25x", "0,5x", "0,75x", "1x", "2x", "3x", "4x", "5x", "10x" });
-            SettingsPlaybackSpeedComboBox.Location = new Point(223, 147);
+            SettingsPlaybackSpeedComboBox.Location = new Point(221, 114);
             SettingsPlaybackSpeedComboBox.Margin = new Padding(4, 3, 4, 3);
             SettingsPlaybackSpeedComboBox.Name = "SettingsPlaybackSpeedComboBox";
             SettingsPlaybackSpeedComboBox.Size = new Size(140, 23);
@@ -227,7 +228,7 @@
             // SettingsPlayerDelayOffsetLabel
             // 
             SettingsPlayerDelayOffsetLabel.AutoSize = true;
-            SettingsPlayerDelayOffsetLabel.Location = new Point(223, 190);
+            SettingsPlayerDelayOffsetLabel.Location = new Point(223, 140);
             SettingsPlayerDelayOffsetLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsPlayerDelayOffsetLabel.Name = "SettingsPlayerDelayOffsetLabel";
             SettingsPlayerDelayOffsetLabel.Size = new Size(133, 15);
@@ -256,17 +257,18 @@
             // 
             // SettingsDelayEventOffsetTrackBar
             // 
-            SettingsDelayEventOffsetTrackBar.Location = new Point(227, 209);
+            SettingsDelayEventOffsetTrackBar.Location = new Point(223, 158);
             SettingsDelayEventOffsetTrackBar.Margin = new Padding(4, 3, 4, 3);
             SettingsDelayEventOffsetTrackBar.Maximum = 100;
             SettingsDelayEventOffsetTrackBar.Name = "SettingsDelayEventOffsetTrackBar";
             SettingsDelayEventOffsetTrackBar.Size = new Size(121, 45);
             SettingsDelayEventOffsetTrackBar.TabIndex = 31;
+            SettingsDelayEventOffsetTrackBar.Scroll += SettingsDelayEventOffsetTrackBar_Scroll;
             // 
             // SettingsAutodelteLastClickCheckBox
             // 
             SettingsAutodelteLastClickCheckBox.AutoSize = true;
-            SettingsAutodelteLastClickCheckBox.Location = new Point(223, 320);
+            SettingsAutodelteLastClickCheckBox.Location = new Point(224, 332);
             SettingsAutodelteLastClickCheckBox.Margin = new Padding(4, 3, 4, 3);
             SettingsAutodelteLastClickCheckBox.Name = "SettingsAutodelteLastClickCheckBox";
             SettingsAutodelteLastClickCheckBox.Size = new Size(137, 19);
@@ -276,9 +278,9 @@
             // 
             // SettingsStartUpDelayNumericUpDown
             // 
-            SettingsStartUpDelayNumericUpDown.Location = new Point(223, 87);
+            SettingsStartUpDelayNumericUpDown.Location = new Point(222, 71);
             SettingsStartUpDelayNumericUpDown.Name = "SettingsStartUpDelayNumericUpDown";
-            SettingsStartUpDelayNumericUpDown.Size = new Size(120, 23);
+            SettingsStartUpDelayNumericUpDown.Size = new Size(140, 23);
             SettingsStartUpDelayNumericUpDown.TabIndex = 35;
             // 
             // SettingsHowManyTimesNumericUpDown
@@ -286,7 +288,7 @@
             SettingsHowManyTimesNumericUpDown.Location = new Point(13, 115);
             SettingsHowManyTimesNumericUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             SettingsHowManyTimesNumericUpDown.Name = "SettingsHowManyTimesNumericUpDown";
-            SettingsHowManyTimesNumericUpDown.Size = new Size(120, 23);
+            SettingsHowManyTimesNumericUpDown.Size = new Size(140, 23);
             SettingsHowManyTimesNumericUpDown.TabIndex = 36;
             SettingsHowManyTimesNumericUpDown.Visible = false;
             // 
@@ -304,7 +306,7 @@
             // SettingsPlayerKeyBind
             // 
             SettingsPlayerKeyBind.AutoSize = true;
-            SettingsPlayerKeyBind.Location = new Point(223, 257);
+            SettingsPlayerKeyBind.Location = new Point(224, 216);
             SettingsPlayerKeyBind.Margin = new Padding(4, 0, 4, 0);
             SettingsPlayerKeyBind.Name = "SettingsPlayerKeyBind";
             SettingsPlayerKeyBind.Size = new Size(84, 15);
@@ -313,7 +315,7 @@
             // 
             // SettingsPlayerKeybindButton
             // 
-            SettingsPlayerKeybindButton.Location = new Point(223, 276);
+            SettingsPlayerKeybindButton.Location = new Point(223, 234);
             SettingsPlayerKeybindButton.Name = "SettingsPlayerKeybindButton";
             SettingsPlayerKeybindButton.Size = new Size(75, 38);
             SettingsPlayerKeybindButton.TabIndex = 39;
@@ -323,18 +325,30 @@
             // 
             // SettingsRecordedKeybindRichTextBox
             // 
-            SettingsRecordedKeybindRichTextBox.Enabled = false;
-            SettingsRecordedKeybindRichTextBox.Location = new Point(304, 275);
+            SettingsRecordedKeybindRichTextBox.Font = new Font("Segoe UI", 18F);
+            SettingsRecordedKeybindRichTextBox.Location = new Point(306, 234);
             SettingsRecordedKeybindRichTextBox.Name = "SettingsRecordedKeybindRichTextBox";
-            SettingsRecordedKeybindRichTextBox.Size = new Size(59, 38);
+            SettingsRecordedKeybindRichTextBox.ReadOnly = true;
+            SettingsRecordedKeybindRichTextBox.Size = new Size(56, 38);
             SettingsRecordedKeybindRichTextBox.TabIndex = 40;
             SettingsRecordedKeybindRichTextBox.Text = "";
+            // 
+            // SettingsPlayerDelayEventOffsetLabel
+            // 
+            SettingsPlayerDelayEventOffsetLabel.AutoSize = true;
+            SettingsPlayerDelayEventOffsetLabel.Location = new Point(221, 188);
+            SettingsPlayerDelayEventOffsetLabel.Margin = new Padding(4, 0, 4, 0);
+            SettingsPlayerDelayEventOffsetLabel.Name = "SettingsPlayerDelayEventOffsetLabel";
+            SettingsPlayerDelayEventOffsetLabel.Size = new Size(169, 15);
+            SettingsPlayerDelayEventOffsetLabel.TabIndex = 41;
+            SettingsPlayerDelayEventOffsetLabel.Text = "Label na kterym bude hodnota";
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(374, 397);
+            Controls.Add(SettingsPlayerDelayEventOffsetLabel);
             Controls.Add(SettingsRecordedKeybindRichTextBox);
             Controls.Add(SettingsPlayerKeybindButton);
             Controls.Add(SettingsPlayerKeyBind);
@@ -361,7 +375,9 @@
             Controls.Add(SettingsExecutionLanguageComboBox);
             Controls.Add(SettingsSaveButton);
             Controls.Add(ExecutionPlayerMakroLabel);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
             Name = "SettingsForm";
             Text = "SettingsForm";
             Load += SettingsForm_Load;
@@ -402,5 +418,6 @@
         private Label SettingsPlayerKeyBind;
         private Button SettingsPlayerKeybindButton;
         private RichTextBox SettingsRecordedKeybindRichTextBox;
+        private Label SettingsPlayerDelayEventOffsetLabel;
     }
 }

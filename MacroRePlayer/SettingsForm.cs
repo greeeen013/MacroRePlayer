@@ -106,6 +106,11 @@ namespace MacroRePlayer
             }
             SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms";
             SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters";
+            SettingsPlayerDelayEventOffsetLabel.Text = $"Current Value: {SettingsDelayEventOffsetTrackBar.Value} in ms";
+
+            // Nastavte zarovnání na střed
+            CenterAlignRichTextBoxContent(SettingsRecordedKeybindRichTextBox);
+
         } // nastavení výchozích hodnot
 
         private void SettingsKeyDelayBeforeRepetetionTrackBar_Scroll(object sender, EventArgs e)
@@ -117,6 +122,11 @@ namespace MacroRePlayer
         {
             SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters"; // aktualizace labelu s hodnotou
         } // aktualizace labelu s hodnotou
+
+        private void SettingsDelayEventOffsetTrackBar_Scroll(object sender, EventArgs e)
+        {
+            SettingsPlayerDelayEventOffsetLabel.Text = $"Current Value: {SettingsDelayEventOffsetTrackBar.Value} in ms"; // aktualizace labelu s hodnotou
+        }
 
         private void SettingsSaveButton_Click(object sender, EventArgs e)
         {
@@ -150,11 +160,11 @@ namespace MacroRePlayer
             settings.AppendLine($"DefaultPlaybackMethod=\"{SettingsPlaybackMethodComboBox.SelectedItem}\"");
             if (SettingsPlaybackMethodComboBox.SelectedIndex == 1)
             {
-                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat=\"{(int)SettingsHowManyTimesNumericUpDown.Value}\"");
+                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat={(int)SettingsHowManyTimesNumericUpDown.Value}");
             }
             else
             {
-                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat=0");
+                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat={0}");
             }
 
             settings.AppendLine($"DefaultPlaybackSpeed=\"{SettingsPlaybackSpeedComboBox.SelectedItem}\"");
@@ -188,15 +198,19 @@ namespace MacroRePlayer
         {
             if (globalHook != null)
             {
-                globalHook.KeyDown -= HookManager_KeyDown; // odhlásí se od hooku
-                globalHook = null; // uvolní hook
+                globalHook.KeyDown -= HookManager_KeyDown; // odhlásí se od hooku  
+                globalHook = null; // uvolní hook  
+                SettingsRecordedKeybindRichTextBox.Text = "None"; // nastaví na "None"
+                SettingsRecordedKeybindRichTextBox.Font = new Font(SettingsRecordedKeybindRichTextBox.Font.FontFamily, 10); // nastaví velikost písma na 10px aby se tam vešel text
+                CenterAlignRichTextBoxContent(SettingsRecordedKeybindRichTextBox);
+                HexKey = null; // nastaví HexKey na null  
             }
             else
             {
-                globalHook = Hook.GlobalEvents(); // vytvoří nový hook
-                globalHook.KeyDown += HookManager_KeyDown; // přidá událost pro KeyDown
+                globalHook = Hook.GlobalEvents(); // vytvoří nový hook  
+                globalHook.KeyDown += HookManager_KeyDown; // přidá událost pro KeyDown  
             }
-        } // záznam klávesy pro spouštění makra
+        } // záznam klávesy pro spouštění makra nebo reset  
 
         // věci pro záznam klávesy
         [DllImport("user32.dll")]
@@ -213,6 +227,9 @@ namespace MacroRePlayer
 
 
             SettingsRecordedKeybindRichTextBox.Text = Key;
+            SettingsRecordedKeybindRichTextBox.Font = new Font(SettingsRecordedKeybindRichTextBox.Font.FontFamily, 18);
+            // Nastavte zarovnání na střed
+            CenterAlignRichTextBoxContent(SettingsRecordedKeybindRichTextBox);
 
 
             if (globalHook != null) // odhlásí se od hooku
@@ -221,5 +238,14 @@ namespace MacroRePlayer
                 globalHook = null;
             }
         } // záznam klávesy pro keybind start/stop makra
+
+        private void CenterAlignRichTextBoxContent(RichTextBox richTextBox)
+        {
+            richTextBox.SelectAll();
+            richTextBox.SelectionAlignment = HorizontalAlignment.Center;
+            richTextBox.DeselectAll();
+        }
+
+        
     }
 }

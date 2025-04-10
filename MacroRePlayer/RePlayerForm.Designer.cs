@@ -242,6 +242,7 @@
             PlayerHowManyTimesNumericUpDown.Name = "PlayerHowManyTimesNumericUpDown";
             PlayerHowManyTimesNumericUpDown.Size = new Size(120, 23);
             PlayerHowManyTimesNumericUpDown.TabIndex = 26;
+            PlayerHowManyTimesNumericUpDown.Visible = false;
             // 
             // PlayerHowManyTimesLabel
             // 
@@ -252,6 +253,7 @@
             PlayerHowManyTimesLabel.Size = new Size(98, 15);
             PlayerHowManyTimesLabel.TabIndex = 25;
             PlayerHowManyTimesLabel.Text = "How may times ?";
+            PlayerHowManyTimesLabel.Visible = false;
             // 
             // PlayerPlaybackSpeedLabel
             // 
@@ -373,10 +375,9 @@
             Controls.Add(SettingsButton);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(title);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
-            MinimizeBox = false;
             Name = "RePlayerForm";
             ShowIcon = false;
             Load += Form1_Load;

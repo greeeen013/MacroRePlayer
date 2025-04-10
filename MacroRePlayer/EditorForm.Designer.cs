@@ -229,7 +229,9 @@
             Controls.Add(pictureBox1);
             Controls.Add(EditorFormButtonSave);
             Controls.Add(JsonFileSelectorComboBox);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
             Name = "EditorForm";
             Text = "EditorForm";
             Load += EditorForm_Load;
