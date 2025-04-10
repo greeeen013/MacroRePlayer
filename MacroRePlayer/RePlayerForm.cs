@@ -49,7 +49,7 @@ namespace MacroRePlayer
 
             this.PlayerPlaybackSpeedComboBox.SelectedIndex = 3; // nastavení výchozího indexu na 3 (čtvrtá položka v ComboBoxu což je 1x speed)
 
-
+            RecordKeybindButton(true); // nastavení výchozího textu pro tlačítko pro nahrávání klávesových zkratek na "Record Keybind" (nahrát klávesovou zkratku)
 
             LoadSettingsIfExisted(); // kontrola a vytvoření konfiguračního souboru, pokud neexistuje a rovnou načte hodnoty
 
@@ -74,7 +74,7 @@ namespace MacroRePlayer
                 PlayerPlaybackMethodComboBox.SelectedItem = settings["DefaultPlaybackMethod"]; // přečtení metody přehrávání
                 PlayerPlaybackSpeedComboBox.SelectedItem = settings["DefaultPlaybackSpeed"]; // přečtení výchozí rychlosti přehrávání
                 autoDeleteLastClick = bool.Parse(settings["AutoDeleteLastClick"]); // přečtení nastavení pro automatické mazání posledního kliknutí
-                HexKeyStartStopMacro = settings["Start/StopPlayingMacroKey"]; // přečtení klávesové zkratky pro spuštění/zastavení přehrávání makra
+                HexKeyStartStopMacro = settings["StartStopPlayingMacroHexKey"]; // přečtení klávesové zkratky pro spuštění/zastavení přehrávání makra
                 //autosaveCheckBox.Checked = bool.Parse(settings["autosave"]);
                 //themeComboBox.SelectedItem = settings["theme"];
                 //defaultSpeedTextBox.Text = settings["default_speed"];
@@ -445,6 +445,36 @@ namespace MacroRePlayer
         } //TESTOVACI FUNKCE
 
 
+        private void HookManager_KeyDown(object? sender, KeyEventArgs e)
+        {
+            uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+            var HexKey = $"0x{scancode:X}";
+            if (HexKey == HexKeyStartStopMacro)
+            {
+                if (isPlayingMacro == false)
+                {
+                    PlayerStartPlayingMacroButton.PerformClick(); // Simulate clicking the start button
+                }
+                else
+                {
+                    isPlayingMacro = false;
+                }
+            }
+        }
+
+        private void RecordKeybindButton(bool a)
+        {
+            if (a)
+            {
+                globalHook = Hook.GlobalEvents(); // inicializace globálního hooku pro sledování vstupů
+                globalHook.KeyDown += HookManager_KeyDown; // přidání event handleru pro stisknutí klávesy
+            }
+            else
+            {
+                globalHook.KeyDown -= HookManager_KeyDown; // odhlášení event handleru pro stisknutí klávesy
+                globalHook.Dispose(); // uvolnění prostředků globálního hooku
+            }
+        }
 
 
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -486,45 +516,7 @@ namespace MacroRePlayer
             }
             
         }
-        private void InitializeGlobalKeyHook()
-        {
-            globalHook = Hook.GlobalEvents(); // vytvoření globálního hooku pro sledování vstupů
-            globalHook.KeyDown += GlobalHook_KeyDownForStartStop; // pridání event handleru pro sledování stisknutí klávesy
-        } // tahle funkce inicializuje globální hook pro sledování klávesnice a přidává event handler pro sledování stisknutí klávesy
-
-        private void GlobalHook_KeyDownForStartStop(object? sender, KeyEventArgs e)
-        {
-            uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC); // získání skenovacího kódu klávesy
-            string hexKey = $"0x{scancode:X}"; // převede skenovací kód na hexadecimální formát
-
-            if (hexKey == HexKeyStartStopMacro) // pokud je stisknuta klávesa pro spuštění/zastavení přehrávání makro 
-            {
-                if (isPlayingMacro)
-                {
-                    PlayerStopPlayingMacroButton_Click(null, EventArgs.Empty); // zastaví přehrávání makra
-                }
-                else
-                {
-                    PlayerStartPlayingMacroButton_Click(null, EventArgs.Empty); // spustí přehrávání makra
-                }
-            }
-        } // tahle funkce je pro sledování globální klávesnice a spouští přehrávání makra nebo ho zastavuje podle toho, zda je makro již přehráváno nebo ne
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            InitializeGlobalKeyHook(); // Initialize the global key hook when the form loads
-        }
-
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            base.OnFormClosed(e);
-            if (globalHook != null)
-            {
-                globalHook.KeyDown -= GlobalHook_KeyDownForStartStop; // Unsubscribe from the event
-                globalHook.Dispose(); // Dispose of the global hook
-            }
-        }
+        
 
 
         //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej

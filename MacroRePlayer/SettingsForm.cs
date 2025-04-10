@@ -88,8 +88,8 @@ namespace MacroRePlayer
             settings.AppendLine($"PlayerDelayEventOffset={(int)SettingsDelayEventOffsetTrackBar.Value}");
             settings.AppendLine($"KeyRepetetionRate={(int)SettingsKeyRepetetionRateTrackBar.Value}");
             settings.AppendLine($"AutoDeleteLastClick={(bool)SettingsAutodelteLastClickCheckBox.Checked}");
-            settings.AppendLine($"Start/StopPlayingMacroKey=\"{richTextBox1.Text}\"");
-            settings.AppendLine($"Start/StopPlayingMacroHexKey={HexKey}");
+            settings.AppendLine($"StartStopPlayingMacroKey=\"{richTextBox1.Text}\"");
+            settings.AppendLine($"StartStopPlayingMacroHexKey={HexKey}");
             settings.AppendLine($"AutoSave={(bool)SettingsAutoSaveCheckBox.Checked}");
 
 
