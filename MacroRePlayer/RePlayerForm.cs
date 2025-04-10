@@ -132,9 +132,20 @@ namespace MacroRePlayer
 
         private void SaveEventsToJson()
         {
-            string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json"); // vytvoření cesty k souboru s koncovkou .json
-            File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented)); // uložení událostí do JSON souboru
-            MessageBox.Show($"Soubor {fileName} byl úspěšně vytvořen."); // informace o úspěšném vytvoření souboru
+            try
+            {
+                string fileName = Path.Combine(directoryPath, JsonFileSelectorForm.Text + ".json"); // vytvoření cesty k souboru s koncovkou .json
+                File.WriteAllText(fileName, JsonConvert.SerializeObject(events, Formatting.Indented)); // uložení událostí do JSON souboru
+                MessageBox.Show($"File {fileName} was successfully created."); // informace o úspěšném vytvoření souboru
+            }
+            catch (ArgumentException ex) // zachytí chybu při neplatném názvu souboru
+            {
+                MessageBox.Show($"Error: Invalid file name. Please check the name and try again.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex) // zachytí jiné chyby
+            {
+                MessageBox.Show($"Error while saving the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         } // tento event se spouští při uložení událostí do JSON souboru a informuje uživatele o úspěšném vytvoření souboru
 
         private void GlobalHook_MouseDownExt(object? sender, MouseEventExtArgs e)
