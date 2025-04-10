@@ -37,7 +37,6 @@
             SettingsFormThemeLabel = new Label();
             SettingsFormThemeComboBox = new ComboBox();
             SettingsStartUpDelayLabel = new Label();
-            SettingsStartUpDelayTextBox = new TextBox();
             SettingsDefaultPlaybackMethodLabel = new Label();
             SettingsPlaybackMethodComboBox = new ComboBox();
             SettingsDefaultPlaybackSpeedLabel = new Label();
@@ -53,10 +52,18 @@
             SettingsDelayEventOffsetTrackBar = new TrackBar();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
-            checkBox3 = new CheckBox();
+            SettingsAutodelteLastClickCheckBox = new CheckBox();
+            SettingsStartUpDelayNumericUpDown = new NumericUpDown();
+            SettingsHowManyTimesNumericUpDown = new NumericUpDown();
+            SettingsHowManyTimesLabel = new Label();
+            SettingsPlayerKeyBind = new Label();
+            SettingsPlayerKeybindButton = new Button();
+            richTextBox1 = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyDelayBeforeRepetetionTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyRepetetionRateTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsDelayEventOffsetTrackBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SettingsStartUpDelayNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SettingsHowManyTimesNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // ExecutionPlayerMakroLabel
@@ -75,9 +82,9 @@
             SettingsPlayerKeyboardLanguageLabel.Location = new Point(6, 68);
             SettingsPlayerKeyboardLanguageLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsPlayerKeyboardLanguageLabel.Name = "SettingsPlayerKeyboardLanguageLabel";
-            SettingsPlayerKeyboardLanguageLabel.Size = new Size(147, 15);
+            SettingsPlayerKeyboardLanguageLabel.Size = new Size(205, 15);
             SettingsPlayerKeyboardLanguageLabel.TabIndex = 3;
-            SettingsPlayerKeyboardLanguageLabel.Text = "Player Keyboard Language";
+            SettingsPlayerKeyboardLanguageLabel.Text = "Player Keyboard Language (not soon)";
             // 
             // SettingsPlayerKeyboardLanguageComboBox
             // 
@@ -92,7 +99,7 @@
             // 
             // SettingsSaveButton
             // 
-            SettingsSaveButton.Location = new Point(223, 415);
+            SettingsSaveButton.Location = new Point(149, 487);
             SettingsSaveButton.Margin = new Padding(4, 3, 4, 3);
             SettingsSaveButton.Name = "SettingsSaveButton";
             SettingsSaveButton.Size = new Size(88, 27);
@@ -106,12 +113,12 @@
             SettingsAutoSaveCheckBox.AutoSize = true;
             SettingsAutoSaveCheckBox.Checked = true;
             SettingsAutoSaveCheckBox.CheckState = CheckState.Checked;
-            SettingsAutoSaveCheckBox.Location = new Point(28, 392);
+            SettingsAutoSaveCheckBox.Location = new Point(6, 414);
             SettingsAutoSaveCheckBox.Margin = new Padding(4, 3, 4, 3);
             SettingsAutoSaveCheckBox.Name = "SettingsAutoSaveCheckBox";
-            SettingsAutoSaveCheckBox.Size = new Size(76, 19);
+            SettingsAutoSaveCheckBox.Size = new Size(189, 19);
             SettingsAutoSaveCheckBox.TabIndex = 7;
-            SettingsAutoSaveCheckBox.Text = "AutoSave";
+            SettingsAutoSaveCheckBox.Text = "AutoSave (maybe not soon lol)";
             SettingsAutoSaveCheckBox.UseVisualStyleBackColor = true;
             // 
             // SettingsExecutionLanguageComboBox
@@ -156,15 +163,6 @@
             SettingsStartUpDelayLabel.TabIndex = 11;
             SettingsStartUpDelayLabel.Text = "Player start up delay";
             // 
-            // SettingsStartUpDelayTextBox
-            // 
-            SettingsStartUpDelayTextBox.Location = new Point(223, 87);
-            SettingsStartUpDelayTextBox.Margin = new Padding(4, 3, 4, 3);
-            SettingsStartUpDelayTextBox.Name = "SettingsStartUpDelayTextBox";
-            SettingsStartUpDelayTextBox.Size = new Size(116, 23);
-            SettingsStartUpDelayTextBox.TabIndex = 12;
-            SettingsStartUpDelayTextBox.Text = "1000";
-            // 
             // SettingsDefaultPlaybackMethodLabel
             // 
             SettingsDefaultPlaybackMethodLabel.AutoSize = true;
@@ -185,6 +183,7 @@
             SettingsPlaybackMethodComboBox.Name = "SettingsPlaybackMethodComboBox";
             SettingsPlaybackMethodComboBox.Size = new Size(140, 23);
             SettingsPlaybackMethodComboBox.TabIndex = 19;
+            SettingsPlaybackMethodComboBox.SelectedIndexChanged += SettingsPlaybackMethodComboBox_SelectedIndexChanged;
             // 
             // SettingsDefaultPlaybackSpeedLabel
             // 
@@ -210,7 +209,7 @@
             // SettingsKeyDelayBeforeRepeationLabel
             // 
             SettingsKeyDelayBeforeRepeationLabel.AutoSize = true;
-            SettingsKeyDelayBeforeRepeationLabel.Location = new Point(6, 232);
+            SettingsKeyDelayBeforeRepeationLabel.Location = new Point(6, 258);
             SettingsKeyDelayBeforeRepeationLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsKeyDelayBeforeRepeationLabel.Name = "SettingsKeyDelayBeforeRepeationLabel";
             SettingsKeyDelayBeforeRepeationLabel.Size = new Size(147, 15);
@@ -220,9 +219,7 @@
             // SettingsKeyRepeatingCheckBox
             // 
             SettingsKeyRepeatingCheckBox.AutoSize = true;
-            SettingsKeyRepeatingCheckBox.Checked = true;
-            SettingsKeyRepeatingCheckBox.CheckState = CheckState.Checked;
-            SettingsKeyRepeatingCheckBox.Location = new Point(9, 209);
+            SettingsKeyRepeatingCheckBox.Location = new Point(9, 235);
             SettingsKeyRepeatingCheckBox.Margin = new Padding(4, 3, 4, 3);
             SettingsKeyRepeatingCheckBox.Name = "SettingsKeyRepeatingCheckBox";
             SettingsKeyRepeatingCheckBox.Size = new Size(138, 19);
@@ -232,7 +229,7 @@
             // 
             // SettingsKeyDelayBeforeRepetetionTrackBar
             // 
-            SettingsKeyDelayBeforeRepetetionTrackBar.Location = new Point(9, 250);
+            SettingsKeyDelayBeforeRepetetionTrackBar.Location = new Point(9, 276);
             SettingsKeyDelayBeforeRepetetionTrackBar.Margin = new Padding(4, 3, 4, 3);
             SettingsKeyDelayBeforeRepetetionTrackBar.Maximum = 1000;
             SettingsKeyDelayBeforeRepetetionTrackBar.Minimum = 200;
@@ -245,7 +242,7 @@
             // 
             // SettingsKeyRepetetionRateTrackBar
             // 
-            SettingsKeyRepetetionRateTrackBar.Location = new Point(9, 333);
+            SettingsKeyRepetetionRateTrackBar.Location = new Point(9, 359);
             SettingsKeyRepetetionRateTrackBar.Margin = new Padding(4, 3, 4, 3);
             SettingsKeyRepetetionRateTrackBar.Maximum = 500;
             SettingsKeyRepetetionRateTrackBar.Minimum = 5;
@@ -259,7 +256,7 @@
             // SettingsKeyRepetitionRateLabel
             // 
             SettingsKeyRepetitionRateLabel.AutoSize = true;
-            SettingsKeyRepetitionRateLabel.Location = new Point(6, 315);
+            SettingsKeyRepetitionRateLabel.Location = new Point(6, 341);
             SettingsKeyRepetitionRateLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsKeyRepetitionRateLabel.Name = "SettingsKeyRepetitionRateLabel";
             SettingsKeyRepetitionRateLabel.Size = new Size(103, 15);
@@ -269,7 +266,7 @@
             // SettingsPlayerDelayOffsetLabel
             // 
             SettingsPlayerDelayOffsetLabel.AutoSize = true;
-            SettingsPlayerDelayOffsetLabel.Location = new Point(219, 213);
+            SettingsPlayerDelayOffsetLabel.Location = new Point(223, 190);
             SettingsPlayerDelayOffsetLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsPlayerDelayOffsetLabel.Name = "SettingsPlayerDelayOffsetLabel";
             SettingsPlayerDelayOffsetLabel.Size = new Size(133, 15);
@@ -279,7 +276,7 @@
             // SettingsKeyDelayBeforeRepeationWValueLabel
             // 
             SettingsKeyDelayBeforeRepeationWValueLabel.AutoSize = true;
-            SettingsKeyDelayBeforeRepeationWValueLabel.Location = new Point(6, 287);
+            SettingsKeyDelayBeforeRepeationWValueLabel.Location = new Point(6, 313);
             SettingsKeyDelayBeforeRepeationWValueLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsKeyDelayBeforeRepeationWValueLabel.Name = "SettingsKeyDelayBeforeRepeationWValueLabel";
             SettingsKeyDelayBeforeRepeationWValueLabel.Size = new Size(169, 15);
@@ -289,7 +286,7 @@
             // SettingsKeyRepetitionRateWValueLabel
             // 
             SettingsKeyRepetitionRateWValueLabel.AutoSize = true;
-            SettingsKeyRepetitionRateWValueLabel.Location = new Point(6, 370);
+            SettingsKeyRepetitionRateWValueLabel.Location = new Point(6, 396);
             SettingsKeyRepetitionRateWValueLabel.Margin = new Padding(4, 0, 4, 0);
             SettingsKeyRepetitionRateWValueLabel.Name = "SettingsKeyRepetitionRateWValueLabel";
             SettingsKeyRepetitionRateWValueLabel.Size = new Size(169, 15);
@@ -298,7 +295,7 @@
             // 
             // SettingsDelayEventOffsetTrackBar
             // 
-            SettingsDelayEventOffsetTrackBar.Location = new Point(223, 232);
+            SettingsDelayEventOffsetTrackBar.Location = new Point(227, 209);
             SettingsDelayEventOffsetTrackBar.Margin = new Padding(4, 3, 4, 3);
             SettingsDelayEventOffsetTrackBar.Maximum = 100;
             SettingsDelayEventOffsetTrackBar.Name = "SettingsDelayEventOffsetTrackBar";
@@ -308,7 +305,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(244, 310);
+            checkBox1.Location = new Point(244, 336);
             checkBox1.Margin = new Padding(4, 3, 4, 3);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(164, 19);
@@ -319,7 +316,7 @@
             // checkBox2
             // 
             checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(244, 337);
+            checkBox2.Location = new Point(244, 363);
             checkBox2.Margin = new Padding(4, 3, 4, 3);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(178, 19);
@@ -327,23 +324,84 @@
             checkBox2.Text = "Interrupt by Keyboard (soon)";
             checkBox2.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // SettingsAutodelteLastClickCheckBox
             // 
-            checkBox3.AutoSize = true;
-            checkBox3.Location = new Point(244, 359);
-            checkBox3.Margin = new Padding(4, 3, 4, 3);
-            checkBox3.Name = "checkBox3";
-            checkBox3.Size = new Size(137, 19);
-            checkBox3.TabIndex = 34;
-            checkBox3.Text = "Autodelete last click?";
-            checkBox3.UseVisualStyleBackColor = true;
+            SettingsAutodelteLastClickCheckBox.AutoSize = true;
+            SettingsAutodelteLastClickCheckBox.Location = new Point(244, 385);
+            SettingsAutodelteLastClickCheckBox.Margin = new Padding(4, 3, 4, 3);
+            SettingsAutodelteLastClickCheckBox.Name = "SettingsAutodelteLastClickCheckBox";
+            SettingsAutodelteLastClickCheckBox.Size = new Size(137, 19);
+            SettingsAutodelteLastClickCheckBox.TabIndex = 34;
+            SettingsAutodelteLastClickCheckBox.Text = "Autodelete last click?";
+            SettingsAutodelteLastClickCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // SettingsStartUpDelayNumericUpDown
+            // 
+            SettingsStartUpDelayNumericUpDown.Location = new Point(223, 87);
+            SettingsStartUpDelayNumericUpDown.Name = "SettingsStartUpDelayNumericUpDown";
+            SettingsStartUpDelayNumericUpDown.Size = new Size(120, 23);
+            SettingsStartUpDelayNumericUpDown.TabIndex = 35;
+            // 
+            // SettingsHowManyTimesNumericUpDown
+            // 
+            SettingsHowManyTimesNumericUpDown.Location = new Point(9, 191);
+            SettingsHowManyTimesNumericUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            SettingsHowManyTimesNumericUpDown.Name = "SettingsHowManyTimesNumericUpDown";
+            SettingsHowManyTimesNumericUpDown.Size = new Size(120, 23);
+            SettingsHowManyTimesNumericUpDown.TabIndex = 36;
+            SettingsHowManyTimesNumericUpDown.Visible = false;
+            // 
+            // SettingsHowManyTimesLabel
+            // 
+            SettingsHowManyTimesLabel.AutoSize = true;
+            SettingsHowManyTimesLabel.Location = new Point(9, 173);
+            SettingsHowManyTimesLabel.Margin = new Padding(4, 0, 4, 0);
+            SettingsHowManyTimesLabel.Name = "SettingsHowManyTimesLabel";
+            SettingsHowManyTimesLabel.Size = new Size(97, 15);
+            SettingsHowManyTimesLabel.TabIndex = 37;
+            SettingsHowManyTimesLabel.Text = "How many times";
+            SettingsHowManyTimesLabel.Visible = false;
+            // 
+            // SettingsPlayerKeyBind
+            // 
+            SettingsPlayerKeyBind.AutoSize = true;
+            SettingsPlayerKeyBind.Location = new Point(401, 9);
+            SettingsPlayerKeyBind.Margin = new Padding(4, 0, 4, 0);
+            SettingsPlayerKeyBind.Name = "SettingsPlayerKeyBind";
+            SettingsPlayerKeyBind.Size = new Size(84, 15);
+            SettingsPlayerKeyBind.TabIndex = 38;
+            SettingsPlayerKeyBind.Text = "Player keybind";
+            // 
+            // SettingsPlayerKeybindButton
+            // 
+            SettingsPlayerKeybindButton.Location = new Point(401, 27);
+            SettingsPlayerKeybindButton.Name = "SettingsPlayerKeybindButton";
+            SettingsPlayerKeybindButton.Size = new Size(75, 38);
+            SettingsPlayerKeybindButton.TabIndex = 39;
+            SettingsPlayerKeybindButton.Text = "click to record";
+            SettingsPlayerKeybindButton.UseVisualStyleBackColor = true;
+            SettingsPlayerKeybindButton.Click += SettingsPlayerKeybindButton_Click;
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(482, 27);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(68, 38);
+            richTextBox1.TabIndex = 40;
+            richTextBox1.Text = "";
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(461, 526);
-            Controls.Add(checkBox3);
+            ClientSize = new Size(660, 526);
+            Controls.Add(richTextBox1);
+            Controls.Add(SettingsPlayerKeybindButton);
+            Controls.Add(SettingsPlayerKeyBind);
+            Controls.Add(SettingsHowManyTimesLabel);
+            Controls.Add(SettingsHowManyTimesNumericUpDown);
+            Controls.Add(SettingsStartUpDelayNumericUpDown);
+            Controls.Add(SettingsAutodelteLastClickCheckBox);
             Controls.Add(checkBox2);
             Controls.Add(checkBox1);
             Controls.Add(SettingsDelayEventOffsetTrackBar);
@@ -359,7 +417,6 @@
             Controls.Add(SettingsDefaultPlaybackSpeedLabel);
             Controls.Add(SettingsPlaybackMethodComboBox);
             Controls.Add(SettingsDefaultPlaybackMethodLabel);
-            Controls.Add(SettingsStartUpDelayTextBox);
             Controls.Add(SettingsStartUpDelayLabel);
             Controls.Add(SettingsFormThemeComboBox);
             Controls.Add(SettingsFormThemeLabel);
@@ -376,6 +433,8 @@
             ((System.ComponentModel.ISupportInitialize)SettingsKeyDelayBeforeRepetetionTrackBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyRepetetionRateTrackBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)SettingsDelayEventOffsetTrackBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SettingsStartUpDelayNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SettingsHowManyTimesNumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -391,7 +450,6 @@
         private System.Windows.Forms.Label SettingsFormThemeLabel;
         private System.Windows.Forms.ComboBox SettingsFormThemeComboBox;
         private System.Windows.Forms.Label SettingsStartUpDelayLabel;
-        private System.Windows.Forms.TextBox SettingsStartUpDelayTextBox;
         private System.Windows.Forms.Label SettingsDefaultPlaybackMethodLabel;
         private System.Windows.Forms.ComboBox SettingsPlaybackMethodComboBox;
         private System.Windows.Forms.Label SettingsDefaultPlaybackSpeedLabel;
@@ -407,6 +465,12 @@
         private System.Windows.Forms.TrackBar SettingsDelayEventOffsetTrackBar;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
-        private CheckBox checkBox3;
+        private CheckBox SettingsAutodelteLastClickCheckBox;
+        private NumericUpDown SettingsStartUpDelayNumericUpDown;
+        private NumericUpDown SettingsHowManyTimesNumericUpDown;
+        private Label SettingsHowManyTimesLabel;
+        private Label SettingsPlayerKeyBind;
+        private Button SettingsPlayerKeybindButton;
+        private RichTextBox richTextBox1;
     }
 }

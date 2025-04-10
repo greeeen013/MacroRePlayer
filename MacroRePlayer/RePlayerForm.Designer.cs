@@ -42,12 +42,14 @@
             FolderDeleteButton = new Button();
             OpenEditorButton = new Button();
             PlayerGroupBox = new GroupBox();
+            PlayerHowManyTimesNumericUpDown = new NumericUpDown();
+            PlayerHowManyTimesLabel = new Label();
             TestButton = new Button();
             PlayerStartStopPlayingKeybindTextBox = new TextBox();
             PlayerStartStopKeybindSetButton = new Button();
-            EditorPlaybackSpeedLabel = new Label();
+            PlayerPlaybackSpeedLabel = new Label();
             PlayerPlaybackSpeedComboBox = new ComboBox();
-            EditorPlaybackMethodLabel = new Label();
+            PlayerPlaybackMethodLabel = new Label();
             PlayerPlaybackMethodComboBox = new ComboBox();
             PlayerStopPlayingMacroButton = new Button();
             PlayerStartPlayingMacroButton = new Button();
@@ -55,8 +57,10 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             SettingsButton = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
+            PlayerChooseAFileLabel = new Label();
             RecorderGroupBox.SuspendLayout();
             PlayerGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PlayerHowManyTimesNumericUpDown).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -207,12 +211,15 @@
             // 
             // PlayerGroupBox
             // 
+            PlayerGroupBox.Controls.Add(PlayerChooseAFileLabel);
+            PlayerGroupBox.Controls.Add(PlayerHowManyTimesNumericUpDown);
+            PlayerGroupBox.Controls.Add(PlayerHowManyTimesLabel);
             PlayerGroupBox.Controls.Add(TestButton);
             PlayerGroupBox.Controls.Add(PlayerStartStopPlayingKeybindTextBox);
             PlayerGroupBox.Controls.Add(PlayerStartStopKeybindSetButton);
-            PlayerGroupBox.Controls.Add(EditorPlaybackSpeedLabel);
+            PlayerGroupBox.Controls.Add(PlayerPlaybackSpeedLabel);
             PlayerGroupBox.Controls.Add(PlayerPlaybackSpeedComboBox);
-            PlayerGroupBox.Controls.Add(EditorPlaybackMethodLabel);
+            PlayerGroupBox.Controls.Add(PlayerPlaybackMethodLabel);
             PlayerGroupBox.Controls.Add(PlayerPlaybackMethodComboBox);
             PlayerGroupBox.Controls.Add(PlayerStopPlayingMacroButton);
             PlayerGroupBox.Controls.Add(PlayerStartPlayingMacroButton);
@@ -225,6 +232,23 @@
             PlayerGroupBox.Size = new Size(422, 464);
             PlayerGroupBox.TabIndex = 13;
             PlayerGroupBox.TabStop = false;
+            // 
+            // PlayerHowManyTimesNumericUpDown
+            // 
+            PlayerHowManyTimesNumericUpDown.Location = new Point(96, 353);
+            PlayerHowManyTimesNumericUpDown.Name = "PlayerHowManyTimesNumericUpDown";
+            PlayerHowManyTimesNumericUpDown.Size = new Size(120, 23);
+            PlayerHowManyTimesNumericUpDown.TabIndex = 26;
+            // 
+            // PlayerHowManyTimesLabel
+            // 
+            PlayerHowManyTimesLabel.AutoSize = true;
+            PlayerHowManyTimesLabel.Location = new Point(96, 335);
+            PlayerHowManyTimesLabel.Margin = new Padding(4, 0, 4, 0);
+            PlayerHowManyTimesLabel.Name = "PlayerHowManyTimesLabel";
+            PlayerHowManyTimesLabel.Size = new Size(98, 15);
+            PlayerHowManyTimesLabel.TabIndex = 25;
+            PlayerHowManyTimesLabel.Text = "How may times ?";
             // 
             // TestButton
             // 
@@ -264,36 +288,36 @@
             PlayerStartStopKeybindSetButton.UseVisualStyleBackColor = false;
             PlayerStartStopKeybindSetButton.Click += PlayerStartStopKeybindSetButton_Click;
             // 
-            // EditorPlaybackSpeedLabel
+            // PlayerPlaybackSpeedLabel
             // 
-            EditorPlaybackSpeedLabel.AutoSize = true;
-            EditorPlaybackSpeedLabel.Location = new Point(96, 343);
-            EditorPlaybackSpeedLabel.Margin = new Padding(4, 0, 4, 0);
-            EditorPlaybackSpeedLabel.Name = "EditorPlaybackSpeedLabel";
-            EditorPlaybackSpeedLabel.Size = new Size(88, 15);
-            EditorPlaybackSpeedLabel.TabIndex = 19;
-            EditorPlaybackSpeedLabel.Text = "playback speed";
+            PlayerPlaybackSpeedLabel.AutoSize = true;
+            PlayerPlaybackSpeedLabel.Location = new Point(256, 291);
+            PlayerPlaybackSpeedLabel.Margin = new Padding(4, 0, 4, 0);
+            PlayerPlaybackSpeedLabel.Name = "PlayerPlaybackSpeedLabel";
+            PlayerPlaybackSpeedLabel.Size = new Size(88, 15);
+            PlayerPlaybackSpeedLabel.TabIndex = 19;
+            PlayerPlaybackSpeedLabel.Text = "playback speed";
             // 
             // PlayerPlaybackSpeedComboBox
             // 
             PlayerPlaybackSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             PlayerPlaybackSpeedComboBox.FormattingEnabled = true;
             PlayerPlaybackSpeedComboBox.Items.AddRange(new object[] { "0,25x", "0,5x", "0,75x", "1x", "2x", "3x", "4x", "5x", "10x" });
-            PlayerPlaybackSpeedComboBox.Location = new Point(99, 361);
+            PlayerPlaybackSpeedComboBox.Location = new Point(259, 309);
             PlayerPlaybackSpeedComboBox.Margin = new Padding(4, 3, 4, 3);
             PlayerPlaybackSpeedComboBox.Name = "PlayerPlaybackSpeedComboBox";
             PlayerPlaybackSpeedComboBox.Size = new Size(92, 23);
             PlayerPlaybackSpeedComboBox.TabIndex = 20;
             // 
-            // EditorPlaybackMethodLabel
+            // PlayerPlaybackMethodLabel
             // 
-            EditorPlaybackMethodLabel.AutoSize = true;
-            EditorPlaybackMethodLabel.Location = new Point(96, 291);
-            EditorPlaybackMethodLabel.Margin = new Padding(4, 0, 4, 0);
-            EditorPlaybackMethodLabel.Name = "EditorPlaybackMethodLabel";
-            EditorPlaybackMethodLabel.Size = new Size(99, 15);
-            EditorPlaybackMethodLabel.TabIndex = 17;
-            EditorPlaybackMethodLabel.Text = "playback method";
+            PlayerPlaybackMethodLabel.AutoSize = true;
+            PlayerPlaybackMethodLabel.Location = new Point(96, 291);
+            PlayerPlaybackMethodLabel.Margin = new Padding(4, 0, 4, 0);
+            PlayerPlaybackMethodLabel.Name = "PlayerPlaybackMethodLabel";
+            PlayerPlaybackMethodLabel.Size = new Size(99, 15);
+            PlayerPlaybackMethodLabel.TabIndex = 17;
+            PlayerPlaybackMethodLabel.Text = "playback method";
             // 
             // PlayerPlaybackMethodComboBox
             // 
@@ -305,6 +329,7 @@
             PlayerPlaybackMethodComboBox.Name = "PlayerPlaybackMethodComboBox";
             PlayerPlaybackMethodComboBox.Size = new Size(140, 23);
             PlayerPlaybackMethodComboBox.TabIndex = 18;
+            PlayerPlaybackMethodComboBox.SelectedIndexChanged += PlayerPlaybackMethodComboBox_SelectedIndexChanged;
             // 
             // PlayerStopPlayingMacroButton
             // 
@@ -336,8 +361,9 @@
             // 
             // PlayerComboBox
             // 
+            PlayerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             PlayerComboBox.FormattingEnabled = true;
-            PlayerComboBox.Location = new Point(131, 55);
+            PlayerComboBox.Location = new Point(131, 66);
             PlayerComboBox.Margin = new Padding(4, 3, 4, 3);
             PlayerComboBox.Name = "PlayerComboBox";
             PlayerComboBox.Size = new Size(140, 23);
@@ -373,6 +399,15 @@
             SettingsButton.UseVisualStyleBackColor = false;
             SettingsButton.Click += SettingsButton_Click;
             // 
+            // PlayerChooseAFileLabel
+            // 
+            PlayerChooseAFileLabel.AutoSize = true;
+            PlayerChooseAFileLabel.Location = new Point(131, 48);
+            PlayerChooseAFileLabel.Name = "PlayerChooseAFileLabel";
+            PlayerChooseAFileLabel.Size = new Size(78, 15);
+            PlayerChooseAFileLabel.TabIndex = 27;
+            PlayerChooseAFileLabel.Text = "Choose a file:";
+            // 
             // RePlayerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -393,6 +428,7 @@
             RecorderGroupBox.PerformLayout();
             PlayerGroupBox.ResumeLayout(false);
             PlayerGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PlayerHowManyTimesNumericUpDown).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -419,14 +455,17 @@
         private System.Windows.Forms.ComboBox PlayerPlaybackMethodComboBox;
         private System.Windows.Forms.Button PlayerStopPlayingMacroButton;
         private System.Windows.Forms.Button PlayerStartPlayingMacroButton;
-        private System.Windows.Forms.Label EditorPlaybackMethodLabel;
-        private System.Windows.Forms.Label EditorPlaybackSpeedLabel;
+        private System.Windows.Forms.Label PlayerPlaybackMethodLabel;
+        private System.Windows.Forms.Label PlayerPlaybackSpeedLabel;
         private System.Windows.Forms.ComboBox PlayerPlaybackSpeedComboBox;
         private System.Windows.Forms.Button PlayerStartStopKeybindSetButton;
         private System.Windows.Forms.TextBox PlayerStartStopPlayingKeybindTextBox;
         private System.Windows.Forms.Button TestButton;
         private System.Windows.Forms.Button SettingsButton;
         private System.Windows.Forms.Timer timer1;
+        private NumericUpDown PlayerHowManyTimesNumericUpDown;
+        private Label PlayerHowManyTimesLabel;
+        private Label PlayerChooseAFileLabel;
     }
 }
 

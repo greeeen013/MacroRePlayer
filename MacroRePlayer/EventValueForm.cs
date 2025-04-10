@@ -155,15 +155,13 @@ namespace MacroRePlayer.EventValueForms
         {
             if (globalHook != null)
             {
-                // Unsubscribe from the global hook if already subscribed
-                globalHook.KeyDown -= HookManager_KeyDown;
-                globalHook = null;
+                globalHook.KeyDown -= HookManager_KeyDown; // odhlásí se od hooku
+                globalHook = null; // uvolní hook
             }
             else
             {
-                // Start recording key presses
-                globalHook = Hook.GlobalEvents();
-                globalHook.KeyDown += HookManager_KeyDown;
+                globalHook = Hook.GlobalEvents(); // vytvoří nový hook
+                globalHook.KeyDown += HookManager_KeyDown; // přidá událost pro KeyDown
             }
         }
 
