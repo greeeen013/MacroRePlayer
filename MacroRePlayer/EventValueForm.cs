@@ -126,24 +126,32 @@ namespace MacroRePlayer.EventValueForms
             SelectedEventType = EventValueTypeOfEventComboBox.SelectedItem.ToString();
             UpdatedEventValue = "";
 
-            if (SelectedEventType == "MouseDown" || SelectedEventType == "MouseUp")
+            switch (SelectedEventType)
             {
-                string x = EventValueFirstTextBox.Text.Trim();
-                string y = EventValueSecondsTextBox.Text.Trim();
-                string button = EventValueButtonComboBox.SelectedItem?.ToString() ?? "";
+                case "MouseDown":
+                case "MouseUp":
+                    string x = EventValueFirstTextBox.Text.Trim();
+                    string y = EventValueSecondsTextBox.Text.Trim();
+                    string button = EventValueButtonComboBox.SelectedItem?.ToString() ?? "";
 
-                UpdatedEventValue = $"X: {x}, Y: {y}, Button: {button}";
-            }
-            else if (SelectedEventType == "KeyDown" || SelectedEventType == "KeyUp")
-            {
-                string key = richTextBox1.Text.Trim();
-                UpdateSecretValue = HexKey;
-                UpdatedEventValue = $"Key: {key}";
-            }
-            else if (SelectedEventType == "DelayEvent")
-            {
-                string delay = EventValueFirstTextBox.Text.Trim();
-                UpdatedEventValue = $"Duration: {delay} ms";
+                    UpdatedEventValue = $"X: {x}, Y: {y}, Button: {button}";
+                    break;
+
+                case "KeyDown":
+                case "KeyUp":
+                    string key = richTextBox1.Text.Trim();
+                    UpdateSecretValue = HexKey;
+                    UpdatedEventValue = $"Key: {key}";
+                    break;
+
+                case "DelayEvent":
+                    string delay = EventValueFirstTextBox.Text.Trim();
+                    UpdatedEventValue = $"Duration: {delay} ms";
+                    break;
+
+                default:
+                    // Pokud je vybrán neznámý typ události, nic se neděje
+                    break;
             }
 
             // Zavřít formulář a vrátit výsledek

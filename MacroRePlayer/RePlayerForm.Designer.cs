@@ -45,7 +45,6 @@
             PlayerChooseAFileLabel = new Label();
             PlayerHowManyTimesNumericUpDown = new NumericUpDown();
             PlayerHowManyTimesLabel = new Label();
-            TestButton = new Button();
             PlayerPlaybackSpeedLabel = new Label();
             PlayerPlaybackSpeedComboBox = new ComboBox();
             PlayerPlaybackMethodLabel = new Label();
@@ -254,19 +253,6 @@
             PlayerHowManyTimesLabel.TabIndex = 25;
             PlayerHowManyTimesLabel.Text = "How may times ?";
             // 
-            // TestButton
-            // 
-            TestButton.BackColor = Color.White;
-            TestButton.ForeColor = SystemColors.ControlText;
-            TestButton.Location = new Point(393, 5);
-            TestButton.Margin = new Padding(4, 3, 4, 3);
-            TestButton.Name = "TestButton";
-            TestButton.Size = new Size(77, 54);
-            TestButton.TabIndex = 24;
-            TestButton.Text = "TestButton";
-            TestButton.UseVisualStyleBackColor = false;
-            TestButton.Click += TestButton_ClickAsync;
-            // 
             // PlayerPlaybackSpeedLabel
             // 
             PlayerPlaybackSpeedLabel.AutoSize = true;
@@ -387,7 +373,6 @@
             Controls.Add(SettingsButton);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(title);
-            Controls.Add(TestButton);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
@@ -429,7 +414,6 @@
         private System.Windows.Forms.Label PlayerPlaybackMethodLabel;
         private System.Windows.Forms.Label PlayerPlaybackSpeedLabel;
         private System.Windows.Forms.ComboBox PlayerPlaybackSpeedComboBox;
-        private System.Windows.Forms.Button TestButton;
         private System.Windows.Forms.Button SettingsButton;
         private System.Windows.Forms.Timer timer1;
         private NumericUpDown PlayerHowManyTimesNumericUpDown;

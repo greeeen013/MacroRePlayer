@@ -52,10 +52,10 @@ namespace MacroRePlayer
 
         } // tento event se spouští při načtení formuláře a předepíše výchozí název souboru (což je dnešní datum a čas) pro ukládání makra
 
-
         private int startUpDelay; // zpoždění při spuštění aplikace
         private bool autoDeleteLastClick; // indikátor pro automatické mazání posledního kliknutí
         private string HexKeyStartStopMacro; // hexadecimální kód pro klávesovou zkratku pro spuštění/zastavení přehrávání makra
+        private int delayOffSet = 0; // offset pro přehrávání makra (odchylka)
         private void LoadSettingsIfExisted()
         {
             string settingsFilePath = Path.Combine(directoryPath, "settings.cfg"); // vytvoření cesty k souboru s nastavením
@@ -72,12 +72,7 @@ namespace MacroRePlayer
                 PlayerPlaybackSpeedComboBox.SelectedItem = settings["DefaultPlaybackSpeed"]; // přečtení výchozí rychlosti přehrávání
                 autoDeleteLastClick = bool.Parse(settings["AutoDeleteLastClick"]); // přečtení nastavení pro automatické mazání posledního kliknutí
                 HexKeyStartStopMacro = settings["StartStopPlayingMacroHexKey"]; // přečtení klávesové zkratky pro spuštění/zastavení přehrávání makra
-                //autosaveCheckBox.Checked = bool.Parse(settings["autosave"]);
-                //themeComboBox.SelectedItem = settings["theme"];
-                //defaultSpeedTextBox.Text = settings["default_speed"];
-                //startupDelayTextBox.Text = settings["startup_delay"];
-                //hotkeyRecordTextBox.Text = settings["hotkey_record"];
-                //hotkeyPlayTextBox.Text = settings["hotkey_play"];
+                delayOffSet = int.Parse(settings["PlayerDelayEventOffset"]); // přečtení offsetu pro zpoždění
             }
         }
 
@@ -115,7 +110,7 @@ namespace MacroRePlayer
             ToggleRecordingButtons(false); // přepíná povolení tlačítek pro nahrávání a zastavení nahrávání
             UnsubscribeGlobalHook(); // odhlášení event handlerů
             SaveEventsToJson(); // uložení událostí do JSON souboru
-        }
+        } // tento event se spouští při kliknutí na tlačítko "Stop Recording" a zastavuje nahrávání událostí
 
         private void ToggleRecordingButtons(bool recording)
         {
@@ -178,8 +173,7 @@ namespace MacroRePlayer
 
                 lastEventTime = DateTime.Now;
             }
-        }
-        // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
+        } // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
 
         private void GlobalHook_KeyUp(object? sender, KeyEventArgs e)
         {
@@ -227,7 +221,7 @@ namespace MacroRePlayer
             editorForm.Show(); // zobrazení editoru
             this.Enabled = false; // zakáže hlavní formulář
             editorForm.FormClosed += (s, args) => this.Enabled = true; // po zavření editoru opět povolí hlavní formulář
-        }  // tento event se spouští při kliknutí na tlačítko pro otevření editoru a zobrazuje editor pro úpravu makra
+        } // tento event se spouští při kliknutí na tlačítko pro otevření editoru a zobrazuje editor pro úpravu makra
 
         private void FolderDeleteButton_Click(object sender, EventArgs e)
         {
@@ -272,9 +266,7 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při změně výběru v Player ComboBoxu a povolí nebo zakáže tlačítko pro spuštění makra podle toho, zda je vybrán nějaký soubor
 
-
-
-        
+        // HLAVNI PLAYER !!!!
         private async void PlayerStartPlayingMacroButton_Click(object sender, EventArgs e)
         {
             if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
@@ -298,8 +290,10 @@ namespace MacroRePlayer
 
             isPlayingMacro = true; // nastaví přehrávání na true
 
-            //int repeatCount = (int)PlayerHowManyTimesNumericUpDown.Value; // získání počtu opakování
-            int currentIteration = 0;
+            int currentIteration = 0; // počáteční iterace pro přehrávání událostí
+
+            int playbackSpeed = int.Parse(PlayerPlaybackSpeedComboBox.SelectedItem.ToString().Replace("x", ""), CultureInfo.InvariantCulture); // konvertuje to DefaultPlaybackSpeed (což je: "1x", "2x", "10x",...) do int
+
 
             do
             {
@@ -310,6 +304,11 @@ namespace MacroRePlayer
                     if (inputEvent is DelayEvent delayEvent)
                     {
                         long targetTimestamp = previousTimestamp + delayEvent.Duration;
+
+                        targetTimestamp += new Random().Next(-delayOffSet, delayOffSet + 1); // Přidání náhodného čísla v rozmezí od -delayOffSet do delayOffSet
+
+                        targetTimestamp = (previousTimestamp + delayEvent.Duration) / playbackSpeed;
+
                         while (stopwatch.ElapsedMilliseconds < targetTimestamp)
                         {
                             await Task.Delay(1); // malý polling delay
@@ -381,29 +380,19 @@ namespace MacroRePlayer
 
             isPlayingMacro = false; // resetuje přehrávání na false po dokončení událostí
             TogglePlayStopButtons(false); // Resetuje tlačítka po dokončení makra
-        }
+        } // tento event se spouští při kliknutí na tlačítko pro spuštění přehrávání makra a spustí přehrávání událostí ze souboru
 
         private void PlayerStopPlayingMacroButton_Click(object sender, EventArgs e)
         {
             isPlayingMacro = false; // nastaví přehrávání na false
             TogglePlayStopButtons(false); // Resetuje tlačítka
-        }
+        } // tento event se spouští při kliknutí na tlačítko pro zastavení přehrávání makra a nastaví přehrávání na false a resetuje tlačítka pro spuštění/zastavení přehrávání makra
+
         private void TogglePlayStopButtons(bool isPlaying)
         {
             PlayerStartPlayingMacroButton.Enabled = !isPlaying; // Aktivuje/deaktivuje tlačítko pro spuštění
             PlayerStopPlayingMacroButton.Enabled = isPlaying;   // Aktivuje/deaktivuje tlačítko pro zastavení
-        }
-
-        private void PlayerStartStopKeybindSetButton_Click(object sender, EventArgs e)
-        {
-            //TODO
-        }
-
-
-
-
-
-
+        } // přepíná povolení tlačítek pro spuštění a zastavení přehrávání makra podle parametru isPlaying
 
         private void MouseOperation(uint button)
         {
@@ -416,31 +405,6 @@ namespace MacroRePlayer
                 }
             });
         } // funkce pro stisknutí nebo uvolnění tlačítka myši používá se v přehrávači makra
-
-        async void TestButton_ClickAsync(object sender, EventArgs e)
-        {
-            // Spustí Notepad
-            System.Diagnostics.Process.Start("notepad.exe");
-            await Task.Delay(1000); // -1432 1015, -1432 942
-            InputSender.ClickKey(0x14); // Z TODO meni se to podle rozložení klávesnice
-
-
-
-            //InputSender.SetCursorPosition(-1432, 1015);
-            //await Task.Delay(50);
-            //MouseOperation((uint)InputSender.MouseEventF.LeftDown);
-            //await Task.Delay(400);
-            //InputSender.SetCursorPosition(-1432, 942);
-            //await Task.Delay(50);
-            //MouseOperation((uint)InputSender.MouseEventF.LeftUp);
-
-            //SendToBack(); // Přesune okno na pozadí
-            //Activate();
-            //MessageBox.Show("Test"); // Zobrazí zprávu
-
-
-        } //TESTOVACI FUNKCE
-
 
         private void HookManager_KeyDown(object? sender, KeyEventArgs e)
         {
@@ -457,7 +421,7 @@ namespace MacroRePlayer
                     isPlayingMacro = false;
                 }
             }
-        }
+        } // tento event se spouští při stisknutí klávesy a kontroluje zda je stisknuta klávesa pro spuštění/zastavení přehrávání makra a pokud ano, tak spustí nebo zastaví přehrávání makra
 
         private void RecordKeybindButton(bool a)
         {
@@ -471,8 +435,7 @@ namespace MacroRePlayer
                 globalHook.KeyDown -= HookManager_KeyDown; // odhlášení event handleru pro stisknutí klávesy
                 globalHook.Dispose(); // uvolnění prostředků globálního hooku
             }
-        }
-
+        } // tento event se spouští při kliknutí na tlačítko pro nahrávání klávesových zkratek a inicializuje nebo uvolňuje globální hook pro sledování vstupů podle parametru a
 
         private void SettingsButton_Click(object sender, EventArgs e)
         {
@@ -511,9 +474,9 @@ namespace MacroRePlayer
             {
                 PlayerHowManyTimesNumericUpDown.Value = 0;
             }
-            
-        }
-        
+
+        } // tento event se spouští při změně výběru v ComboBoxu pro metodu přehrávání a nastavuje viditelnost a hodnoty pro nastavení počtu opakování podle vybrané metody přehrávání
+
 
 
         //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej

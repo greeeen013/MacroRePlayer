@@ -22,10 +22,10 @@ namespace MacroRePlayer
         private readonly List<IInputEvent> loadedEvents = [];
         private string selectedFile = "";
 
-        private int dragRow = -1;
-        private Label? dragLabel = null;
-        private Point mouseDownLocation;
-        private bool isDragging = false;
+        private int dragRow = -1; // index řádku, který se táhne
+        private Label? dragLabel = null; // label pro drag and drop (když se něco táhne)
+        private Point mouseDownLocation; // pozice myši při stisknutí tlačítka
+        private bool isDragging = false; // označuje, zda je prvek tažen
 
         private void EditorForm_Load(object sender, EventArgs e)
         {
@@ -59,22 +59,21 @@ namespace MacroRePlayer
             if (File.Exists(selectedFile))
             {
                 // Pridaní InputEventConverter aby se správně parsovala InputEvent interface  
-                var settings = new JsonSerializerSettings();
-                settings.Converters.Add(new InputEventConverter());
+                var settings = new JsonSerializerSettings(); // nastavení pro JsonSerializer
+                settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro deserializaci událostí
 
-                List<IInputEvent>? loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings) ?? []; ;
-                //MessageBox.Show($"{loadedEvents}");  
+                List<IInputEvent>? loadedEvents = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(selectedFile), settings) ?? []; // načtení souboru a deserializace do seznamu událostí 
 
                 EditorEventsDataGridView.Rows.Clear();
                 foreach (var inputEvent in loadedEvents)
                 {
-                    string eventName = inputEvent.Type;
-                    string eventValue = "";
-                    string? secretValue = null; // Default to null if not provided
+                    string eventName = inputEvent.Type; // název události
+                    string eventValue = ""; // hodnota události
+                    string? secretValue = null; // hodnota pro skrytí když není potřeba tak to zapíše null
 
-                    switch (inputEvent)
+                    switch (inputEvent) // podle typu události nastaví hodnotu
                     {
-                        case DelayEvent delayEvent:
+                        case DelayEvent delayEvent: 
                             eventValue = $"Duration: {delayEvent.Duration} ms";
                             break;
                         case MouseDownEvent mouseDownEvent:
@@ -100,7 +99,7 @@ namespace MacroRePlayer
             {
                 EditorEventsDataGridView.Rows.Clear(); // Vyčistí panel když není vybrán žádný soubor
             }
-        }
+        } // event kterej se spustí když se vybere soubor a naplní ho do tabulky
 
         private void Save_Click(object sender, EventArgs e)
         {
@@ -113,11 +112,11 @@ namespace MacroRePlayer
                     if (row.Cells[1].Value == null || row.Cells[2].Value == null)
                         continue;
 
-                    string? eventType = row.Cells[1].Value.ToString(); // to ošetření s otazníkem by v budoucnu mělo být zbytečný TODO
+                    string? eventType = row.Cells[1].Value.ToString();
                     string? eventValue = row.Cells[2].Value.ToString();
                     string? secretValue = row.Cells[3]?.Value?.ToString();
 
-                    switch (eventType) // všechny otazníky by mohly pryč v budoucnu TODO
+                    switch (eventType)
                     {
                         case "DelayEvent":
                             if (int.TryParse((eventValue ?? "").Replace("Duration: ", "").Replace(" ms", ""), out int duration))
@@ -156,25 +155,24 @@ namespace MacroRePlayer
             {
                 MessageBox.Show("No file selected to save.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        } // uložení souboru
 
         private void EditorEventsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Získání indexu sloupce
-            int columnIndex = e.ColumnIndex;
+            int columnIndex = e.ColumnIndex; // Získání indexu sloupce
 
-            // Předpokládáme, že EditorEventColumn je na indexu 1 a EditorValueColumn na indexu 2
-            if (columnIndex == 1 || columnIndex == 2)
+            
+            if (EditorEventsDataGridView.Columns[columnIndex].Name == "EditorEventColumn" || EditorEventsDataGridView.Columns[columnIndex].Name == "EditorValueColumn") // pokud je kliknuto na sloupec s událostí nebo hodnotou
             {
-                // Získání dat z řádku
-                var selectedRow = EditorEventsDataGridView.Rows[e.RowIndex];
+                var selectedRow = EditorEventsDataGridView.Rows[e.RowIndex]; // Získání dat z řádku
                 var eventType = selectedRow.Cells[1].Value?.ToString(); // Typ události
                 var eventValue = selectedRow.Cells[2].Value?.ToString(); // Hodnota události
 
-                // Otevření nové formy s předanými hodnotami
-                var form = new EventValueForm(eventType ?? "", eventValue ?? "");
+                var form = new EventValueForm(eventType ?? "", eventValue ?? ""); // Otevření nové formy s předanými hodnotami
 
-                if (form.ShowDialog() == DialogResult.OK)
+                this.Enabled = false; // zakáže editor formulář
+
+                if (form.ShowDialog() == DialogResult.OK) // pokud uživatel potvrdí změny
                 {
                     // Aktualizuj hodnoty v DataGridView
                     selectedRow.Cells[1].Value = form.SelectedEventType;
@@ -182,71 +180,71 @@ namespace MacroRePlayer
                     selectedRow.Cells[3].Value = form.UpdateSecretValue; // Nastavení hodnoty na null pro další použití
                 }
             }
-        }
+            this.Enabled = true; // povolí editor formulář
+        } // událost dvojitého kliknutí na buňku v DataGridView
 
         private void EditorEventsDataGridView_MouseDown(object sender, MouseEventArgs e)
         {
-            var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
-            if (hit.RowIndex < 0 || hit.ColumnIndex < 0) return;
+            var hit = EditorEventsDataGridView.HitTest(e.X, e.Y); // získání informací o tom, co bylo kliknuto
+            if (hit.RowIndex < 0 || hit.ColumnIndex < 0) return; // pokud není kliknuto na platnou buňku, nic nedělej
 
-            mouseDownLocation = e.Location;
-            dragRow = hit.RowIndex;
+            mouseDownLocation = e.Location; // uložení pozice myši
+            dragRow = hit.RowIndex; // uložení indexu řádku, který byl kliknut
             isDragging = false; // ještě nezačalo tažení
 
-            dragLabel ??= new Label();
-            dragLabel.Text = EditorEventsDataGridView[hit.ColumnIndex, hit.RowIndex].Value?.ToString();
-            dragLabel.Parent = EditorEventsDataGridView;
-            dragLabel.Location = e.Location;
+            dragLabel ??= new Label(); // vytvoření nového labelu pro drag and drop
+            dragLabel.Text = EditorEventsDataGridView[hit.ColumnIndex, hit.RowIndex].Value?.ToString(); // text labelu je hodnota buňky
+            dragLabel.Parent = EditorEventsDataGridView; // label je podřízený DataGridView
+            dragLabel.Location = e.Location; // nastavení pozice labelu na pozici myši
             dragLabel.Visible = false; // schováme, zobrazíme až při skutečném tažení
-        }
+        } // událost stisknutí myši na DataGridView
 
         private void EditorEventsDataGridView_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && dragLabel != null)
+            if (e.Button == MouseButtons.Left && dragLabel != null) // pokud je stisknuto levé tlačítko myši a label existuje
             {
-                int dx = Math.Abs(e.X - mouseDownLocation.X);
-                int dy = Math.Abs(e.Y - mouseDownLocation.Y);
+                int dx = Math.Abs(e.X - mouseDownLocation.X); // vzdálenost myši od původní pozice
+                int dy = Math.Abs(e.Y - mouseDownLocation.Y); // vzdálenost myši od původní pozice
 
                 if (!isDragging && (dx > 5 || dy > 5)) // spustíme tažení
                 {
-                    isDragging = true;
-                    dragLabel.Visible = true;
-                    EditorEventsDataGridView.ClearSelection(); // nevybíráme během drag
+                    isDragging = true; // označíme, že tažení začalo
+                    dragLabel.Visible = true; // zobrazíme label
                 }
 
-                if (isDragging)
+                if (isDragging) // pokud už je tažení spuštěno
                 {
-                    dragLabel.Location = e.Location;
+                    dragLabel.Location = e.Location; // aktualizujeme pozici labelu
                 }
             }
-        }
+        } // událost pohybu myši na DataGridView
 
         private void EditorEventsDataGridView_MouseUp(object sender, MouseEventArgs e)
         {
-            if (isDragging)
+            if (isDragging) // pokud je tažení spuštěno
             {
-                var hit = EditorEventsDataGridView.HitTest(e.X, e.Y);
-                int dropRow;
-                if (hit.Type != DataGridViewHitTestType.None)
+                var hit = EditorEventsDataGridView.HitTest(e.X, e.Y); // získání informací o tom, co bylo kliknuto
+                int dropRow; // index řádku, kam se má prvek přesunout
+                if (hit.Type != DataGridViewHitTestType.None) // pokud je kliknuto na platnou buňku
                 {
-                    dropRow = hit.RowIndex;
-                    if (dragRow >= 0)
+                    dropRow = hit.RowIndex; // uložení indexu řádku, kam se má prvek přesunout
+                    if (dragRow >= 0) // pokud je platný index řádku
                     {
-                        int tgtRow = dropRow + (dragRow > dropRow ? 1 : 0);
-                        if (tgtRow != dragRow)
+                        int tgtRow = dropRow + (dragRow > dropRow ? 1 : 0); // určení cílového řádku
+                        if (tgtRow != dragRow) // pokud se cílový řádek liší od původního
                         {
-                            DataGridViewRow row = EditorEventsDataGridView.Rows[dragRow];
-                            EditorEventsDataGridView.Rows.Remove(row);
-                            EditorEventsDataGridView.Rows.Insert(tgtRow, row);
+                            DataGridViewRow row = EditorEventsDataGridView.Rows[dragRow]; // získání řádku, který se má přesunout
+                            EditorEventsDataGridView.Rows.Remove(row); // odstranění původního řádku
+                            EditorEventsDataGridView.Rows.Insert(tgtRow, row); // vložit řádek na nové místo
 
-                            EditorEventsDataGridView.ClearSelection();
-                            row.Selected = true;
+                            EditorEventsDataGridView.ClearSelection(); // vymazání výběru
+                            row.Selected = true; // označení přesunutého řádku
                         }
                     }
                 }
                 else
                 {
-                    EditorEventsDataGridView.Rows[dragRow].Selected = true;
+                    EditorEventsDataGridView.Rows[dragRow].Selected = true; // pokud není platná buňka, vybereme původní řádek
                 }
             }
 
@@ -257,16 +255,16 @@ namespace MacroRePlayer
                 dragLabel = null;
             }
 
-            isDragging = false;
-        }
+            isDragging = false; // označíme, že tažení skončilo
+        } // událost uvolnění myši na DataGridView
 
         private void EditorEventsDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (isDragging)
+            if (isDragging) // pokud je tažení spuštěno
             {
-                EditorEventsDataGridView.ClearSelection();
+                EditorEventsDataGridView.ClearSelection(); // vymazání výběru (jinak to problikava modře)
             }
-        }
+        } // událost změny výběru v DataGridView
 
 
 
@@ -279,14 +277,11 @@ namespace MacroRePlayer
         //done: funkčnost copy
         //done: funkčnost paste
         //done: pridat funkčnost extract
-        //TODO: pridat ošetření aby v textboxu bylo pouze číslo pokud se jedna o souřadnice (a aby to nehodilo error když tam bude něco jinýho)
         //done: pridat delete tlačítko
         //done: pridat posun na konec tlacitko a uplne nahoru (mozna bych to dal kdyz podrzim tu default sipku nahoru a dolu tak se to posune uplne nahoru nebo dolu)
         //done: fixnout kdyz posouvam se stejnym eventem nejako se dojebavaj hodnoty
         //done: fixnout kdyz odmazu pismeno (mozna i cislici) tka to hodi error !!! WORKING ON IT
         //done: fixnout json file selector kdyz zmenim ten file na jinaci file tak se nezmeni ta tabulka
 
-        //TODO: dodelat player
-        //TODO: udelat to cely nejako hezky
     }
 }

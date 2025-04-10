@@ -53,7 +53,7 @@
             SettingsHowManyTimesLabel = new Label();
             SettingsPlayerKeyBind = new Label();
             SettingsPlayerKeybindButton = new Button();
-            richTextBox1 = new RichTextBox();
+            SettingsRecordedKeybindRichTextBox = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyDelayBeforeRepetetionTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsKeyRepetetionRateTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SettingsDelayEventOffsetTrackBar).BeginInit();
@@ -321,21 +321,21 @@
             SettingsPlayerKeybindButton.UseVisualStyleBackColor = true;
             SettingsPlayerKeybindButton.Click += SettingsPlayerKeybindButton_Click;
             // 
-            // richTextBox1
+            // SettingsRecordedKeybindRichTextBox
             // 
-            richTextBox1.Enabled = false;
-            richTextBox1.Location = new Point(304, 275);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(59, 38);
-            richTextBox1.TabIndex = 40;
-            richTextBox1.Text = "";
+            SettingsRecordedKeybindRichTextBox.Enabled = false;
+            SettingsRecordedKeybindRichTextBox.Location = new Point(304, 275);
+            SettingsRecordedKeybindRichTextBox.Name = "SettingsRecordedKeybindRichTextBox";
+            SettingsRecordedKeybindRichTextBox.Size = new Size(59, 38);
+            SettingsRecordedKeybindRichTextBox.TabIndex = 40;
+            SettingsRecordedKeybindRichTextBox.Text = "";
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(374, 397);
-            Controls.Add(richTextBox1);
+            Controls.Add(SettingsRecordedKeybindRichTextBox);
             Controls.Add(SettingsPlayerKeybindButton);
             Controls.Add(SettingsPlayerKeyBind);
             Controls.Add(SettingsHowManyTimesLabel);
@@ -401,6 +401,6 @@
         private Label SettingsHowManyTimesLabel;
         private Label SettingsPlayerKeyBind;
         private Button SettingsPlayerKeybindButton;
-        private RichTextBox richTextBox1;
+        private RichTextBox SettingsRecordedKeybindRichTextBox;
     }
 }

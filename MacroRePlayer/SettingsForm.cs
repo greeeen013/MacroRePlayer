@@ -20,14 +20,14 @@ namespace MacroRePlayer
             InitializeComponent();
         }
 
-        private string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
+        private readonly string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg"); // cesta k souboru s nastavením
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            if (File.Exists(settingsPath))
+            if (File.Exists(settingsPath)) // pokud soubor existuje
             {
                 var settings = File.ReadAllLines(settingsPath);
-                foreach (var line in settings)
+                foreach (var line in settings) // pro každý řádek v souboru
                 {
                     if (line.StartsWith("ExecutionPlayer="))
                     {
@@ -87,7 +87,7 @@ namespace MacroRePlayer
                     else if (line.StartsWith("StartStopPlayingMacroKey="))
                     {
                         var value = line.Split('=')[1].Trim('"');
-                        richTextBox1.Text = value;
+                        SettingsRecordedKeybindRichTextBox.Text = value;
                     }
                     else if (line.StartsWith("StartStopPlayingMacroHexKey="))
                     {
@@ -106,21 +106,20 @@ namespace MacroRePlayer
             }
             SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms";
             SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters";
-        }
+        } // nastavení výchozích hodnot
 
         private void SettingsKeyDelayBeforeRepetetionTrackBar_Scroll(object sender, EventArgs e)
         {
-            SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms";
-        }
+            SettingsKeyDelayBeforeRepeationWValueLabel.Text = $"Current Value: {SettingsKeyDelayBeforeRepetetionTrackBar.Value} in ms"; // aktualizace labelu s hodnotou
+        } // aktualizace labelu s hodnotou
 
         private void SettingsKeyRepetetionRateTrackBar_Scroll(object sender, EventArgs e)
         {
-            SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters";
-        }
+            SettingsKeyRepetitionRateWValueLabel.Text = $"Current Value: {SettingsKeyRepetetionRateTrackBar.Value} characters"; // aktualizace labelu s hodnotou
+        } // aktualizace labelu s hodnotou
 
         private void SettingsSaveButton_Click(object sender, EventArgs e)
         {
-            settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer", "settings.cfg");
             if (File.Exists(settingsPath))
             {
                 var settings = WriteOutSettings();
@@ -138,7 +137,7 @@ namespace MacroRePlayer
                 File.WriteAllText(settingsPath, settings.ToString());
             }
             this.Close(); // zavře okno nastavení
-        }
+        } // uložení nastavení a zavření okna
 
         private StringBuilder WriteOutSettings()
         {
@@ -164,12 +163,12 @@ namespace MacroRePlayer
             settings.AppendLine($"PlayerDelayEventOffset={(int)SettingsDelayEventOffsetTrackBar.Value}");
             settings.AppendLine($"KeyRepetetionRate={(int)SettingsKeyRepetetionRateTrackBar.Value}");
             settings.AppendLine($"AutoDeleteLastClick={(bool)SettingsAutodelteLastClickCheckBox.Checked}");
-            settings.AppendLine($"StartStopPlayingMacroKey=\"{richTextBox1.Text}\"");
+            settings.AppendLine($"StartStopPlayingMacroKey=\"{SettingsRecordedKeybindRichTextBox.Text}\"");
             settings.AppendLine($"StartStopPlayingMacroHexKey={HexKey}");
 
 
             return settings;
-        }
+        } // zapis nastavení do souboru
 
         private void SettingsPlaybackMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -183,8 +182,7 @@ namespace MacroRePlayer
                 SettingsHowManyTimesNumericUpDown.Visible = false;
                 SettingsHowManyTimesLabel.Visible = false;
             }
-        }
-
+        } // zobrazení labelu a numericUpDownu pro počet opakování
 
         private void SettingsPlayerKeybindButton_Click(object sender, EventArgs e)
         {
@@ -198,8 +196,9 @@ namespace MacroRePlayer
                 globalHook = Hook.GlobalEvents(); // vytvoří nový hook
                 globalHook.KeyDown += HookManager_KeyDown; // přidá událost pro KeyDown
             }
-        }
+        } // záznam klávesy pro spouštění makra
 
+        // věci pro záznam klávesy
         [DllImport("user32.dll")]
         static extern uint MapVirtualKey(uint uCode, uint uMapType);
         const uint MAPVK_VK_TO_VSC = 0;
@@ -213,7 +212,7 @@ namespace MacroRePlayer
             HexKey = $"0x{scancode:X}";
 
 
-            richTextBox1.Text = Key;
+            SettingsRecordedKeybindRichTextBox.Text = Key;
 
 
             if (globalHook != null) // odhlásí se od hooku
@@ -221,6 +220,6 @@ namespace MacroRePlayer
                 globalHook.KeyDown -= HookManager_KeyDown;
                 globalHook = null;
             }
-        }
+        } // záznam klávesy pro keybind start/stop makra
     }
 }
