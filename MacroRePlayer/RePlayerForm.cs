@@ -493,25 +493,22 @@ namespace MacroRePlayer
 
         private void PlayerPlaybackMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(PlayerPlaybackMethodComboBox.SelectedIndex == 0) // pokud je vybrána metoda přehrávání "One time play"
+            if(PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "One time play") // pokud je vybrána metoda přehrávání "One time play"
             {
                 PlayerHowManyTimesNumericUpDown.Value = 1;
+                PlayerHowManyTimesNumericUpDown.Visible = false; // zakáže nastavení počtu opakování
+                PlayerHowManyTimesLabel.Visible = false; // skryje popis pro nastavení počtu opakování
             }
-            else
-            if (PlayerPlaybackMethodComboBox.SelectedIndex == 1) // pokud je vybrána metoda přehrávání "Play X times"
+            else if (PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "Play X times") // pokud je vybrána metoda přehrávání "Play X times"
             {
                 PlayerHowManyTimesNumericUpDown.Visible = true; // povolí nastavení počtu opakování
                 PlayerHowManyTimesLabel.Visible = true; // zobrazí popis pro nastavení počtu opakování
                 PlayerHowManyTimesNumericUpDown.Value = 1;
             }
-            else
+            else if (PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "Repeat until stopped")
             {
                 PlayerHowManyTimesNumericUpDown.Visible = false; // zakáže nastavení počtu opakování
                 PlayerHowManyTimesLabel.Visible = false; // skryje popis pro nastavení počtu opakování
-            }
-
-            if(PlayerPlaybackMethodComboBox.SelectedIndex == 2) // pokud je vybrána metoda přehrávání "Repeat until stopped"
-            {
                 PlayerHowManyTimesNumericUpDown.Value = 0;
             }
 
