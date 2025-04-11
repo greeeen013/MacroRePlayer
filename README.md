@@ -3,7 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/greeeen013/MacroRePlayer)](https://github.com/greeeen013/MacroRePlayer/stargazers)
 
-**MacroRePlayer** is an application designed for **recording**, **editing**, and **replaying** mouse and keyboard events. The main goal is to simplify the automation of repetitive tasks on a computer without the need to write custom scripts. The project is designed to provide a user-friendly interface with **maximum control** over recorded events, and will eventually allow additional advanced features like custom loops, infinite replay, or adjustable speeds.
+**MacroRePlayer** is a lightweight and easy-to-use application for **recording**, **editing**, and **replaying** mouse and keyboard events.  
+It aims to simplify the automation of repetitive tasks — without writing a single line of code.  
+Packed with a built-in editor, advanced configuration, and playback features, it's ideal for both casual and power users.
 
 ---
 
@@ -25,33 +27,29 @@
 
 ## Key Features ✨
 
-- **Macro Recording** of mouse events (clicks, release) and keyboard events (press, release).
-- **Advanced Editor** for modifying recorded macro events:
-  - Changing the order of events.
-  - Copying, pasting, and deleting events.
-  - Inserting custom delays between events.
-  - Adding custom loops (TODO).
-- **(Re)Play**:
-  - Replay actions with few millisecond accuracy 
-  - The ability to set a custom **keybind** to start or stop playback.
-  - Select a replay mode:
-    - **One-time**  
-    - **Repeat X times** (TODO)
-    - **Infinite** (TODO)
-  - Adjust the **playback speed** from **0.25×** to **10×** (TODO).
-- **User-friendly interface** – easy to understand for users with no prior macro experience and many tool tips.
-- **Advanced configuration options** for any future (TODO) additions.
-
+- 🔴 **Macro Recording** – Records mouse and keyboard events with millisecond-level precision.
+- ✏️ **Editor** – Modify your macros with a full-featured editor:
+  - Reorder, copy, delete, and insert events.
+  - Adjust timing between actions.
+  - Visual event list with ComboBox file selector.
+- 🔁 **Replay** – Play back macros with options for:
+  - One-time or repeated execution.
+  - Adjustable playback speed.
+  - Hotkey support for quick start/stop.
+- ⚙️ **Settings** – Customize defaults like playback speed, delays, theme, and more.
+- 💾 **Save & Config** – Configuration is saved via `.cfg` file.
+- 🧠 **Intuitive UI** – Clean interface with helpful tooltips for beginners and advanced users alike.
 ---
 
-## Installation 🛠️
+## Download ⬇️
 
-- **Clone the repository**  
-   ```bash
-   git clone https://github.com/greeeen013/MacroRePlayer.git
-   cd MacroRePlayer
-- **Run the application**
-   >A standalone `.exe` file will soon be available in the Release section once the program reaches a usable state.
+You can download the latest `.exe` version from the **[Releases page](https://github.com/greeeen013/MacroRePlayer/releases)**.  
+No installation required — just download and run.
+
+> **Note**: If you're a developer, you can clone the repository using:
+> ```bash
+> git clone https://github.com/greeeen013/MacroRePlayer.git
+> ```
 
 ---
 
@@ -63,90 +61,99 @@
 
 ## Getting Started 🚀
 
-### Open the application
-After launching, the main interface will appear with options to **Record**, **Play**, or **Editor button**.
-
-### Set up Keybinds (optional)
-Choose a key (or a key combination, possibly as a future feature) to control recording and playback.
-
-### Record a Macro
-Click **Start Recording** and begin performing mouse and keyboard actions. When finished, click **Stop Recording** to end the session.
-
-### Edit the Macro
-Click the **Open Editor** button to open the Editor, where you can modify or fine-tune individual events and values as needed.
-
-### Replay the Macro
-Configure your replay mode and speed, then start playback.
+- Launch the application.
+- Use the top buttons to **Record**, **Edit**, or **Replay** a macro.
+- Define keybinds in settings for quick control.
+- Save and load macros as `.json` files.
 
 ---
 
 ## Detailed Use 📖
 
 ### Record
-1. Click **Start Recoring** (or use a defined keybind).
-2. The application begins recording all mouse and keyboard actions in the order they're performed.
-3. When finished, click **Stop Recording** (or the same keybind) again to stop.
-4. And it will save the sessions as `.json` files
+1. Click **Start Recording**.
+2. Perform mouse/keyboard actions.
+3. Click **Stop Recording**.
+4. Your session is automatically saved as a `.json` file.
 
 ### Edit
-1. Click the **Open Editor** button
-2. The Editor window will appear. Then, select your `.json` file from the dropdown menu to display a complete timeline of all recorded events in the list.
-2. You can:
-    - **↑/↓ Arrow Keys** – Move events up or down in the timeline. (Fun fact: Holding an arrow key will instantly move the selected event to the top/bottom!)
-   - **Delete** - Remove unwanted events.
-   - **Copy** actions to quickly duplicate the events.
-   - **Extract** will delete and copy the action to quickly rearrange the events
-   - **Insert** copied event under selected item
-   - **Adjust time delays** between events.
-   - Insert **conditions, loops** (TODO).
+1. Open the **Editor**.
+2. Select a recorded file from the dropdown.
+3. Modify entries:
+   - Reorder with **Drag & Drop**.
+   - **Copy**, **Delete**, **Extract/Insert**.
+   - Adjust **values**.
+   - **Visual icons per event type** coming soon.
 
 ### (Re)Play
-1. Set a **keybind** to **Start** / **Stop** the playback (optional). 
-2. In the **Player** window, choose:
-   - **Mode** (one-time, repeat X times, infinite) (TODO).
-   - **Speed** (from 0.25× to 10×) (TODO).
-3. Click **Start Playing Macro** (or use the defined keybind) to start (Re)Playing all recorded actions.
-4. Playback can be **stopped** at any time using the same defined keybind or by pressing **Stop Playing Macro**.
+1. Open the **RePlayer** form and look for **Player** section.
+2. Select a `.json` file
+3. Choose playback **mode** and **speed**.
+4. Start or stop using a **keybind** or UI button.
+5. Precise timing and corrected **delay logic**.
 
 ---
 
-## Configuration ⚙️ (TODO)
+## Configuration ⚙️
 - the `.cfg` file should create automatically when needed to save some data and by default it should look like this
 [Settings]
-autosave = true
-theme = "white"
-default_speed = 1
-startup_delay = 1000
-hotkey_record = ""
-hotkey_play = ""
-
-## Planned Features 🗺️ (TODO)
-
-- **Repeat**: Replay the macro a specific number of times or indefinitely.
-- **Variable speeds**: Adjust playback speed up to 10× or slow it down to 0.25×.
-- **Advanced loops**: Create your own loops or conditional logic (e.g.,`for loop`).
-- **Save and load macros**: Export and share macros with others.
-- **startup delay**
-- **setting form**: with option tu execute macro in python (it won't be soon) and skin etc.
-- **Full movement tracking** *(Planned, but not soon)* 
+ExecutionPlayer="C#"
+FormTheme="White"
+PlayerStartUpDelay=0
+DefaultPlaybackMethod="One time play"
+DefaultPlaybackHowManyTimesRepeat=1
+DefaultPlaybackSpeed="1x"
+KeyRepeating=False
+KeyDelayBeforeRepetetion=200
+PlayerDelayEventOffset=0
+KeyRepetetionRate=5
+AutoDeleteLastClick=False
+StartStopPlayingMacroKey=""
+StartStopPlayingMacroHexKey=
 
 ---
 
-## Contribution
+## Planned Features 🗺️
 
-If you have suggestions for improvements or want to report a bug, feel free to open an **Issue** or submit a **Pull Request**. We welcome your contributions!
+- **Key repeating control** – Allows a key to be held down for a longer period of time to type multiple characters instead of one (ideal for text fields).
+- **Event icons in Editor** – Add visual icons for each event type to enhance navigation.
+- **Python macro execution** – Future idea to allow running macros via Python scripts.
+- **Loop/conditional logic** – Add support for loops in **EditorForm** and conditions in macros.
+- **Theme customization** – Allow users to choose and customize the application theme.
+- **Full mouse movement tracking** – Long-term goal to track and replay entire mouse movements (not just where it was pressed and released)
 
-1. **Fork** this repository.  
-2. **Create a new branch** for your feature.
+---
+
+## Contributing ℹ️
+
+Feel free to open an issue or submit a PR:
+
+1. **Fork** the repo.
+2. **Create a feature branch**.
    ```bash
    git checkout -b feature/your-feature
-4. **Commit Changes:**
+3. **Commit & push changes.**
    ```bash
-   git commit -m "feat: add amazing feature"
-6. **Push & Create PR:**
-   ```bash
+   git commit -m "feat: add feature"
    git push origin feature/your-feature
 
 ---
 
-Thank you for your interest in MacroRePlayer! We hope it helps you automate repetitive tasks and allows you to focus on more important and creative work. If you have any questions or ideas, feel free to reach out in the [Issues](https://github.com/greeeen013/MacroRePlayer/issues).
+## Issues / Support 🚩
+
+Found a bug or have a suggestion? Open an issue here:
+👉 [Issue Tracker](https://github.com/greeeen013/MacroRePlayer/issues)
+
+---
+
+## Screenshots 📷
+
+![RePlayerForm](https://github.com/user-attachments/assets/1ade1cfb-54d5-4710-9b5f-28675330f4fd)
+
+![SettingsForm](https://github.com/user-attachments/assets/c39a0737-5d7a-49a2-845c-3a7da88689ae)
+
+![EditorForm](https://github.com/user-attachments/assets/02eb6320-0cf9-4d35-aaf5-7ae250d57726)
+
+---
+
+Thank you for your interest in MacroRePlayer! We hope it helps you automate repetitive tasks and allows you to focus on more important and creative work.
