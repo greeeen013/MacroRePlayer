@@ -46,12 +46,12 @@
             pictureBox1 = new PictureBox();
             EditorFormToolTip = new ToolTip(components);
             EditorEventsDataGridView = new DataGridView();
+            EditorChooseAFileLabel = new Label();
             EditorIconColumn = new DataGridViewImageColumn();
             EditorEventColumn = new DataGridViewTextBoxColumn();
             EditorValueColumn = new DataGridViewTextBoxColumn();
             SecretValue = new DataGridViewTextBoxColumn();
             EditorCommentColumn = new DataGridViewTextBoxColumn();
-            EditorChooseAFileLabel = new Label();
             EditorFormContextMenuEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)EditorEventsDataGridView).BeginInit();
@@ -180,6 +180,15 @@
             EditorEventsDataGridView.MouseMove += EditorEventsDataGridView_MouseMove;
             EditorEventsDataGridView.MouseUp += EditorEventsDataGridView_MouseUp;
             // 
+            // EditorChooseAFileLabel
+            // 
+            EditorChooseAFileLabel.AutoSize = true;
+            EditorChooseAFileLabel.Location = new Point(13, 10);
+            EditorChooseAFileLabel.Name = "EditorChooseAFileLabel";
+            EditorChooseAFileLabel.Size = new Size(78, 15);
+            EditorChooseAFileLabel.TabIndex = 24;
+            EditorChooseAFileLabel.Text = "Choose a file:";
+            // 
             // EditorIconColumn
             // 
             EditorIconColumn.HeaderText = "Icon";
@@ -191,12 +200,14 @@
             EditorEventColumn.HeaderText = "Event";
             EditorEventColumn.Name = "EditorEventColumn";
             EditorEventColumn.ReadOnly = true;
+            EditorEventColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // EditorValueColumn
             // 
             EditorValueColumn.HeaderText = "Value";
             EditorValueColumn.Name = "EditorValueColumn";
             EditorValueColumn.ReadOnly = true;
+            EditorValueColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             EditorValueColumn.Width = 200;
             // 
             // SecretValue
@@ -204,21 +215,14 @@
             SecretValue.HeaderText = "SecretValue";
             SecretValue.Name = "SecretValue";
             SecretValue.ReadOnly = true;
+            SecretValue.SortMode = DataGridViewColumnSortMode.NotSortable;
             SecretValue.Visible = false;
             // 
             // EditorCommentColumn
             // 
             EditorCommentColumn.HeaderText = "Comment";
             EditorCommentColumn.Name = "EditorCommentColumn";
-            // 
-            // EditorChooseAFileLabel
-            // 
-            EditorChooseAFileLabel.AutoSize = true;
-            EditorChooseAFileLabel.Location = new Point(13, 10);
-            EditorChooseAFileLabel.Name = "EditorChooseAFileLabel";
-            EditorChooseAFileLabel.Size = new Size(78, 15);
-            EditorChooseAFileLabel.TabIndex = 24;
-            EditorChooseAFileLabel.Text = "Choose a file:";
+            EditorCommentColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // EditorForm
             // 
@@ -261,11 +265,11 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolTip EditorFormToolTip;
         private System.Windows.Forms.DataGridView EditorEventsDataGridView;
-        private System.Windows.Forms.DataGridViewImageColumn EditorIconColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EditorEventColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EditorValueColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SecretValue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EditorCommentColumn;
         private Label EditorChooseAFileLabel;
+        private DataGridViewImageColumn EditorIconColumn;
+        private DataGridViewTextBoxColumn EditorEventColumn;
+        private DataGridViewTextBoxColumn EditorValueColumn;
+        private DataGridViewTextBoxColumn SecretValue;
+        private DataGridViewTextBoxColumn EditorCommentColumn;
     }
 }

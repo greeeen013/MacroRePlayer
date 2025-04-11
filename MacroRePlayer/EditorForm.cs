@@ -159,29 +159,33 @@ namespace MacroRePlayer
 
         private void EditorEventsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            int columnIndex = e.ColumnIndex; // Získání indexu sloupce
+            int columnIndex = e.ColumnIndex; // Získání indexu sloupce  
+            int rowIndex = e.RowIndex; // Získání indexu řádku  
 
-            
-            if (EditorEventsDataGridView.Columns[columnIndex].Name == "EditorEventColumn" || EditorEventsDataGridView.Columns[columnIndex].Name == "EditorValueColumn") // pokud je kliknuto na sloupec s událostí nebo hodnotou
+            // Ověření, že není kliknuto na hlavičku nebo neplatný řádek  
+            if (rowIndex < 0 || columnIndex < 0)
+                return;
+
+            if (EditorEventsDataGridView.Columns[columnIndex].Name == "EditorEventColumn" || EditorEventsDataGridView.Columns[columnIndex].Name == "EditorValueColumn") // pokud je kliknuto na sloupec s událostí nebo hodnotou  
             {
-                var selectedRow = EditorEventsDataGridView.Rows[e.RowIndex]; // Získání dat z řádku
-                var eventType = selectedRow.Cells[1].Value?.ToString(); // Typ události
-                var eventValue = selectedRow.Cells[2].Value?.ToString(); // Hodnota události
+                var selectedRow = EditorEventsDataGridView.Rows[rowIndex]; // Získání dat z řádku  
+                var eventType = selectedRow.Cells[1].Value?.ToString(); // Typ události  
+                var eventValue = selectedRow.Cells[2].Value?.ToString(); // Hodnota události  
 
-                var form = new EventValueForm(eventType ?? "", eventValue ?? ""); // Otevření nové formy s předanými hodnotami
+                var form = new EventValueForm(eventType ?? "", eventValue ?? ""); // Otevření nové formy s předanými hodnotami  
 
-                this.Enabled = false; // zakáže editor formulář
+                this.Enabled = false; // zakáže editor formulář  
 
-                if (form.ShowDialog() == DialogResult.OK) // pokud uživatel potvrdí změny
+                if (form.ShowDialog() == DialogResult.OK) // pokud uživatel potvrdí změny  
                 {
-                    // Aktualizuj hodnoty v DataGridView
+                    // Aktualizuj hodnoty v DataGridView  
                     selectedRow.Cells[1].Value = form.SelectedEventType;
                     selectedRow.Cells[2].Value = form.UpdatedEventValue;
-                    selectedRow.Cells[3].Value = form.UpdateSecretValue; // Nastavení hodnoty na null pro další použití
+                    selectedRow.Cells[3].Value = form.UpdateSecretValue; // Nastavení hodnoty na null pro další použití  
                 }
             }
-            this.Enabled = true; // povolí editor formulář
-        } // událost dvojitého kliknutí na buňku v DataGridView
+            this.Enabled = true; // povolí editor formulář  
+        } // událost dvojitého kliknutí na buňku v DataGridView  
 
         private void EditorEventsDataGridView_MouseDown(object sender, MouseEventArgs e)
         {
