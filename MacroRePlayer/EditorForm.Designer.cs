@@ -59,6 +59,7 @@
             // 
             // JsonFileSelectorComboBox
             // 
+            JsonFileSelectorComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             JsonFileSelectorComboBox.FormattingEnabled = true;
             JsonFileSelectorComboBox.Location = new Point(13, 28);
             JsonFileSelectorComboBox.Margin = new Padding(4, 3, 4, 3);

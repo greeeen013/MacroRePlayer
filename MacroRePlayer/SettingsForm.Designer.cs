@@ -161,7 +161,7 @@
             // 
             SettingsPlaybackSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SettingsPlaybackSpeedComboBox.FormattingEnabled = true;
-            SettingsPlaybackSpeedComboBox.Items.AddRange(new object[] { "0,25x", "0,5x", "0,75x", "1x", "2x", "3x", "4x", "5x", "10x" });
+            SettingsPlaybackSpeedComboBox.Items.AddRange(new object[] { "0,25x", "0,5x", "0,75x", "1x", "1,25x", "1,5x", "1,75x", "2x", "3x", "4x", "5x", "10x" });
             SettingsPlaybackSpeedComboBox.Location = new Point(221, 114);
             SettingsPlaybackSpeedComboBox.Margin = new Padding(4, 3, 4, 3);
             SettingsPlaybackSpeedComboBox.Name = "SettingsPlaybackSpeedComboBox";

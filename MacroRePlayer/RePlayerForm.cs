@@ -317,9 +317,9 @@ namespace MacroRePlayer
 
             isPlayingMacro = true; // nastaví přehrávání na true
 
-            int currentIteration = 0; // počáteční iterace pro přehrávání událostí
+            int currentIteration = 0; // počáteční iterace pro přehrávání událostí (cykly)
 
-            int playbackSpeed = int.Parse(PlayerPlaybackSpeedComboBox.SelectedItem.ToString().Replace("x", ""), CultureInfo.InvariantCulture); // konvertuje to DefaultPlaybackSpeed (což je: "1x", "2x", "10x",...) do int
+            double playbackSpeed = double.Parse(PlayerPlaybackSpeedComboBox.SelectedItem.ToString().Replace("x", "").Replace(",", "."), CultureInfo.InvariantCulture); // konvertuje to DefaultPlaybackSpeed (což je: "1x", "1.25x", "2x",...) do double
 
 
             do
@@ -330,11 +330,24 @@ namespace MacroRePlayer
 
                     if (inputEvent is DelayEvent delayEvent)
                     {
-                        long targetTimestamp = previousTimestamp + delayEvent.Duration;
 
-                        targetTimestamp += new Random().Next(-delayOffSet, delayOffSet + 1); // Přidání náhodného čísla v rozmezí od -delayOffSet do delayOffSet
+                        // Calculate the base delay duration adjusted by playback speed
+                        long adjustedDuration = (long)(delayEvent.Duration / playbackSpeed);
 
-                        targetTimestamp = (previousTimestamp + delayEvent.Duration) / playbackSpeed;
+                        // Add a random offset within the range of -delayOffSet to +delayOffSet
+                        long randomOffset = new Random().Next(-delayOffSet, delayOffSet + 1);
+
+                        // Calculate the final target timestamp
+                        long targetTimestamp = previousTimestamp + adjustedDuration + randomOffset;
+
+                        // Wait until the target timestamp is reached
+                        while (stopwatch.ElapsedMilliseconds < targetTimestamp)
+                        {
+                            await Task.Delay(1); // Small polling delay
+                        }
+
+                        // Update the previous timestamp
+                        previousTimestamp = targetTimestamp;
 
                         while (stopwatch.ElapsedMilliseconds < targetTimestamp)
                         {

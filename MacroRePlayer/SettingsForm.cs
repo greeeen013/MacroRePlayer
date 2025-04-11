@@ -158,14 +158,9 @@ namespace MacroRePlayer
             settings.AppendLine($"PlayerStartUpDelay={(int)SettingsStartUpDelayNumericUpDown.Value}");
 
             settings.AppendLine($"DefaultPlaybackMethod=\"{SettingsPlaybackMethodComboBox.SelectedItem}\"");
-            if (SettingsPlaybackMethodComboBox.SelectedIndex == 1)
-            {
-                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat={(int)SettingsHowManyTimesNumericUpDown.Value}");
-            }
-            else
-            {
-                settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat={0}");
-            }
+
+            settings.AppendLine($"DefaultPlaybackHowManyTimesRepeat={(int)SettingsHowManyTimesNumericUpDown.Value}"); // test ?
+
 
             settings.AppendLine($"DefaultPlaybackSpeed=\"{SettingsPlaybackSpeedComboBox.SelectedItem}\"");
             settings.AppendLine($"KeyRepeating={(bool)SettingsKeyRepeatingCheckBox.Checked}");
@@ -182,15 +177,22 @@ namespace MacroRePlayer
 
         private void SettingsPlaybackMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SettingsPlaybackMethodComboBox.SelectedIndex == 1)
+            if (SettingsPlaybackMethodComboBox.SelectedItem != null && SettingsPlaybackMethodComboBox.SelectedItem.ToString() == "Play X times")
             {
                 SettingsHowManyTimesLabel.Visible = true;
                 SettingsHowManyTimesNumericUpDown.Visible = true;
             }
-            else
+            else if (SettingsPlaybackMethodComboBox.SelectedItem != null && SettingsPlaybackMethodComboBox.SelectedItem.ToString() == "One time play")
             {
                 SettingsHowManyTimesNumericUpDown.Visible = false;
                 SettingsHowManyTimesLabel.Visible = false;
+                SettingsHowManyTimesNumericUpDown.Value = 1; // nastaví na 1 aby se to přehrálo jen 1x
+            }
+            else if (SettingsPlaybackMethodComboBox.SelectedItem != null && SettingsPlaybackMethodComboBox.SelectedItem.ToString() == "Repeat until stopped")
+            {
+                SettingsHowManyTimesNumericUpDown.Visible = false;
+                SettingsHowManyTimesLabel.Visible = false;
+                SettingsHowManyTimesNumericUpDown.Value = 0; // opakuje se do nekonečna
             }
         } // zobrazení labelu a numericUpDownu pro počet opakování
 
