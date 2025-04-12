@@ -80,6 +80,7 @@ namespace MacroRePlayer
 
         private void StartRecording_Click(object sender, EventArgs e)
         {
+            
             Directory.CreateDirectory(directoryPath); // vytvoření složky pro ukládání souborů, pokud neexistuje
             RecordKeybindButton(false); // zdeaktivuje sledování klávesových zkratek nevidím duvod proč by to mělo být povoleno při nahrávání událostí
             events.Clear(); // vyčistí seznam událostí
@@ -307,10 +308,10 @@ namespace MacroRePlayer
 
             var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
             settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
-            var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboruisPlayingMacro = true; // Set playing flag to true
+            var events = JsonConvert.DeserializeObject<List<IInputEvent>>(File.ReadAllText(fileName), settings); // načtení událostí ze souboru
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            long previousTimestamp = 0;
+            long previousTimestamp = stopwatch.ElapsedMilliseconds;
 
             if (startUpDelay > 0) // pokud je nastaveno zpoždění při spuštění
             {
@@ -323,99 +324,86 @@ namespace MacroRePlayer
 
             double playbackSpeed = double.Parse(PlayerPlaybackSpeedComboBox.SelectedItem.ToString().Replace("x", "").Replace(",", "."), CultureInfo.InvariantCulture); // konvertuje to DefaultPlaybackSpeed (což je: "1x", "1.25x", "2x",...) do double
 
-
             do
             {
                 foreach (var inputEvent in events ?? Enumerable.Empty<IInputEvent>()) // pro každou událost
                 {
                     if (!isPlayingMacro) break; // pokud je přehrávání zastaveno, ukončí smyčku
 
-                    if (inputEvent is DelayEvent delayEvent)
+                    switch (inputEvent)
                     {
+                        case DelayEvent delayEvent:
+                            // Calculate the base delay duration adjusted by playback speed
+                            long adjustedDuration = (long)(delayEvent.Duration / playbackSpeed);
 
-                        // Calculate the base delay duration adjusted by playback speed
-                        long adjustedDuration = (long)(delayEvent.Duration / playbackSpeed);
+                            // Add a random offset within the range of -delayOffSet to +delayOffSet
+                            long randomOffset = new Random().Next(-delayOffSet, delayOffSet + 1);
 
-                        // Add a random offset within the range of -delayOffSet to +delayOffSet
-                        long randomOffset = new Random().Next(-delayOffSet, delayOffSet + 1);
+                            // Calculate the final target timestamp
+                            long targetTimestamp = previousTimestamp + adjustedDuration + randomOffset;
 
-                        // Calculate the final target timestamp
-                        long targetTimestamp = previousTimestamp + adjustedDuration + randomOffset;
+                            // Wait until the target timestamp is reached
+                            while (stopwatch.ElapsedMilliseconds < targetTimestamp)
+                            {
+                                await Task.Delay(1); // Small polling delay
+                            }
 
-                        // Wait until the target timestamp is reached
-                        while (stopwatch.ElapsedMilliseconds < targetTimestamp)
-                        {
-                            await Task.Delay(1); // Small polling delay
-                        }
+                            // Update the previous timestamp
+                            previousTimestamp = targetTimestamp;
+                            break;
 
-                        // Update the previous timestamp
-                        previousTimestamp = targetTimestamp;
-
-                        while (stopwatch.ElapsedMilliseconds < targetTimestamp)
-                        {
-                            await Task.Delay(1); // malý polling delay
-                        }
-                        previousTimestamp = targetTimestamp;
-                        continue;
-                    }
-
-                    switch (inputEvent.Type) // podle typu události
-                    {
-                        case "MouseDown":
-                            InputSender.SetCursorPosition(((MouseDownEvent)inputEvent).X, ((MouseDownEvent)inputEvent).Y); // nastaví kurzor na pozici
-                            switch (((MouseDownEvent)inputEvent).Button) // podle tlačítka myši
+                        case MouseDownEvent mouseDownEvent:
+                            InputSender.SetCursorPosition(mouseDownEvent.X, mouseDownEvent.Y);
+                            switch (mouseDownEvent.Button)
                             {
                                 case "Left":
-                                    MouseOperation((uint)InputSender.MouseEventF.LeftDown); // zavolá funkci pro stisknutí levého tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.LeftDown);
                                     break;
                                 case "Right":
-                                    MouseOperation((uint)InputSender.MouseEventF.RightDown); // zavolá funkci pro stisknutí pravého tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.RightDown);
                                     break;
                                 case "Middle":
-                                    MouseOperation((uint)InputSender.MouseEventF.MiddleDown); // zavolá funkci pro stisknutí prostředního tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.MiddleDown);
                                     break;
                             }
                             break;
-                        case "MouseUp":
-                            InputSender.SetCursorPosition(((MouseUpEvent)inputEvent).X, ((MouseUpEvent)inputEvent).Y); // nastaví kurzor na pozici
-                            switch (((MouseUpEvent)inputEvent).Button) // podle tlačítka myši
+
+                        case MouseUpEvent mouseUpEvent:
+                            InputSender.SetCursorPosition(mouseUpEvent.X, mouseUpEvent.Y);
+                            switch (mouseUpEvent.Button)
                             {
                                 case "Left":
-                                    MouseOperation((uint)InputSender.MouseEventF.LeftUp); // zavolá funkci pro uvolnění levého tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.LeftUp);
                                     break;
                                 case "Right":
-                                    MouseOperation((uint)InputSender.MouseEventF.RightUp); // zavolá funkci pro uvolnění pravého tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.RightUp);
                                     break;
                                 case "Middle":
-                                    MouseOperation((uint)InputSender.MouseEventF.MiddleUp); // zavolá funkci pro uvolnění prostředního tlačítka myši
+                                    MouseOperation((uint)InputSender.MouseEventF.MiddleUp);
                                     break;
                             }
                             break;
-                        case "KeyDown":
-                            RecordKeybindButton(false); // zastaví sledování klávesových zkratek aby makro samo nezmáčklo klávesu pro spuštění/zastavení přehrávání makra
-                            var keyDownEvent = (KeyDownEvent)inputEvent; // převede událost na KeyDownEvent
-                            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost stisknutí klávesy
+
+                        case KeyDownEvent keyDownEvent:
+                            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
                             {
-                                new InputSender.KeyboardInput // vytvoří novou instanci klávesové události
+                                new InputSender.KeyboardInput
                                 {
-                                    wScan = Convert.ToUInt16(keyDownEvent.Code, 16), // převede hexadecimální kód na číslo
-                                    dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode // příznak pro stisknutí klávesy
+                                    wScan = Convert.ToUInt16(keyDownEvent.Code, 16),
+                                    dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode
                                 }
                             });
-                            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
                             break;
-                        case "KeyUp":
-                            RecordKeybindButton(false); // zastaví sledování klávesových zkratek aby makro samo nezmáčklo klávesu pro spuštění/zastavení přehrávání makra
-                            var keyUpEvent = (KeyUpEvent)inputEvent; // převede událost na KeyUpEvent
-                            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost uvolnění klávesy
+
+                        case KeyUpEvent keyUpEvent:
+                            InputSender.SendKeyboardInput(new InputSender.KeyboardInput[]
                             {
-                                new InputSender.KeyboardInput // vytvoří novou instanci klávesové události
+                                new InputSender.KeyboardInput
                                 {
-                                    wScan = Convert.ToUInt16(keyUpEvent.Code, 16), // převede hexadecimální kód na číslo
-                                    dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode // příznak pro uvolnění klávesy
+                                    wScan = Convert.ToUInt16(keyUpEvent.Code, 16),
+                                    dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode
                                 }
                             });
-                            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
                             break;
                     }
                 }
@@ -426,7 +414,7 @@ namespace MacroRePlayer
 
             isPlayingMacro = false; // resetuje přehrávání na false po dokončení událostí
             TogglePlayStopButtons(false); // Resetuje tlačítka po dokončení makra
-        } // tento event se spouští při kliknutí na tlačítko pro spuštění přehrávání makra a spustí přehrávání událostí ze souboru
+        }
 
         private void PlayerStopPlayingMacroButton_Click(object sender, EventArgs e)
         {
