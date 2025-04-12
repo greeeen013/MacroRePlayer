@@ -19,7 +19,7 @@ namespace MacroRePlayer.EventValueForms
         [DllImport("user32.dll")]
         static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
-        const uint MAPVK_VK_TO_VSC = 0;
+        private const uint MAPVK_VK_TO_VSC = 0;
 
         private IKeyboardMouseEvents globalHook; // Globální hook pro sledování vstupů
 

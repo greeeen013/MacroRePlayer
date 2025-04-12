@@ -380,6 +380,7 @@
             MaximizeBox = false;
             Name = "RePlayerForm";
             ShowIcon = false;
+            FormClosed += RePlayerForm_FormClosed;
             Load += Form1_Load;
             RecorderGroupBox.ResumeLayout(false);
             RecorderGroupBox.PerformLayout();

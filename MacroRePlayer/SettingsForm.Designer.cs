@@ -167,6 +167,7 @@
             SettingsPlaybackSpeedComboBox.Name = "SettingsPlaybackSpeedComboBox";
             SettingsPlaybackSpeedComboBox.Size = new Size(140, 23);
             SettingsPlaybackSpeedComboBox.TabIndex = 21;
+            SettingsPlaybackSpeedComboBox.SelectedIndexChanged += SettingsPlaybackSpeedComboBox_SelectedIndexChanged;
             // 
             // SettingsKeyDelayBeforeRepeationLabel
             // 
@@ -279,6 +280,7 @@
             // SettingsStartUpDelayNumericUpDown
             // 
             SettingsStartUpDelayNumericUpDown.Location = new Point(222, 71);
+            SettingsStartUpDelayNumericUpDown.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             SettingsStartUpDelayNumericUpDown.Name = "SettingsStartUpDelayNumericUpDown";
             SettingsStartUpDelayNumericUpDown.Size = new Size(140, 23);
             SettingsStartUpDelayNumericUpDown.TabIndex = 35;

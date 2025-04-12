@@ -248,6 +248,9 @@ namespace MacroRePlayer
             richTextBox.DeselectAll();
         }
 
-        
+        private void SettingsPlaybackSpeedComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

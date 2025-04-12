@@ -22,16 +22,16 @@ namespace MacroRePlayer
         private DateTime lastEventTime; // Poslední zaznamenaný čas události
         private bool isRecording; // Indikátor nahrávání
         private IKeyboardMouseEvents? globalHook; // Globální hook pro sledování vstupů
-        private HashSet<string> pressedKeys = new HashSet<string>(); // Sledování stisknutých kláves
+        private HashSet<string> pressedKeys = []; // Sledování stisknutých kláves
         private readonly string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MacroRePlayer"); // Cesta k adresáři pro ukládání souborů
         private bool isPlayingMacro = false; // indikátor přehrávání makra
-        
+
 
         //kvuli zavolání funkce pro ziskání konkrétní hardware klávesy
         [DllImport("user32.dll")]
         static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
-        const uint MAPVK_VK_TO_VSC = 0;
+        private const uint MAPVK_VK_TO_VSC = 0;
 
         public RePlayerForm()
         {
@@ -51,6 +51,11 @@ namespace MacroRePlayer
             LoadSettingsIfExisted(); // kontrola a vytvoření konfiguračního souboru, pokud neexistuje a rovnou načte hodnoty
 
         } // tento event se spouští při načtení formuláře a předepíše výchozí název souboru (což je dnešní datum a čas) pro ukládání makra
+
+        private void RePlayerForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            UnsubscribeGlobalHook();
+        }
 
         private int startUpDelay; // zpoždění při spuštění aplikace
         private bool autoDeleteLastClick; // indikátor pro automatické mazání posledního kliknutí
@@ -76,24 +81,29 @@ namespace MacroRePlayer
                 delayOffSet = int.Parse(settings["PlayerDelayEventOffset"]); // přečtení offsetu pro zpoždění
                 PlayerHowManyTimesNumericUpDown.Value = int.Parse(settings["DefaultPlaybackHowManyTimesRepeat"]); // přečtení počtu opakování přehrávání makra
             }
+
         }
 
         private void StartRecording_Click(object sender, EventArgs e)
         {
-            
+            // Zajistěte, že před inicializací hooku je odpojen jakýkoli existující hook
+            UnsubscribeGlobalHook();
+            RecordKeybindButton(false);
+
+
             Directory.CreateDirectory(directoryPath); // vytvoření složky pro ukládání souborů, pokud neexistuje
-            RecordKeybindButton(false); // zdeaktivuje sledování klávesových zkratek nevidím duvod proč by to mělo být povoleno při nahrávání událostí
             events.Clear(); // vyčistí seznam událostí
             isRecording = true; // nastaví nahrávání na true
             lastEventTime = DateTime.Now; // nastaví poslední čas události na aktuální čas
             ToggleRecordingButtons(true); // přepíná povolení tlačítek pro nahrávání a zastavení nahrávání
 
-            globalHook = Hook.GlobalEvents(); // inicializace globálního hooku pro sledování vstupů
-            globalHook.MouseDownExt += GlobalHook_MouseDownExt; // přidání event handleru pro stisknutí myši
-            globalHook.MouseUpExt += GlobalHook_MouseUpExt; // přidání event handleru pro uvolnění myši
-            globalHook.KeyDown += GlobalHook_KeyDown; // přidání event handleru pro stisknutí klávesy
-            globalHook.KeyUp += GlobalHook_KeyUp; // přidání event handleru pro uvolnění klávesy
-        } // tento event se spouští při kliknutí na tlačítko "Start Recording" a inicializuje nahrávání událostí
+            // Inicializace globálního hooku
+            globalHook = Hook.GlobalEvents();
+            globalHook.MouseDownExt += GlobalHook_MouseDownExt;
+            globalHook.MouseUpExt += GlobalHook_MouseUpExt;
+            globalHook.KeyDown += GlobalHook_KeyDown;
+            globalHook.KeyUp += GlobalHook_KeyUp;
+        }
 
         private void StopRecording_Click(object sender, EventArgs e)
         {
@@ -108,10 +118,11 @@ namespace MacroRePlayer
                     events.RemoveRange(events.Count - 4, 4); // tak odstraní poslední 4 události
                 }
             }
-            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
+
             isRecording = false; // nastavuje nahrávání na false
             ToggleRecordingButtons(false); // přepíná povolení tlačítek pro nahrávání a zastavení nahrávání
             UnsubscribeGlobalHook(); // odhlášení event handlerů
+            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
             SaveEventsToJson(); // uložení událostí do JSON souboru
         } // tento event se spouští při kliknutí na tlačítko "Stop Recording" a zastavuje nahrávání událostí
 
@@ -125,13 +136,15 @@ namespace MacroRePlayer
         {
             if (globalHook != null) // pokud je globální hook inicializován
             {
-                globalHook.MouseDownExt -= GlobalHook_MouseDownExt; // odhlášení event handleru pro stisknutí myši
-                globalHook.MouseUpExt -= GlobalHook_MouseUpExt; // odhlášení event handleru pro uvolnění myši
-                globalHook.KeyDown -= GlobalHook_KeyDown; // odhlášení event handleru pro stisknutí klávesy
-                globalHook.KeyUp -= GlobalHook_KeyUp; // odhlášení event handleru pro uvolnění klávesy
+                globalHook.MouseDownExt -= GlobalHook_MouseDownExt;
+                globalHook.MouseUpExt -= GlobalHook_MouseUpExt;
+                globalHook.KeyDown -= GlobalHook_KeyDown;
+                globalHook.KeyUp -= GlobalHook_KeyUp;
+                globalHook.KeyDown -= HookManager_KeyDown; // odhlášení event handleru pro makro klávesu
                 globalHook.Dispose(); // uvolnění prostředků globálního hooku
+                globalHook = null; // nastavte na null, aby bylo jasné, že hook byl odpojen
             }
-        } // tento event se spouští při ukončení nahrávání a odpojuje všechny event handlery pro sledování vstupů
+        }
 
         private void SaveEventsToJson()
         {
@@ -182,16 +195,34 @@ namespace MacroRePlayer
 
         private void GlobalHook_KeyDown(object? sender, KeyEventArgs e)
         {
+            // Získání scancode a hexadecimální reprezentace klávesy
+            uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+            var hexKey = $"0x{scancode:X}";
+
+            // Kontrola, zda je stisknuta klávesa pro spuštění/zastavení makra
+            if (hexKey == HexKeyStartStopMacro)
+            {
+                if (!isPlayingMacro)
+                {
+                    PlayerStartPlayingMacroButton.PerformClick(); // Simulace kliknutí na tlačítko Start
+                }
+                else
+                {
+                    isPlayingMacro = false; // Zastavení přehrávání makra
+                }
+                return; // Ukončení metody, aby se tato klávesa nezaznamenávala jako událost
+            }
+
+            // Záznam klávesové události, pokud klávesa ještě nebyla stisknuta
             if (pressedKeys.Add(e.KeyCode.ToString()))
             {
-                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
                 RecordEvent(new KeyDownEvent
                 {
                     Key = e.KeyCode.ToString(),
-                    Code = $"0x{scancode:X}"
+                    Code = hexKey
                 });
             }
-        } // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí, pokud klávesa ještě nebyla stisknuta (aby se zabránilo opakovanému zaznamenávání stejné klávesy)
+        }
 
         private void GlobalHook_KeyUp(object? sender, KeyEventArgs e)
         {
@@ -284,14 +315,32 @@ namespace MacroRePlayer
         } // tento event se spouští při změně výběru v Player ComboBoxu a povolí nebo zakáže tlačítko pro spuštění makra podle toho, zda je vybrán nějaký soubor
 
         // HLAVNI PLAYER !!!!
+        private bool isWaitingForStartUpDelay = false; // indikátor pro čekání na zpoždění při spuštění
         private async void PlayerStartPlayingMacroButton_Click(object sender, EventArgs e)
         {
             if (PlayerComboBox.SelectedItem == null) return; // pokud není vybrán žádný soubor, nic se nestane (ošetření)
+            if (isPlayingMacro) return; // pokud je makro již přehráváno, nic se nestane (ošetření)
 
             string fileName = Path.Combine(directoryPath, PlayerComboBox.SelectedItem?.ToString() ?? ""); // vytvoření cesty k souboru
             if (!File.Exists(fileName)) return; // pokud soubor neexistuje, nic se nestane (ošetření)
 
             TogglePlayStopButtons(true); // Deaktivuje tlačítko Start a aktivuje tlačítko Stop
+            isPlayingMacro = true; // nastaví přehrávání na true
+            RecordKeybindButton(false); // zakáže sledování klávesových zkratek pro jistotu
+            //PlayerStopPlayingMacroButton.Enabled = false; // zakáže tlačítko pro zastavení přehrávání
+            if (startUpDelay > 0) // pokud je nastaveno zpoždění při spuštění
+            {
+                if (isWaitingForStartUpDelay) return; // pokud už čeká na zpoždění, nic se nestane (ošetření)
+                isWaitingForStartUpDelay = true; // nastaví indikátor pro čekání na zpoždění
+                await Task.Delay(startUpDelay); // čeká na zpoždění
+                if (!isPlayingMacro) // kontrola, zda je přehrávání makra zastaveno
+                {
+                    return; // pokud je přehrávání zastaveno, ukončí metodu
+                }
+                isWaitingForStartUpDelay = false; // resetuje indikátor pro čekání na zpoždění
+            }
+           //PlayerStopPlayingMacroButton.Enabled = true; // povolí tlačítko pro zastavení přehrávání
+            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
 
             var settings = new JsonSerializerSettings(); // vytvoření nastavení pro JSON serializaci
             settings.Converters.Add(new InputEventConverter()); // přidání konvertoru pro události
@@ -299,13 +348,6 @@ namespace MacroRePlayer
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             long previousTimestamp = stopwatch.ElapsedMilliseconds;
-
-            if (startUpDelay > 0) // pokud je nastaveno zpoždění při spuštění
-            {
-                await Task.Delay(startUpDelay); // čeká na zpoždění
-            }
-
-            isPlayingMacro = true; // nastaví přehrávání na true
 
             int currentIteration = 0; // počáteční iterace pro přehrávání událostí (cykly)
 
@@ -453,8 +495,12 @@ namespace MacroRePlayer
             }
             else
             {
-                globalHook.KeyDown -= HookManager_KeyDown; // odhlášení event handleru pro stisknutí klávesy
-                globalHook.Dispose(); // uvolnění prostředků globálního hooku
+                if (globalHook != null)
+                {
+                    globalHook.KeyDown -= HookManager_KeyDown; // odhlášení event handleru pro stisknutí klávesy
+                    globalHook.Dispose();
+                    globalHook = null;
+                }
             }
         } // tento event se spouští při kliknutí na tlačítko pro nahrávání klávesových zkratek a inicializuje nebo uvolňuje globální hook pro sledování vstupů podle parametru a
 
@@ -472,32 +518,28 @@ namespace MacroRePlayer
             LoadSettingsIfExisted(); // načtení nastavení z konfiguračního souboru pokud existuje což by měl v tomto případě
         } // tento event se spouští při zavření formuláře nastavení a opět povolí hlavní formulář
 
+        private void UpdatePlaybackMethodUI(string method)
+        {
+            bool isRepeat = method == "Play X times";
+            PlayerHowManyTimesNumericUpDown.Visible = isRepeat;
+            PlayerHowManyTimesLabel.Visible = isRepeat;
+            PlayerHowManyTimesNumericUpDown.Value = isRepeat ? 1 : 0;
+
+            PlayerHowManyTimesNumericUpDown.Value = method == "Repeat until stopped" ? 0 : 1;
+        }
+
         private void PlayerPlaybackMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "One time play") // pokud je vybrána metoda přehrávání "One time play"
+            if (PlayerPlaybackMethodComboBox.SelectedItem != null)
             {
-                PlayerHowManyTimesNumericUpDown.Value = 1;
-                PlayerHowManyTimesNumericUpDown.Visible = false; // zakáže nastavení počtu opakování
-                PlayerHowManyTimesLabel.Visible = false; // skryje popis pro nastavení počtu opakování
-            }
-            else if (PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "Play X times") // pokud je vybrána metoda přehrávání "Play X times"
-            {
-                PlayerHowManyTimesNumericUpDown.Visible = true; // povolí nastavení počtu opakování
-                PlayerHowManyTimesLabel.Visible = true; // zobrazí popis pro nastavení počtu opakování
-                PlayerHowManyTimesNumericUpDown.Value = 1;
-            }
-            else if (PlayerPlaybackMethodComboBox.SelectedItem != null && PlayerPlaybackMethodComboBox.SelectedItem.ToString() == "Repeat until stopped")
-            {
-                PlayerHowManyTimesNumericUpDown.Visible = false; // zakáže nastavení počtu opakování
-                PlayerHowManyTimesLabel.Visible = false; // skryje popis pro nastavení počtu opakování
-                PlayerHowManyTimesNumericUpDown.Value = 0;
+                UpdatePlaybackMethodUI(PlayerPlaybackMethodComboBox.SelectedItem.ToString());
             }
 
         } // tento event se spouští při změně výběru v ComboBoxu pro metodu přehrávání a nastavuje viditelnost a hodnoty pro nastavení počtu opakování podle vybrané metody přehrávání
 
+        
 
 
-        //TODO: na bookmarku mam jednu vec u ktery si nejsem jistej
         //TODO: nejako zjistit a fixnou verticalní zarovnání v StartStopPlayingKeybindTextBox (idk jestli to je vubec possible)
     }
 }
