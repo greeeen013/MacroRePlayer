@@ -56,6 +56,7 @@ namespace MacroRePlayer
         private bool autoDeleteLastClick; // indikátor pro automatické mazání posledního kliknutí
         private string HexKeyStartStopMacro; // hexadecimální kód pro klávesovou zkratku pro spuštění/zastavení přehrávání makra
         private int delayOffSet = 0; // offset pro přehrávání makra (odchylka)
+
         private void LoadSettingsIfExisted()
         {
             string settingsFilePath = Path.Combine(directoryPath, "settings.cfg"); // vytvoření cesty k souboru s nastavením
@@ -80,7 +81,7 @@ namespace MacroRePlayer
         private void StartRecording_Click(object sender, EventArgs e)
         {
             Directory.CreateDirectory(directoryPath); // vytvoření složky pro ukládání souborů, pokud neexistuje
-
+            RecordKeybindButton(false); // zdeaktivuje sledování klávesových zkratek nevidím duvod proč by to mělo být povoleno při nahrávání událostí
             events.Clear(); // vyčistí seznam událostí
             isRecording = true; // nastaví nahrávání na true
             lastEventTime = DateTime.Now; // nastaví poslední čas události na aktuální čas
@@ -106,7 +107,7 @@ namespace MacroRePlayer
                     events.RemoveRange(events.Count - 4, 4); // tak odstraní poslední 4 události
                 }
             }
-
+            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
             isRecording = false; // nastavuje nahrávání na false
             ToggleRecordingButtons(false); // přepíná povolení tlačítek pro nahrávání a zastavení nahrávání
             UnsubscribeGlobalHook(); // odhlášení event handlerů
@@ -390,6 +391,7 @@ namespace MacroRePlayer
                             }
                             break;
                         case "KeyDown":
+                            RecordKeybindButton(false); // zastaví sledování klávesových zkratek aby makro samo nezmáčklo klávesu pro spuštění/zastavení přehrávání makra
                             var keyDownEvent = (KeyDownEvent)inputEvent; // převede událost na KeyDownEvent
                             InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost stisknutí klávesy
                             {
@@ -399,8 +401,10 @@ namespace MacroRePlayer
                                     dwFlags = (uint)InputSender.KeyEventF.KeyDown | (uint)InputSender.KeyEventF.Scancode // příznak pro stisknutí klávesy
                                 }
                             });
+                            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
                             break;
                         case "KeyUp":
+                            RecordKeybindButton(false); // zastaví sledování klávesových zkratek aby makro samo nezmáčklo klávesu pro spuštění/zastavení přehrávání makra
                             var keyUpEvent = (KeyUpEvent)inputEvent; // převede událost na KeyUpEvent
                             InputSender.SendKeyboardInput(new InputSender.KeyboardInput[] // odesílá událost uvolnění klávesy
                             {
@@ -410,6 +414,7 @@ namespace MacroRePlayer
                                     dwFlags = (uint)InputSender.KeyEventF.KeyUp | (uint)InputSender.KeyEventF.Scancode // příznak pro uvolnění klávesy
                                 }
                             });
+                            RecordKeybindButton(true); // znovu povolí sledování klávesových zkratek
                             break;
                     }
                 }
