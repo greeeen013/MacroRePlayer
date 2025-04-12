@@ -146,6 +146,7 @@ namespace MacroRePlayer
                     PlayerComboBox.Items.Add(JsonFileSelectorForm.Text + ".json");
                 }
                 PlayerComboBox.SelectedItem = JsonFileSelectorForm.Text + ".json"; // Předvyplnění ComboBoxu novým souborem
+                JsonFileSelectorForm.Text = $"MacroRecord{DateTime.Now:HH-mm_dd.MM.yyyy}"; // aktualizování názvu souboru pro další nahrávání
 
             }
             catch (ArgumentException ex) // zachytí chybu při neplatném názvu souboru
