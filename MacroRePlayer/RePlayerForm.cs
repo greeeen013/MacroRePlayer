@@ -160,62 +160,49 @@ namespace MacroRePlayer
             }
         } // tento event se spouští při uložení událostí do JSON souboru a informuje uživatele o úspěšném vytvoření souboru
 
+        private void RecordEvent(IInputEvent inputEvent)
+        {
+            if (isRecording)
+            {
+                AddDelayEvent();
+                events.Add(inputEvent);
+                lastEventTime = DateTime.Now;
+            }
+        } // tento event se spouští při zaznamenávání události a přidává zpoždění mezi událostmi do seznamu událostí
+
         private void GlobalHook_MouseDownExt(object? sender, MouseEventExtArgs e)
         {
-            if (isRecording) // pokud je nahrávání povoleno
-            {
-                AddDelayEvent(); // přidání zpoždění mezi událostmi
-                events.Add(new MouseDownEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() }); // zaznamenání události stisknutí myši
-                lastEventTime = DateTime.Now; // aktualizace posledního času události
-            }
+            RecordEvent(new MouseDownEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() });
         } // tento event se spouští při stisknutí myši a zaznamenává událost do seznamu událostí
 
         private void GlobalHook_MouseUpExt(object? sender, MouseEventExtArgs e)
         {
-            if (isRecording) // pokud je nahrávání povoleno
-            {
-                AddDelayEvent(); // přidání zpoždění mezi událostmi
-                events.Add(new MouseUpEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() }); // zaznamenání události uvolnění myši
-                lastEventTime = DateTime.Now; // aktualizace posledního času události
-            }
+            RecordEvent(new MouseUpEvent { X = e.X, Y = e.Y, Button = e.Button.ToString() });
         } // tento event se spouští při uvolnění myši a zaznamenává událost do seznamu událostí
 
         private void GlobalHook_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (isRecording && pressedKeys.Add(e.KeyCode.ToString()))
+            if (pressedKeys.Add(e.KeyCode.ToString()))
             {
-                AddDelayEvent();
-
                 uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
-
-                events.Add(new KeyDownEvent
+                RecordEvent(new KeyDownEvent
                 {
                     Key = e.KeyCode.ToString(),
-                    Code = $"0x{scancode:X}" // např. "0x1E"
+                    Code = $"0x{scancode:X}"
                 });
-
-                lastEventTime = DateTime.Now;
             }
-        } // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí
+        } // tento event se spouští při stisknutí klávesy a zaznamenává událost do seznamu událostí, pokud klávesa ještě nebyla stisknuta (aby se zabránilo opakovanému zaznamenávání stejné klávesy)
 
         private void GlobalHook_KeyUp(object? sender, KeyEventArgs e)
         {
-            if (isRecording)
+            uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC);
+            RecordEvent(new KeyUpEvent
             {
-                AddDelayEvent(); // přidání zpoždění mezi událostmi
-
-                uint scancode = MapVirtualKey((uint)e.KeyCode, MAPVK_VK_TO_VSC); // získání skenovacího kódu klávesy
-
-                events.Add(new KeyUpEvent // zaznamenání události uvolnění klávesy
-                {
-                    Key = e.KeyCode.ToString(), // název klávesy
-                    Code = $"0x{scancode:X}" // skenovací kód ve formátu hexadecimálního čísla
-                });
-
-                lastEventTime = DateTime.Now;
-                pressedKeys.Remove(e.KeyCode.ToString());
-            }
-        } // tento event se spouští při uvolnění klávesy a zaznamenává událost do seznamu událostí
+                Key = e.KeyCode.ToString(),
+                Code = $"0x{scancode:X}"
+            });
+            pressedKeys.Remove(e.KeyCode.ToString());
+        } // tento event se spouští při uvolnění klávesy a zaznamenává událost do seznamu událostí a odstraňuje klávesu ze seznamu stisknutých kláves (aby se zabránilo opakovanému zaznamenávání stejné klávesy)
 
         private void AddDelayEvent()
         {
